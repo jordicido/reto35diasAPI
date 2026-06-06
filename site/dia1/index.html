@@ -1,0 +1,2004 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 35 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="./..">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 1: Presentación del reto - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-1-presentacion-del-reto" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 1: Presentación del reto
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usermanager-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UserManager API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-construir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a construir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-una-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es una API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-una-api-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es una API REST
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodos-http-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Métodos HTTP principales
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recursos-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Recursos principales
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recursos principales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#health" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Health
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Auth
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#users" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Users
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelo-inicial-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modelo inicial de usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roles-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Roles de usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autenticacion-y-autorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Autenticación y autorización
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autenticación y autorización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Autenticación
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Autorización
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recorrido-del-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Recorrido del reto
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contrato-inicial-de-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contrato inicial de la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-de-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos de estado
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#herramientas-que-utilizaremos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Herramientas que utilizaremos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-crear-el-documento-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Crear el documento inicial
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-escribir-una-descripcion-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Escribir una descripción del proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-definir-los-recursos-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Definir los recursos principales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-definir-el-modelo-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Definir el modelo de usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-disenar-los-endpoints-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Diseñar los endpoints principales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-dibujar-el-flujo-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Dibujar el flujo general
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-escribir-las-reglas-iniciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Escribir las reglas iniciales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-anadir-dos-reglas-mas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Añadir dos reglas más
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-proponer-dos-errores-posibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Proponer dos errores posibles
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-disenar-una-respuesta-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Diseñar una respuesta JSON
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-con-tus-palabras-que-es-una-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar con tus palabras qué es una API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 1
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#usermanager-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        UserManager API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-construir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a construir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-una-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es una API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-una-api-rest" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es una API REST
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metodos-http-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Métodos HTTP principales
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recursos-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Recursos principales
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Recursos principales">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#health" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Health
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Auth
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#users" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Users
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelo-inicial-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modelo inicial de usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roles-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Roles de usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autenticacion-y-autorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Autenticación y autorización
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autenticación y autorización">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#autenticacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Autenticación
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autorizacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Autorización
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recorrido-del-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Recorrido del reto
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contrato-inicial-de-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contrato inicial de la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-de-estado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos de estado
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#herramientas-que-utilizaremos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Herramientas que utilizaremos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-crear-el-documento-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Crear el documento inicial
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-escribir-una-descripcion-del-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Escribir una descripción del proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-definir-los-recursos-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Definir los recursos principales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-definir-el-modelo-de-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Definir el modelo de usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-disenar-los-endpoints-principales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Diseñar los endpoints principales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-dibujar-el-flujo-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Dibujar el flujo general
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-escribir-las-reglas-iniciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Escribir las reglas iniciales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-anadir-dos-reglas-mas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Añadir dos reglas más
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-proponer-dos-errores-posibles" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Proponer dos errores posibles
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-disenar-una-respuesta-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Diseñar una respuesta JSON
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-con-tus-palabras-que-es-una-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar con tus palabras qué es una API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 1
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-1-presentacion-del-reto">Día 1: Presentación del reto<a class="headerlink" href="#dia-1-presentacion-del-reto" title="Permanent link">&para;</a></h1>
+<p>Hoy empezamos un reto opcional de 35 días en el que vamos a construir paso a
+paso una <strong>API REST de gestión de usuarios</strong>.</p>
+<p>La idea no es hacer ejercicios sueltos, sino construir un producto poco a poco,
+como se haría en un proyecto real. Empezaremos desde cero, sin servidor, sin
+rutas y sin base de datos, y acabaremos con una API capaz de registrar usuarios,
+iniciar sesión, proteger rutas, usar roles, conectarse a una base de datos y
+comunicarse con un frontend en Next.js.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Objetivo del día</p>
+<p>Entender qué vamos a construir, qué es una API REST y cuáles serán las
+primeras decisiones de diseño de <strong>UserManager API</strong>.</p>
+</div>
+<h2 id="usermanager-api">UserManager API<a class="headerlink" href="#usermanager-api" title="Permanent link">&para;</a></h2>
+<p>El proyecto se llamará <strong>UserManager API</strong>.</p>
+<p>Será una API sencilla en cuanto a temática, pero muy completa técnicamente. He
+elegido una gestión de usuarios porque es algo fácil de entender y aparece en
+prácticamente cualquier aplicación real: una tienda online, una red social, una
+app de reservas, una plataforma educativa, un panel de administración o una
+aplicación móvil.</p>
+<div class="admonition tip">
+<p class="admonition-title">Idea principal</p>
+<p>Lo importante del reto es que entendáis cómo se construye una API
+profesional desde dentro: rutas, datos, validaciones, errores, seguridad,
+base de datos e integración con un cliente real.</p>
+</div>
+<h2 id="que-vamos-a-construir">Qué vamos a construir<a class="headerlink" href="#que-vamos-a-construir" title="Permanent link">&para;</a></h2>
+<p>Vamos a crear una API REST que permitirá gestionar usuarios.</p>
+<p>Al finalizar el proyecto, nuestra API permitirá realizar acciones como estas:</p>
+<div class="language-text highlight"><span class="filename">Funcionalidades finales</span><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Registrar un usuario
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Iniciar sesión
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Consultar mi perfil
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Listar usuarios
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Modificar datos de usuario
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Eliminar o desactivar usuarios
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Cambiar contraseñas
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Asignar roles
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>Proteger rutas privadas
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Conectar con un frontend real
+</span></code></pre></div>
+<p>La API tendrá tres grupos principales de rutas:</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/auth</code></td>
+<td>Acciones relacionadas con autenticación</td>
+</tr>
+<tr>
+<td><code>/users</code></td>
+<td>Acciones relacionadas con gestión de usuarios</td>
+</tr>
+<tr>
+<td><code>/health</code></td>
+<td>Comprobar que la API está funcionando</td>
+</tr>
+</tbody>
+</table>
+<h2 id="que-es-una-api">Qué es una API<a class="headerlink" href="#que-es-una-api" title="Permanent link">&para;</a></h2>
+<p>Una <strong>API</strong> es una forma de comunicación entre aplicaciones.</p>
+<p>Por ejemplo, imaginemos que tenemos una aplicación web con una pantalla de
+login. Cuando el usuario escribe su email y su contraseña, el frontend necesita
+preguntarle al backend:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>¿Existe este usuario?
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>¿La contraseña es correcta?
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>¿Puede entrar en la aplicación?
+</span></code></pre></div>
+<p>El frontend no accede directamente a la base de datos. Lo que hace es enviar
+una petición a la API.</p>
+<p>La API recibe esa petición, procesa la información, consulta la base de datos si
+hace falta y devuelve una respuesta.</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Usuario] --&gt; B[Frontend]
+    B --&gt; C[API REST]
+    C --&gt; D[Base de datos]
+    D --&gt; C
+    C --&gt; B
+    B --&gt; A</code></pre>
+<p>En nuestro caso, durante los primeros días probaremos la API con herramientas
+como <strong>Postman</strong> o <strong>Thunder Client</strong>. Más adelante, conectaremos la API con un
+frontend real en <strong>Next.js</strong>.</p>
+<h2 id="que-es-una-api-rest">Qué es una API REST<a class="headerlink" href="#que-es-una-api-rest" title="Permanent link">&para;</a></h2>
+<p>REST es una forma de diseñar APIs utilizando los elementos propios del protocolo
+HTTP.</p>
+<p>Una API REST organiza la información en forma de <strong>recursos</strong>. En nuestro
+proyecto, el recurso principal será:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>users
+</span></code></pre></div>
+<p>Sobre ese recurso podremos hacer diferentes operaciones:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Consultar usuarios
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Crear usuarios
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Modificar usuarios
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Eliminar usuarios
+</span></code></pre></div>
+<p>Cada operación se representa mediante una combinación de:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Método HTTP + Ruta
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Ejemplo</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/users</code></td>
+<td>Quiero obtener la lista de usuarios</td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td>Quiero crear un nuevo usuario</td>
+</tr>
+</tbody>
+</table>
+<h2 id="metodos-http-principales">Métodos HTTP principales<a class="headerlink" href="#metodos-http-principales" title="Permanent link">&para;</a></h2>
+<p>Durante el reto trabajaremos con varios métodos HTTP.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Para qué sirve</th>
+<th>Ejemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td>Obtener información</td>
+<td><code>GET /api/users</code>, <code>GET /api/users/1</code>, <code>GET /api/users/me</code></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td>Crear información nueva</td>
+<td><code>POST /api/users</code>, <code>POST /api/auth/register</code>, <code>POST /api/auth/login</code></td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td>Modificar parcialmente un recurso</td>
+<td><code>PATCH /api/users/1</code>, <code>PATCH /api/users/me/password</code>, <code>PATCH /api/users/1/role</code></td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td>Eliminar un recurso</td>
+<td><code>DELETE /api/users/1</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Borrado lógico</p>
+<p>En un proyecto real muchas veces no se borra el usuario definitivamente,
+sino que se marca como inactivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>isActive = false
+</span></code></pre></div>
+</div>
+<h2 id="recursos-principales">Recursos principales<a class="headerlink" href="#recursos-principales" title="Permanent link">&para;</a></h2>
+<p>Nuestra API tendrá tres grupos principales de rutas.</p>
+<h3 id="health">Health<a class="headerlink" href="#health" title="Permanent link">&para;</a></h3>
+<p>Servirá para comprobar que el servidor está funcionando.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>GET /api/health
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Respuesta de ejemplo</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UserManager API funcionando&quot;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="auth">Auth<a class="headerlink" href="#auth" title="Permanent link">&para;</a></h3>
+<p>Servirá para las acciones relacionadas con autenticación.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>POST /api/auth/register
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>POST /api/auth/login
+</span></code></pre></div>
+<p>Estas rutas permitirán:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Registrar usuarios
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>Iniciar sesión
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>Recibir un token de acceso
+</span></code></pre></div>
+<h3 id="users">Users<a class="headerlink" href="#users" title="Permanent link">&para;</a></h3>
+<p>Servirá para gestionar usuarios.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>GET    /api/users
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>GET    /api/users/:id
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>GET    /api/users/me
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>POST   /api/users
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>PATCH  /api/users/:id
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>DELETE /api/users/:id
+</span></code></pre></div>
+<p>Estas rutas permitirán:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>Listar usuarios
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>Consultar un usuario concreto
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>Consultar mi propio perfil
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>Crear usuarios
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>Modificar usuarios
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>Eliminar o desactivar usuarios
+</span></code></pre></div>
+<h2 id="modelo-inicial-de-usuario">Modelo inicial de usuario<a class="headerlink" href="#modelo-inicial-de-usuario" title="Permanent link">&para;</a></h2>
+<p>Nuestro recurso principal será el usuario.</p>
+<p>De momento, vamos a imaginar que un usuario tendrá estos datos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>id
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>name
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>email
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>password
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>role
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>isActive
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>createdAt
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>updatedAt
+</span></code></pre></div>
+<p>Más adelante veremos que <strong>no debemos guardar la contraseña directamente</strong>, sino
+una versión cifrada llamada <code>passwordHash</code>.</p>
+<p>El modelo final se parecerá más a esto:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Identificador único del usuario</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Nombre completo</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Correo electrónico</td>
+</tr>
+<tr>
+<td><code>passwordHash</code></td>
+<td>Contraseña cifrada</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>Rol del usuario: <code>USER</code> o <code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td>Indica si el usuario está activo o desactivado</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>Fecha de creación</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>Fecha de última modificación</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">Ejemplo de usuario</span><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="w">  </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01T10:00:00.000Z&quot;</span><span class="p">,</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="w">  </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01T10:00:00.000Z&quot;</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="admonition danger">
+<p class="admonition-title">Importante</p>
+<p>La API nunca debería devolver la contraseña del usuario. Ni siquiera
+cifrada.</p>
+</div>
+<h2 id="roles-de-usuario">Roles de usuario<a class="headerlink" href="#roles-de-usuario" title="Permanent link">&para;</a></h2>
+<p>Nuestra API trabajará con dos roles principales:</p>
+<table>
+<thead>
+<tr>
+<th>Rol</th>
+<th>Qué representa</th>
+<th>Qué podrá hacer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>USER</code></td>
+<td>Usuario normal</td>
+<td>Iniciar sesión, ver su perfil, modificar algunos datos y cambiar su contraseña</td>
+</tr>
+<tr>
+<td><code>ADMIN</code></td>
+<td>Usuario administrador</td>
+<td>Listar usuarios, cambiar roles, desactivar usuarios, eliminar usuarios y gestionar el sistema</td>
+</tr>
+</tbody>
+</table>
+<p>La diferencia entre estos dos perfiles nos permitirá trabajar un concepto muy
+importante:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Autenticación ≠ Autorización
+</span></code></pre></div>
+<h2 id="autenticacion-y-autorizacion">Autenticación y autorización<a class="headerlink" href="#autenticacion-y-autorizacion" title="Permanent link">&para;</a></h2>
+<h3 id="autenticacion">Autenticación<a class="headerlink" href="#autenticacion" title="Permanent link">&para;</a></h3>
+<p>La autenticación consiste en comprobar quién eres.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Soy Laura y esta es mi contraseña.
+</span></code></pre></div>
+<p>La API comprueba si los datos son correctos. Si son correctos, permite iniciar
+sesión.</p>
+<h3 id="autorizacion">Autorización<a class="headerlink" href="#autorizacion" title="Permanent link">&para;</a></h3>
+<p>La autorización consiste en comprobar qué puedes hacer.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>Laura ha iniciado sesión, pero ¿puede listar todos los usuarios?
+</span></code></pre></div>
+<p>Si Laura tiene rol <code>USER</code>, probablemente no. Si tiene rol <code>ADMIN</code>, sí.</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Usuario envía email y contraseña] --&gt; B{¿Credenciales correctas?}
+    B --&gt;|No| C[Error 401]
+    B --&gt;|Sí| D[Usuario autenticado]
+    D --&gt; E{¿Tiene permisos?}
+    E --&gt;|No| F[Error 403]
+    E --&gt;|Sí| G[Acceso permitido]</code></pre>
+<h2 id="recorrido-del-reto">Recorrido del reto<a class="headerlink" href="#recorrido-del-reto" title="Permanent link">&para;</a></h2>
+<p>El reto irá creciendo poco a poco.</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Días 1-6: Fundamentos de API REST] --&gt; B[Días 7-11: CRUD en memoria]
+    B --&gt; C[Días 12-15: Validaciones y errores]
+    C --&gt; D[Días 16-22: Base de datos y persistencia]
+    D --&gt; E[Días 23-26: Arquitectura por capas]
+    E --&gt; F[Días 27-32: Seguridad y autenticación]
+    F --&gt; G[Días 33-35: Frontend Next.js e integración final]</code></pre>
+<p>No vamos a empezar directamente con seguridad, base de datos o Docker. Primero
+construiremos una base sencilla y luego la iremos mejorando.</p>
+<div class="language-text highlight"><span class="filename">Proceso</span><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Primero: servidor básico.
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>Después: rutas.
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>Después: usuarios en memoria.
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>Después: validaciones.
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>Después: base de datos.
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>Después: arquitectura.
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>Después: login y seguridad.
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>Finalmente: conexión con frontend.
+</span></code></pre></div>
+<h2 id="contrato-inicial-de-la-api">Contrato inicial de la API<a class="headerlink" href="#contrato-inicial-de-la-api" title="Permanent link">&para;</a></h2>
+<p>Aunque todavía no vamos a programar toda la API, sí vamos a definir qué
+esperamos que haga.</p>
+<p>Un <strong>contrato de API</strong> es un acuerdo sobre cómo se comunica el cliente con el
+servidor.</p>
+<p>Define cosas como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Qué rutas existen.
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Qué método HTTP usa cada ruta.
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Qué datos hay que enviar.
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Qué respuesta devuelve.
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>Qué errores pueden aparecer.
+</span></code></pre></div>
+<div class="language-text highlight"><span class="filename">Endpoint de ejemplo</span><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>POST /api/auth/register
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Datos que recibe</span><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="p">{</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Laura Martínez&quot;</span><span class="p">,</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;laura@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Respuesta esperada</span><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Laura Martínez&quot;</span><span class="p">,</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;laura@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cuándo podría ocurrir</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>Faltan datos</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td>El email ya existe</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Por qué importa</p>
+<p>Este concepto será especialmente importante cuando conectemos el frontend
+Next.js, porque el frontend necesitará que nuestra API responda de una
+forma concreta.</p>
+</div>
+<h2 id="codigos-de-estado">Códigos de estado<a class="headerlink" href="#codigos-de-estado" title="Permanent link">&para;</a></h2>
+<p>Durante el proyecto iremos utilizando códigos HTTP.</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>La petición se ha realizado correctamente</td>
+</tr>
+<tr>
+<td><code>201 Created</code></td>
+<td>Se ha creado un recurso</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>La petición está mal formada</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>No has iniciado sesión o el token no es válido</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>Has iniciado sesión, pero no tienes permisos</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>No se ha encontrado el recurso</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td>Hay un conflicto, por ejemplo un email duplicado</td>
+</tr>
+<tr>
+<td><code>500 Server Error</code></td>
+<td>Error interno del servidor</td>
+</tr>
+</tbody>
+</table>
+<p>No se trata de memorizarlos todos desde el primer día, pero sí de empezar a
+entender que una API debe comunicar bien qué ha pasado.</p>
+<h2 id="herramientas-que-utilizaremos">Herramientas que utilizaremos<a class="headerlink" href="#herramientas-que-utilizaremos" title="Permanent link">&para;</a></h2>
+<p>A lo largo del reto utilizaremos herramientas como:</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Uso aproximado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node.js</td>
+<td>Ejecutar JavaScript/TypeScript en backend</td>
+</tr>
+<tr>
+<td>Express</td>
+<td>Crear el servidor y las rutas</td>
+</tr>
+<tr>
+<td>TypeScript</td>
+<td>Añadir tipado al proyecto</td>
+</tr>
+<tr>
+<td>Postman o Thunder Client</td>
+<td>Probar peticiones HTTP</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td>Levantar servicios de forma reproducible</td>
+</tr>
+<tr>
+<td>PostgreSQL o MySQL</td>
+<td>Guardar datos</td>
+</tr>
+<tr>
+<td>ORM o acceso a datos</td>
+<td>Comunicarnos con la base de datos</td>
+</tr>
+<tr>
+<td>JWT</td>
+<td>Autenticación mediante tokens</td>
+</tr>
+<tr>
+<td>bcrypt</td>
+<td>Cifrar contraseñas</td>
+</tr>
+<tr>
+<td>Next.js</td>
+<td>Frontend real que consumirá la API</td>
+</tr>
+</tbody>
+</table>
+<p>No vamos a necesitarlas todas desde el primer día. Iremos introduciéndolas poco
+a poco cuando tengan sentido.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<p>En esta primera sesión todavía no vamos a programar la API completa. El objetivo
+es <strong>entender el reto y diseñar el producto</strong>.</p>
+<h3 id="paso-1-crear-el-documento-inicial">Paso 1: Crear el documento inicial<a class="headerlink" href="#paso-1-crear-el-documento-inicial" title="Permanent link">&para;</a></h3>
+<p>Crea un documento llamado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>UserManager API - Diseño inicial
+</span></code></pre></div>
+<p>Puede ser un documento de texto, Markdown o una página en vuestro cuaderno
+digital.</p>
+<h3 id="paso-2-escribir-una-descripcion-del-proyecto">Paso 2: Escribir una descripción del proyecto<a class="headerlink" href="#paso-2-escribir-una-descripcion-del-proyecto" title="Permanent link">&para;</a></h3>
+<p>Añade una descripción breve.</p>
+<div class="language-text highlight"><span class="filename">Ejemplo</span><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>UserManager API es una API REST para gestionar usuarios de una aplicación.
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Permitirá registrar usuarios, iniciar sesión, consultar perfiles, modificar
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>datos, gestionar roles y proteger rutas privadas mediante autenticación.
+</span></code></pre></div>
+<h3 id="paso-3-definir-los-recursos-principales">Paso 3: Definir los recursos principales<a class="headerlink" href="#paso-3-definir-los-recursos-principales" title="Permanent link">&para;</a></h3>
+<p>Añade los recursos principales de la API y explica brevemente para qué servirá
+cada uno.</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>Explicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/auth</code></td>
+<td>Servirá para registrar usuarios e iniciar sesión</td>
+</tr>
+<tr>
+<td><code>/users</code></td>
+<td>Servirá para consultar, crear, modificar y eliminar usuarios</td>
+</tr>
+<tr>
+<td><code>/health</code></td>
+<td>Servirá para comprobar que la API está funcionando</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-4-definir-el-modelo-de-usuario">Paso 4: Definir el modelo de usuario<a class="headerlink" href="#paso-4-definir-el-modelo-de-usuario" title="Permanent link">&para;</a></h3>
+<p>Copia el modelo inicial de usuario y escribe una breve explicación de cada
+campo.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>User
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>- id
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>- name
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>- email
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>- passwordHash
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>- role
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a>- isActive
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>- createdAt
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a>- updatedAt
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Explicación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Identificador único del usuario</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Nombre completo del usuario</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Correo electrónico del usuario</td>
+</tr>
+<tr>
+<td><code>passwordHash</code></td>
+<td>Contraseña cifrada</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>Rol del usuario, <code>USER</code> o <code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td>Indica si el usuario está activo o desactivado</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>Fecha de creación</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>Fecha de última modificación</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-5-disenar-los-endpoints-principales">Paso 5: Diseñar los endpoints principales<a class="headerlink" href="#paso-5-disenar-los-endpoints-principales" title="Permanent link">&para;</a></h3>
+<p>Copia esta tabla en tu documento:</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+<th>Acceso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/health</code></td>
+<td>Comprueba si la API funciona</td>
+<td>Público</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/register</code></td>
+<td>Registra un usuario</td>
+<td>Público</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/login</code></td>
+<td>Inicia sesión</td>
+<td>Público</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/me</code></td>
+<td>Consulta mi perfil</td>
+<td>Usuario autenticado</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users</code></td>
+<td>Lista todos los usuarios</td>
+<td><code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/:id</code></td>
+<td>Consulta un usuario por ID</td>
+<td><code>ADMIN</code> o propio usuario</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/:id</code></td>
+<td>Modifica un usuario</td>
+<td><code>ADMIN</code> o propio usuario</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/:id</code></td>
+<td>Elimina o desactiva un usuario</td>
+<td><code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/me/password</code></td>
+<td>Cambia mi contraseña</td>
+<td>Usuario autenticado</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/:id/role</code></td>
+<td>Cambia el rol de un usuario</td>
+<td><code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/:id/status</code></td>
+<td>Activa o desactiva un usuario</td>
+<td><code>ADMIN</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-6-dibujar-el-flujo-general">Paso 6: Dibujar el flujo general<a class="headerlink" href="#paso-6-dibujar-el-flujo-general" title="Permanent link">&para;</a></h3>
+<p>Añade este esquema a tu documento:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Frontend o Postman] --&gt; B[API REST]
+    B --&gt; C[Validaciones]
+    C --&gt; D[Lógica de negocio]
+    D --&gt; E[Base de datos]
+    E --&gt; D
+    D --&gt; B
+    B --&gt; A</code></pre>
+<p>Después, escribe una explicación breve:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>El cliente envía una petición a la API. La API valida los datos, aplica la
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>lógica necesaria, consulta o modifica la base de datos y devuelve una respuesta.
+</span></code></pre></div>
+<h3 id="paso-7-escribir-las-reglas-iniciales">Paso 7: Escribir las reglas iniciales<a class="headerlink" href="#paso-7-escribir-las-reglas-iniciales" title="Permanent link">&para;</a></h3>
+<p>Añade estas reglas:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>El email no se puede repetir.
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>La contraseña no se guarda en texto plano.
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>La API nunca devuelve passwordHash.
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>Un USER solo puede acceder a su propia información.
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>Un ADMIN puede gestionar usuarios.
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>Un usuario inactivo no puede iniciar sesión.
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<p>Ahora debéis completar una pequeña parte de diseño por vuestra cuenta.</p>
+<h3 id="tarea-libre-1-anadir-dos-reglas-mas">Tarea libre 1: Añadir dos reglas más<a class="headerlink" href="#tarea-libre-1-anadir-dos-reglas-mas" title="Permanent link">&para;</a></h3>
+<p>Añade dos reglas nuevas que creas que debería cumplir la API.</p>
+<div class="language-text highlight"><span class="filename">Ejemplos</span><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>La contraseña debe tener al menos 8 caracteres.
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>El nombre del usuario no puede estar vacío.
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>Un usuario no puede cambiar su propio rol.
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a>El email debe tener formato válido.
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>Un ADMIN no puede desactivarse a sí mismo.
+</span></code></pre></div>
+<h3 id="tarea-libre-2-proponer-dos-errores-posibles">Tarea libre 2: Proponer dos errores posibles<a class="headerlink" href="#tarea-libre-2-proponer-dos-errores-posibles" title="Permanent link">&para;</a></h3>
+<p>Escribe dos situaciones de error que podrían ocurrir en la API y qué código HTTP
+devolverías.</p>
+<div class="language-text highlight"><span class="filename">Ejemplo</span><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>Intentar registrar un email ya existente → 409 Conflict
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>Intentar consultar un usuario que no existe → 404 Not Found
+</span></code></pre></div>
+<h3 id="tarea-libre-3-disenar-una-respuesta-json">Tarea libre 3: Diseñar una respuesta JSON<a class="headerlink" href="#tarea-libre-3-disenar-una-respuesta-json" title="Permanent link">&para;</a></h3>
+<p>Diseña cómo debería responder la API cuando se consulta el perfil de un usuario.</p>
+<div class="language-text highlight"><span class="filename">Ruta</span><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>GET /api/users/me
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Ejemplo esperado</span><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="p">{</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Puedes añadir algún campo más si crees que tiene sentido, pero recuerda:</p>
+<div class="admonition warning">
+<p class="admonition-title">Regla</p>
+<p>Nunca se debe devolver la contraseña.</p>
+</div>
+<h3 id="tarea-libre-4-explicar-con-tus-palabras-que-es-una-api">Tarea libre 4: Explicar con tus palabras qué es una API<a class="headerlink" href="#tarea-libre-4-explicar-con-tus-palabras-que-es-una-api" title="Permanent link">&para;</a></h3>
+<p>Escribe una explicación breve, con tus palabras, respondiendo a esta pregunta:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>¿Qué es una API y para qué sirve?
+</span></code></pre></div>
+<p>No hace falta que sea una definición perfecta. Lo importante es que se entienda
+la idea.</p>
+<h2 id="entrega-recomendada-del-dia-1">Entrega recomendada del día 1<a class="headerlink" href="#entrega-recomendada-del-dia-1" title="Permanent link">&para;</a></h2>
+<p>Al terminar el día 1 deberías tener un documento con:</p>
+<ul>
+<li>Nombre del proyecto.</li>
+<li>Descripción de UserManager API.</li>
+<li>Recursos principales.</li>
+<li>Modelo de usuario.</li>
+<li>Tabla de endpoints.</li>
+<li>Esquema del funcionamiento general.</li>
+<li>Reglas iniciales.</li>
+<li>Dos reglas propuestas por ti.</li>
+<li>Dos posibles errores HTTP.</li>
+<li>Ejemplo de respuesta JSON.</li>
+<li>Explicación personal de qué es una API.</li>
+</ul>
+<p>Nombre recomendado del archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>dia-01-diseno-inicial-usermanager.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy no hemos empezado todavía a programar, pero hemos hecho algo igual de
+importante: <strong>definir qué vamos a construir</strong>.</p>
+<p>Antes de escribir código conviene saber:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Qué problema queremos resolver.
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>Qué recursos tendrá la API.
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>Qué rutas vamos a necesitar.
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>Qué datos tendrá cada usuario.
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>Qué reglas debe cumplir el sistema.
+</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>Qué errores pueden aparecer.
+</span></code></pre></div>
+<p>A partir del próximo día empezaremos a preparar el proyecto y crear el primer
+servidor.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Antes de programar una API, hay que entender qué producto queremos
+construir y cómo se van a comunicar las aplicaciones con ella.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="./.." class="md-footer__link md-footer__link--prev" aria-label="Anterior: Reto 35 días">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Reto 35 días
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>
