@@ -47,6 +47,15 @@ Copyright &copy; 2026 The authors
 nav = [
   { "Reto 35 días" = "index.md" },
   { "Día 1" = "dia1.md" },
+  { "Día 2" = "dia2.md" },
+  { "Día 3" = "dia3.md" },
+  { "Día 4" = "dia4.md" },
+  { "Día 5" = "dia5.md" },
+  { "Día 6" = "dia6.md" },
+  { "Día 7" = "dia7.md" },
+  { "Día 8" = "dia8.md" },
+  { "Día 9" = "dia9.md" },
+  { "Día 10" = "dia10.md" },
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
