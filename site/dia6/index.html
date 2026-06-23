@@ -1,0 +1,2389 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 35 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia5/">
+      
+      
+        <link rel="next" href="../dia7/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 6: Cliente HTTP y depuración - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-6-cliente-http-y-depuracion" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 6: Cliente HTTP y depuración
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-cliente-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es un cliente HTTP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-no-basta-con-el-navegador" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Por qué no basta con el navegador
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thunder-client-y-postman" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Thunder Client y Postman
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thunder Client y Postman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#thunder-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Thunder Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postman" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Postman
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partes-que-debemos-revisar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partes que debemos revisar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-codes-y-depuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Status codes y depuración
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-frecuentes-al-probar-apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Errores frecuentes al probar APIs
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-pensar-cuando-algo-falla" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo pensar cuando algo falla
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#colecciones-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Colecciones de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentar-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Documentar pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-crear-una-coleccion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Crear una colección general
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-anadir-peticiones-basicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Añadir peticiones básicas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-anadir-peticiones-con-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Añadir peticiones con body
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-anadir-peticiones-de-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Añadir peticiones de debug
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-crear-una-ruta-temporal-para-depuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Crear una ruta temporal para depuración
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-provocar-un-error-de-ruta-inexistente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Provocar un error de ruta inexistente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-provocar-un-error-de-metodo-incorrecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Provocar un error de método incorrecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-provocar-un-error-de-json-mal-formado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Provocar un error de JSON mal formado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-anadir-logs-temporales-en-el-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Añadir logs temporales en el servidor
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-crear-el-documento-del-dia-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Crear el documento del día 6
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-anadir-tabla-de-pruebas-realizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Añadir tabla de pruebas realizadas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-crear-una-peticion-con-header-personalizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Crear una petición con header personalizado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-crear-una-prueba-de-actualizacion-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Crear una prueba de actualización completa
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-una-pequena-guia-de-depuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear una pequeña guía de depuración
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-comparar-navegador-y-cliente-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Comparar navegador y cliente HTTP
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 6
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-cliente-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es un cliente HTTP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-no-basta-con-el-navegador" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Por qué no basta con el navegador
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#thunder-client-y-postman" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Thunder Client y Postman
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Thunder Client y Postman">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#thunder-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Thunder Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#postman" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Postman
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#partes-que-debemos-revisar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Partes que debemos revisar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#status-codes-y-depuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Status codes y depuración
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#errores-frecuentes-al-probar-apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Errores frecuentes al probar APIs
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-pensar-cuando-algo-falla" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo pensar cuando algo falla
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#colecciones-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Colecciones de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentar-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Documentar pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-crear-una-coleccion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Crear una colección general
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-anadir-peticiones-basicas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Añadir peticiones básicas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-anadir-peticiones-con-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Añadir peticiones con body
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-anadir-peticiones-de-debug" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Añadir peticiones de debug
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-crear-una-ruta-temporal-para-depuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Crear una ruta temporal para depuración
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-provocar-un-error-de-ruta-inexistente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Provocar un error de ruta inexistente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-provocar-un-error-de-metodo-incorrecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Provocar un error de método incorrecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-provocar-un-error-de-json-mal-formado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Provocar un error de JSON mal formado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-anadir-logs-temporales-en-el-servidor" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Añadir logs temporales en el servidor
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-crear-el-documento-del-dia-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Crear el documento del día 6
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-anadir-tabla-de-pruebas-realizadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Añadir tabla de pruebas realizadas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-crear-una-peticion-con-header-personalizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Crear una petición con header personalizado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-crear-una-prueba-de-actualizacion-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Crear una prueba de actualización completa
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-una-pequena-guia-de-depuracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear una pequeña guía de depuración
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-comparar-navegador-y-cliente-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Comparar navegador y cliente HTTP
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 6
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-6-cliente-http-y-depuracion">Día 6: Cliente HTTP y depuración<a class="headerlink" href="#dia-6-cliente-http-y-depuracion" title="Permanent link">&para;</a></h1>
+<p>En los días anteriores hemos creado la base de nuestra API y hemos empezado a
+trabajar con rutas, métodos HTTP, JSON, body, params, query params y headers.</p>
+<p>Ya tenemos varias rutas funcionando, como:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">GET /api/health</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="err">GET /api/users</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="err">POST /api/users</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="err">PATCH /api/users/:id</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="err">DELETE /api/users/:id</span>
+</span></code></pre></div>
+<p>Además, hemos creado rutas temporales de debug para entender cómo viajan los
+datos dentro de una petición HTTP.</p>
+<p>Hoy vamos a centrarnos en una habilidad muy importante para cualquier persona
+que desarrolle backend: <strong>probar y depurar peticiones HTTP correctamente</strong>.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Objetivo del día</p>
+<p>Aprender a probar la API con Thunder Client o Postman, organizar
+colecciones de peticiones y depurar errores habituales sin cambiar código al
+azar.</p>
+</div>
+<p>Cuando una API no funciona, no siempre el problema está en el código. A veces el
+error está en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>La URL
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>El método HTTP
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>El body
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Los headers
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>El puerto
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>El servidor apagado
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>El formato JSON
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>El Content-Type
+</span></code></pre></div>
+<p>Por eso, antes de empezar con el CRUD real de usuarios, vamos a dedicar este día
+a aprender a probar bien nuestra API.</p>
+<h2 id="que-vamos-a-trabajar-hoy">Qué vamos a trabajar hoy<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cliente HTTP</td>
+<td>Enviar peticiones a una API</td>
+</tr>
+<tr>
+<td>Colecciones de peticiones</td>
+<td>Organizar pruebas reutilizables</td>
+</tr>
+<tr>
+<td>Request</td>
+<td>Revisar qué enviamos</td>
+</tr>
+<tr>
+<td>Response</td>
+<td>Revisar qué responde la API</td>
+</tr>
+<tr>
+<td>Status code</td>
+<td>Interpretar el resultado de la petición</td>
+</tr>
+<tr>
+<td>Headers</td>
+<td>Probar metadatos y tokens</td>
+</tr>
+<tr>
+<td>Body JSON</td>
+<td>Enviar datos al servidor</td>
+</tr>
+<tr>
+<td>Errores frecuentes</td>
+<td>Reconocer fallos comunes</td>
+</tr>
+<tr>
+<td>Depuración</td>
+<td>Seguir un orden para encontrar el problema</td>
+</tr>
+<tr>
+<td>Documentación de pruebas</td>
+<td>Registrar qué se ha probado</td>
+</tr>
+</tbody>
+</table>
+<p>La pregunta central de hoy será:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Cuando una petición falla, ¿cómo puedo saber qué está fallando?
+</span></code></pre></div>
+<h2 id="que-es-un-cliente-http">Qué es un cliente HTTP<a class="headerlink" href="#que-es-un-cliente-http" title="Permanent link">&para;</a></h2>
+<p>Un <strong>cliente HTTP</strong> es una herramienta que nos permite enviar peticiones a una
+API y analizar la respuesta.</p>
+<p>Cuando usamos una API, normalmente hay un cliente y un servidor.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Cliente HTTP"] --&gt; B["Petición HTTP"]
+    B --&gt; C["API REST"]
+    C --&gt; D["Respuesta HTTP"]
+    D --&gt; A</code></pre>
+<p>Durante el desarrollo, el cliente puede ser:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Un navegador
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>Thunder Client
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>Postman
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>Un frontend
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>Una app móvil
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>Otro backend
+</span></code></pre></div>
+<p>En nuestro caso, durante estas primeras fases usaremos principalmente <strong>Thunder
+Client</strong> o <strong>Postman</strong>.</p>
+<h2 id="por-que-no-basta-con-el-navegador">Por qué no basta con el navegador<a class="headerlink" href="#por-que-no-basta-con-el-navegador" title="Permanent link">&para;</a></h2>
+<p>El navegador nos sirve para probar algunas rutas sencillas, por ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="err">GET http://localhost:3000/api/health</span>
+</span></code></pre></div>
+<p>Pero se queda corto cuando necesitamos probar cosas más completas.</p>
+<table>
+<thead>
+<tr>
+<th>Necesidad</th>
+<th>Por qué el navegador se queda corto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code> con body JSON</td>
+<td>No es cómodo enviar cuerpos JSON</td>
+</tr>
+<tr>
+<td><code>PATCH</code> con datos</td>
+<td>No se puede preparar fácilmente la petición</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td>No hay una interfaz directa para probarlo</td>
+</tr>
+<tr>
+<td>Headers personalizados</td>
+<td>No se añaden cómodamente</td>
+</tr>
+<tr>
+<td><code>Authorization: Bearer token</code></td>
+<td>Necesitamos configurar headers</td>
+</tr>
+<tr>
+<td>Colecciones de pruebas</td>
+<td>El navegador no organiza pruebas</td>
+</tr>
+</tbody>
+</table>
+<p>Por eso usamos herramientas como Thunder Client o Postman. Estas herramientas
+nos permiten construir peticiones completas y ver claramente la respuesta.</p>
+<h2 id="thunder-client-y-postman">Thunder Client y Postman<a class="headerlink" href="#thunder-client-y-postman" title="Permanent link">&para;</a></h2>
+<h3 id="thunder-client">Thunder Client<a class="headerlink" href="#thunder-client" title="Permanent link">&para;</a></h3>
+<p>Thunder Client es una extensión de Visual Studio Code que permite probar APIs
+sin salir del editor.</p>
+<p>Es cómodo porque:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Está integrado en VS Code.
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>Es ligero.
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>Permite guardar colecciones.
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>Permite enviar body JSON.
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>Permite añadir headers.
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>Permite revisar status code y respuesta.
+</span></code></pre></div>
+<h3 id="postman">Postman<a class="headerlink" href="#postman" title="Permanent link">&para;</a></h3>
+<p>Postman es una herramienta muy utilizada en el mundo profesional para probar y
+documentar APIs.</p>
+<p>Permite:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Crear colecciones.
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>Guardar entornos.
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>Enviar peticiones complejas.
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>Documentar APIs.
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Compartir pruebas con otros desarrolladores.
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Automatizar algunas comprobaciones.
+</span></code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Lo importante</p>
+<p>Para este reto podéis usar cualquiera de las dos herramientas. Lo importante
+no es la herramienta concreta, sino aprender a probar bien una API.</p>
+</div>
+<h2 id="partes-que-debemos-revisar">Partes que debemos revisar<a class="headerlink" href="#partes-que-debemos-revisar" title="Permanent link">&para;</a></h2>
+<p>Cuando una petición no funciona, tenemos que revisar varias partes.</p>
+<pre class="mermaid"><code>flowchart TD
+    A["Petición falla"] --&gt; B["¿Servidor encendido?"]
+    B --&gt; C["¿Puerto correcto?"]
+    C --&gt; D["¿Método correcto?"]
+    D --&gt; E["¿Ruta correcta?"]
+    E --&gt; F["¿Body correcto?"]
+    F --&gt; G["¿Headers correctos?"]
+    G --&gt; H["¿Respuesta esperada?"]</code></pre>
+<p>Una petición HTTP tiene varias zonas importantes:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Método
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>URL
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>Headers
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>Body
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>Status code de respuesta
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>Body de respuesta
+</span></code></pre></div>
+<div class="language-http highlight"><span class="filename">Petición</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="err">POST http://localhost:3000/api/users</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="err">Content-Type: application/json</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Respuesta</span><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario recibido para crear&quot;</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-10-8"><a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="status-codes-y-depuracion">Status codes y depuración<a class="headerlink" href="#status-codes-y-depuracion" title="Permanent link">&para;</a></h2>
+<p>Los códigos de estado nos ayudan a entender qué ha pasado.</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>La petición ha ido bien</td>
+</tr>
+<tr>
+<td><code>201 Created</code></td>
+<td>Se ha creado un recurso</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>La petición está mal formada</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Falta autenticación</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>No hay permisos</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>La ruta o recurso no existe</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td>Hay un conflicto, como un email duplicado</td>
+</tr>
+<tr>
+<td><code>500 Server Error</code></td>
+<td>Ha fallado el servidor</td>
+</tr>
+</tbody>
+</table>
+<p>Durante estos primeros días veremos sobre todo <code>200</code>, <code>201</code> y <code>404</code>. Más
+adelante empezaremos a provocar y controlar errores como <code>400</code>, <code>401</code>, <code>403</code>,
+<code>409</code> y <code>500</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Buena práctica</p>
+<p>No mires solo el JSON de respuesta. Revisa siempre también el <strong>status
+code</strong>.</p>
+</div>
+<h2 id="errores-frecuentes-al-probar-apis">Errores frecuentes al probar APIs<a class="headerlink" href="#errores-frecuentes-al-probar-apis" title="Permanent link">&para;</a></h2>
+<p>Cuando una petición falla, estos son algunos errores muy habituales:</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Ejemplo</th>
+<th>Qué revisar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Servidor apagado</td>
+<td><code>http://localhost:3000/api/health</code> no responde</td>
+<td>Ejecutar <code>npm run dev</code></td>
+</tr>
+<tr>
+<td>Puerto incorrecto</td>
+<td>Probar <code>localhost:3001</code> cuando la API usa <code>3000</code></td>
+<td>Revisar <code>const PORT = 3000</code></td>
+</tr>
+<tr>
+<td>Ruta mal escrita</td>
+<td><code>/api/healt</code> en lugar de <code>/api/health</code></td>
+<td>Revisar URL exacta</td>
+</tr>
+<tr>
+<td>Método incorrecto</td>
+<td>Enviar <code>GET /api/users</code> cuando quieres crear</td>
+<td>Revisar método HTTP</td>
+</tr>
+<tr>
+<td>Body mal configurado</td>
+<td>Enviar texto plano en lugar de JSON</td>
+<td>Revisar body y <code>Content-Type</code></td>
+</tr>
+<tr>
+<td>Falta <code>express.json()</code></td>
+<td><code>req.body</code> llega vacío o mal</td>
+<td>Revisar <code>app.use(express.json())</code></td>
+</tr>
+<tr>
+<td>Header incorrecto</td>
+<td><code>Authorization</code> mal escrito</td>
+<td>Revisar nombre y valor del header</td>
+</tr>
+</tbody>
+</table>
+<div class="language-json highlight"><span class="filename">Body JSON correcto</span><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="como-pensar-cuando-algo-falla">Cómo pensar cuando algo falla<a class="headerlink" href="#como-pensar-cuando-algo-falla" title="Permanent link">&para;</a></h2>
+<p>Cuando algo falla, no hay que cambiar código al azar.</p>
+<p>Conviene seguir un orden:</p>
+<ol>
+<li>¿Está arrancado el servidor?</li>
+<li>¿Estoy usando el puerto correcto?</li>
+<li>¿La ruta existe?</li>
+<li>¿Estoy usando el método correcto?</li>
+<li>¿El body está en JSON?</li>
+<li>¿Los headers están bien?</li>
+<li>¿Qué status code devuelve?</li>
+<li>¿Qué mensaje aparece en la respuesta?</li>
+<li>¿Qué aparece en la terminal?</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">La terminal cuenta</p>
+<p>La terminal también es muy importante. Muchas veces el error real aparece
+allí.</p>
+</div>
+<h2 id="colecciones-de-pruebas">Colecciones de pruebas<a class="headerlink" href="#colecciones-de-pruebas" title="Permanent link">&para;</a></h2>
+<p>Una colección es un grupo de peticiones guardadas.</p>
+<p>En lugar de escribir cada vez las URLs desde cero, podemos guardar nuestras
+pruebas organizadas.</p>
+<div class="language-text highlight"><span class="filename">Ejemplo de organización</span><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>UserManager API
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  Día 3
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    GET /
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    GET /api/health
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    GET /api/ping
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>  Día 4
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    GET /api/users
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    GET /api/users/1
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    POST /api/users
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    PATCH /api/users/1
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    DELETE /api/users/1
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>  Día 5
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    POST /api/debug/body
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    GET /api/debug/params/25
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>    GET /api/debug/query?role=ADMIN
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    GET /api/debug/headers
+</span></code></pre></div>
+<p>Esto nos permitirá volver a probar rápidamente la API cuando hagamos cambios.</p>
+<h2 id="documentar-pruebas">Documentar pruebas<a class="headerlink" href="#documentar-pruebas" title="Permanent link">&para;</a></h2>
+<p>No basta con probar una vez y olvidarse.</p>
+<p>Durante este reto iremos documentando las pruebas en los archivos de <code>docs/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Petición</th>
+<th>Método</th>
+<th style="text-align: right;">Código esperado</th>
+<th style="text-align: right;">Código obtenido</th>
+<th>Observaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/health</code></td>
+<td><code>GET</code></td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">200</td>
+<td>Correcto</td>
+</tr>
+<tr>
+<td><code>/api/users</code></td>
+<td><code>GET</code></td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;">200</td>
+<td>Devuelve array vacío</td>
+</tr>
+<tr>
+<td><code>/api/no-existe</code></td>
+<td><code>GET</code></td>
+<td style="text-align: right;">404</td>
+<td style="text-align: right;">404</td>
+<td>Ruta inexistente</td>
+</tr>
+</tbody>
+</table>
+<p>Esto nos ayuda a ver el progreso y a detectar errores.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre el repositorio:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>usermanager-api
+</span></code></pre></div>
+<p>Entra en la carpeta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Arranca el servidor:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Comprueba que responde:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="err">GET http://localhost:3000/api/health</span>
+</span></code></pre></div>
+<h3 id="paso-2-crear-una-coleccion-general">Paso 2: Crear una colección general<a class="headerlink" href="#paso-2-crear-una-coleccion-general" title="Permanent link">&para;</a></h3>
+<p>En Thunder Client o Postman, crea una colección llamada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>UserManager API
+</span></code></pre></div>
+<p>Dentro de esa colección puedes crear carpetas o secciones por día:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>Día 3 - Primer endpoint
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>Día 4 - Métodos HTTP
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>Día 5 - Body params headers
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>Día 6 - Depuración
+</span></code></pre></div>
+<p>La organización no tiene que ser perfecta, pero sí clara.</p>
+<h3 id="paso-3-anadir-peticiones-basicas">Paso 3: Añadir peticiones básicas<a class="headerlink" href="#paso-3-anadir-peticiones-basicas" title="Permanent link">&para;</a></h3>
+<p>Añade estas peticiones a la colección:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="err">GET http://localhost:3000/</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="err">GET http://localhost:3000/api/health</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="err">GET http://localhost:3000/api/users</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="err">GET http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Comprueba que todas responden correctamente y completa una tabla con los códigos
+obtenidos.</p>
+<h3 id="paso-4-anadir-peticiones-con-body">Paso 4: Añadir peticiones con body<a class="headerlink" href="#paso-4-anadir-peticiones-con-body" title="Permanent link">&para;</a></h3>
+<p>Añade esta petición:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="err">POST http://localhost:3000/api/users</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body JSON</span><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Comprueba que la API devuelve los datos recibidos.</p>
+<p>Después añade:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="err">PATCH http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body JSON</span><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">{</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Actualizada&quot;</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Comprueba que la API devuelve el ID y los cambios recibidos.</p>
+<h3 id="paso-5-anadir-peticiones-de-debug">Paso 5: Añadir peticiones de debug<a class="headerlink" href="#paso-5-anadir-peticiones-de-debug" title="Permanent link">&para;</a></h3>
+<p>Añade estas peticiones del día anterior:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="err">POST   http://localhost:3000/api/debug/body</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="err">GET    http://localhost:3000/api/debug/params/25</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="err">GET    http://localhost:3000/api/debug/query?role=ADMIN&amp;isActive=true</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="err">GET    http://localhost:3000/api/debug/headers</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="err">PATCH  http://localhost:3000/api/debug/users/7?notify=true</span>
+</span></code></pre></div>
+<p>En la petición de headers añade:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="err">Authorization: Bearer token-de-prueba</span>
+</span></code></pre></div>
+<p>En la petición combinada añade también body:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p">{</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Nombre actualizado&quot;</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="paso-6-crear-una-ruta-temporal-para-depuracion">Paso 6: Crear una ruta temporal para depuración<a class="headerlink" href="#paso-6-crear-una-ruta-temporal-para-depuracion" title="Permanent link">&para;</a></h3>
+<p>Añade en <code>src/server.ts</code> una ruta temporal:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/api/debug/request&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Información completa de la petición&quot;</span><span class="p">,</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">    </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">req.method</span><span class="p">,</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">req.path</span><span class="p">,</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a><span class="w">    </span><span class="nx">params</span><span class="o">:</span><span class="w"> </span><span class="kt">req.params</span><span class="p">,</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a><span class="w">    </span><span class="nx">query</span><span class="o">:</span><span class="w"> </span><span class="kt">req.query</span><span class="p">,</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a><span class="w">    </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="kt">req.headers</span><span class="p">,</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a><span class="w">    </span><span class="nx">body</span><span class="o">:</span><span class="w"> </span><span class="kt">req.body</span>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-27-11"><a id="__codelineno-27-11" name="__codelineno-27-11" href="#__codelineno-27-11"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Esta ruta nos permite ver en una sola respuesta mucha información de la petición.</p>
+<div class="language-http highlight"><span class="filename">Prueba</span><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="err">POST http://localhost:3000/api/debug/request?source=thunder</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="err">x-client-name: thunder-client</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="p">{</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">&quot;example&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;datos de prueba&quot;</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Respuesta esperada</span><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="p">{</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Información completa de la petición&quot;</span><span class="p">,</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;POST&quot;</span><span class="p">,</span>
+</span><span id="__span-30-4"><a id="__codelineno-30-4" name="__codelineno-30-4" href="#__codelineno-30-4"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/debug/request&quot;</span><span class="p">,</span>
+</span><span id="__span-30-5"><a id="__codelineno-30-5" name="__codelineno-30-5" href="#__codelineno-30-5"></a><span class="w">  </span><span class="nt">&quot;params&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-30-6"><a id="__codelineno-30-6" name="__codelineno-30-6" href="#__codelineno-30-6"></a><span class="w">  </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-30-7"><a id="__codelineno-30-7" name="__codelineno-30-7" href="#__codelineno-30-7"></a><span class="w">    </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;thunder&quot;</span>
+</span><span id="__span-30-8"><a id="__codelineno-30-8" name="__codelineno-30-8" href="#__codelineno-30-8"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-30-9"><a id="__codelineno-30-9" name="__codelineno-30-9" href="#__codelineno-30-9"></a><span class="w">  </span><span class="nt">&quot;headers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-30-10"><a id="__codelineno-30-10" name="__codelineno-30-10" href="#__codelineno-30-10"></a><span class="w">    </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-30-11"><a id="__codelineno-30-11" name="__codelineno-30-11" href="#__codelineno-30-11"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-30-12"><a id="__codelineno-30-12" name="__codelineno-30-12" href="#__codelineno-30-12"></a><span class="w">  </span><span class="nt">&quot;body&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-30-13"><a id="__codelineno-30-13" name="__codelineno-30-13" href="#__codelineno-30-13"></a><span class="w">    </span><span class="nt">&quot;example&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;datos de prueba&quot;</span>
+</span><span id="__span-30-14"><a id="__codelineno-30-14" name="__codelineno-30-14" href="#__codelineno-30-14"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-30-15"><a id="__codelineno-30-15" name="__codelineno-30-15" href="#__codelineno-30-15"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>No hace falta copiar todos los headers en la documentación. Solo entender que
+aparecen.</p>
+<h3 id="paso-7-provocar-un-error-de-ruta-inexistente">Paso 7: Provocar un error de ruta inexistente<a class="headerlink" href="#paso-7-provocar-un-error-de-ruta-inexistente" title="Permanent link">&para;</a></h3>
+<p>Prueba esta petición:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="err">GET http://localhost:3000/api/ruta-inventada</span>
+</span></code></pre></div>
+<p>Anota:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Código obtenido
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>Respuesta obtenida
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Qué crees que significa
+</span></code></pre></div>
+<p>Todavía no tenemos un middleware <code>404</code> personalizado, así que Express responderá
+de forma básica.</p>
+<h3 id="paso-8-provocar-un-error-de-metodo-incorrecto">Paso 8: Provocar un error de método incorrecto<a class="headerlink" href="#paso-8-provocar-un-error-de-metodo-incorrecto" title="Permanent link">&para;</a></h3>
+<p>Prueba esta petición:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="err">POST http://localhost:3000/api/health</span>
+</span></code></pre></div>
+<p>Recuerda que nosotros hemos creado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="err">GET /api/health</span>
+</span></code></pre></div>
+<p>Pero no hemos creado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="err">POST /api/health</span>
+</span></code></pre></div>
+<p>Anota qué ocurre. Esto nos ayuda a entender que método y ruta funcionan juntos.</p>
+<h3 id="paso-9-provocar-un-error-de-json-mal-formado">Paso 9: Provocar un error de JSON mal formado<a class="headerlink" href="#paso-9-provocar-un-error-de-json-mal-formado" title="Permanent link">&para;</a></h3>
+<p>En Thunder Client o Postman, prueba a enviar un JSON incorrecto en una petición
+<code>POST</code>.</p>
+<div class="language-json highlight"><span class="filename">JSON incorrecto</span><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="p">{</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana&quot;</span><span class="p">,</span>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Ese JSON tiene un error: sobra la coma final.</p>
+<p>Comprueba qué respuesta aparece y mira también la terminal. La idea no es dejar
+el proyecto roto, sino aprender a reconocer errores de formato.</p>
+<p>Después corrige el JSON.</p>
+<h3 id="paso-10-anadir-logs-temporales-en-el-servidor">Paso 10: Añadir logs temporales en el servidor<a class="headerlink" href="#paso-10-anadir-logs-temporales-en-el-servidor" title="Permanent link">&para;</a></h3>
+<p>En la ruta:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">userData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">201</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario recibido para crear&quot;</span><span class="p">,</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">userData</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Añade un <code>console.log</code> temporal:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">userData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Body recibido en POST /api/users:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">userData</span><span class="p">);</span>
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>
+</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">201</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario recibido para crear&quot;</span><span class="p">,</span>
+</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">userData</span>
+</span><span id="__span-38-9"><a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-38-10"><a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Vuelve a probar:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="err">POST http://localhost:3000/api/users</span>
+</span></code></pre></div>
+<p>Y observa la terminal.</p>
+<div class="admonition note">
+<p class="admonition-title">Depurar no es solo mirar la respuesta</p>
+<p>También podemos usar la terminal para comprobar qué está llegando al
+servidor.</p>
+</div>
+<h3 id="paso-11-crear-el-documento-del-dia-6">Paso 11: Crear el documento del día 6<a class="headerlink" href="#paso-11-crear-el-documento-del-dia-6" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea un archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>docs/dia-06-cliente-http-depuracion.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><span class="filename">docs/dia-06-cliente-http-depuracion.md</span><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="gh"># Día 6: Cliente HTTP y depuración</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>
+</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="k">-</span><span class="w"> </span>He organizado una colección de pruebas de la API.
+</span><span id="__span-41-6"><a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="k">-</span><span class="w"> </span>He probado rutas básicas.
+</span><span id="__span-41-7"><a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="k">-</span><span class="w"> </span>He probado peticiones con body.
+</span><span id="__span-41-8"><a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a><span class="k">-</span><span class="w"> </span>He probado peticiones con params, query params y headers.
+</span><span id="__span-41-9"><a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a><span class="k">-</span><span class="w"> </span>He creado una ruta temporal de depuración.
+</span><span id="__span-41-10"><a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a><span class="k">-</span><span class="w"> </span>He provocado errores controlados para entender qué ocurre.
+</span><span id="__span-41-11"><a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a><span class="k">-</span><span class="w"> </span>He revisado respuestas y códigos de estado.
+</span><span id="__span-41-12"><a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a>
+</span><span id="__span-41-13"><a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a><span class="gu">## Colección creada</span>
+</span><span id="__span-41-14"><a id="__codelineno-41-14" name="__codelineno-41-14" href="#__codelineno-41-14"></a>
+</span><span id="__span-41-15"><a id="__codelineno-41-15" name="__codelineno-41-15" href="#__codelineno-41-15"></a>Nombre de la colección:
+</span><span id="__span-41-16"><a id="__codelineno-41-16" name="__codelineno-41-16" href="#__codelineno-41-16"></a>
+</span><span id="__span-41-17"><a id="__codelineno-41-17" name="__codelineno-41-17" href="#__codelineno-41-17"></a><span class="sb">```text</span>
+</span><span id="__span-41-18"><a id="__codelineno-41-18" name="__codelineno-41-18" href="#__codelineno-41-18"></a>UserManager API
+</span><span id="__span-41-19"><a id="__codelineno-41-19" name="__codelineno-41-19" href="#__codelineno-41-19"></a><span class="sb">```</span>
+</span><span id="__span-41-20"><a id="__codelineno-41-20" name="__codelineno-41-20" href="#__codelineno-41-20"></a>
+</span><span id="__span-41-21"><a id="__codelineno-41-21" name="__codelineno-41-21" href="#__codelineno-41-21"></a><span class="gu">## Ruta temporal de depuración</span>
+</span><span id="__span-41-22"><a id="__codelineno-41-22" name="__codelineno-41-22" href="#__codelineno-41-22"></a>
+</span><span id="__span-41-23"><a id="__codelineno-41-23" name="__codelineno-41-23" href="#__codelineno-41-23"></a><span class="sb">```http</span>
+</span><span id="__span-41-24"><a id="__codelineno-41-24" name="__codelineno-41-24" href="#__codelineno-41-24"></a><span class="err">POST /api/debug/request</span>
+</span><span id="__span-41-25"><a id="__codelineno-41-25" name="__codelineno-41-25" href="#__codelineno-41-25"></a><span class="sb">```</span>
+</span><span id="__span-41-26"><a id="__codelineno-41-26" name="__codelineno-41-26" href="#__codelineno-41-26"></a>
+</span><span id="__span-41-27"><a id="__codelineno-41-27" name="__codelineno-41-27" href="#__codelineno-41-27"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-41-28"><a id="__codelineno-41-28" name="__codelineno-41-28" href="#__codelineno-41-28"></a>
+</span><span id="__span-41-29"><a id="__codelineno-41-29" name="__codelineno-41-29" href="#__codelineno-41-29"></a>Un cliente HTTP sirve para enviar peticiones a una API y analizar las
+</span><span id="__span-41-30"><a id="__codelineno-41-30" name="__codelineno-41-30" href="#__codelineno-41-30"></a>respuestas. Es útil porque permite probar métodos, headers, body, params y
+</span><span id="__span-41-31"><a id="__codelineno-41-31" name="__codelineno-41-31" href="#__codelineno-41-31"></a>códigos de estado de una forma más completa que el navegador.
+</span></code></pre></div>
+<h3 id="paso-12-anadir-tabla-de-pruebas-realizadas">Paso 12: Añadir tabla de pruebas realizadas<a class="headerlink" href="#paso-12-anadir-tabla-de-pruebas-realizadas" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 6, añade una tabla como esta:</p>
+<table>
+<thead>
+<tr>
+<th>Petición</th>
+<th>Qué prueba</th>
+<th style="text-align: right;">Código esperado</th>
+<th style="text-align: right;">Código obtenido</th>
+<th>Observaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/health</code></td>
+<td>Health endpoint</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>GET /api/users</code></td>
+<td>Listado simulado</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td>Body JSON</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/1</code></td>
+<td>Params + body</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST /api/debug/request?source=thunder</code></td>
+<td>Request completa</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>GET /api/ruta-inventada</code></td>
+<td>Ruta inexistente</td>
+<td style="text-align: right;">404</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST /api/health</code></td>
+<td>Método incorrecto</td>
+<td style="text-align: right;">404</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Completa los resultados obtenidos según tus pruebas.</p>
+<h3 id="paso-13-actualizar-el-readme">Paso 13: Actualizar el README<a class="headerlink" href="#paso-13-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace al documento del día 6:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-42-7"><a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-42-8"><a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span></code></pre></div>
+<h3 id="paso-14-guardar-cambios-en-git">Paso 14: Guardar cambios en Git<a class="headerlink" href="#paso-14-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 6 - Organizar pruebas y depurar peticiones&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<p>Ahora toca practicar sin seguir exactamente la guía.</p>
+<h3 id="tarea-libre-1-crear-una-peticion-con-header-personalizado">Tarea libre 1: Crear una petición con header personalizado<a class="headerlink" href="#tarea-libre-1-crear-una-peticion-con-header-personalizado" title="Permanent link">&para;</a></h3>
+<p>Crea una petición a:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="err">POST /api/debug/request</span>
+</span></code></pre></div>
+<p>Añade un header personalizado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="err">x-student-name: tu-nombre</span>
+</span></code></pre></div>
+<p>Añade un body JSON con información inventada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="p">{</span>
+</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Probando headers personalizados&quot;</span>
+</span><span id="__span-49-3"><a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>En el documento del día 6, anota dónde aparece ese header en la respuesta.</p>
+<h3 id="tarea-libre-2-crear-una-prueba-de-actualizacion-completa">Tarea libre 2: Crear una prueba de actualización completa<a class="headerlink" href="#tarea-libre-2-crear-una-prueba-de-actualizacion-completa" title="Permanent link">&para;</a></h3>
+<p>Crea una petición:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="err">PATCH /api/users/5</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="p">{</span>
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Modificado&quot;</span><span class="p">,</span>
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;modificado@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-51-4"><a id="__codelineno-51-4" name="__codelineno-51-4" href="#__codelineno-51-4"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-51-5"><a id="__codelineno-51-5" name="__codelineno-51-5" href="#__codelineno-51-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Anota:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>Qué viaja en params.
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>Qué viaja en body.
+</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>Qué devuelve la API.
+</span></code></pre></div>
+<h3 id="tarea-libre-3-crear-una-pequena-guia-de-depuracion">Tarea libre 3: Crear una pequeña guía de depuración<a class="headerlink" href="#tarea-libre-3-crear-una-pequena-guia-de-depuracion" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 6, añade una sección llamada:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="gu">## Mi guía para depurar una petición</span>
+</span></code></pre></div>
+<p>Escribe una lista ordenada con los pasos que seguirías cuando una petición no
+funciona.</p>
+<div class="language-text highlight"><span class="filename">Ejemplo</span><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>1. Comprobar que el servidor está arrancado.
+</span><span id="__span-54-2"><a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>2. Revisar el método HTTP.
+</span><span id="__span-54-3"><a id="__codelineno-54-3" name="__codelineno-54-3" href="#__codelineno-54-3"></a>3. Revisar la URL.
+</span><span id="__span-54-4"><a id="__codelineno-54-4" name="__codelineno-54-4" href="#__codelineno-54-4"></a>4. Revisar el body.
+</span><span id="__span-54-5"><a id="__codelineno-54-5" name="__codelineno-54-5" href="#__codelineno-54-5"></a>5. Revisar los headers.
+</span><span id="__span-54-6"><a id="__codelineno-54-6" name="__codelineno-54-6" href="#__codelineno-54-6"></a>6. Mirar el status code.
+</span><span id="__span-54-7"><a id="__codelineno-54-7" name="__codelineno-54-7" href="#__codelineno-54-7"></a>7. Mirar la terminal.
+</span></code></pre></div>
+<p>Puedes adaptarla con tus palabras.</p>
+<h3 id="tarea-libre-4-comparar-navegador-y-cliente-http">Tarea libre 4: Comparar navegador y cliente HTTP<a class="headerlink" href="#tarea-libre-4-comparar-navegador-y-cliente-http" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 6, añade una tabla comparando el navegador con Thunder
+Client o Postman.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Ventajas</th>
+<th>Limitaciones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Navegador</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Thunder Client/Postman</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>La idea es que expliques por qué para probar una API necesitamos algo más que el
+navegador.</p>
+<h2 id="entrega-recomendada-del-dia-6">Entrega recomendada del día 6<a class="headerlink" href="#entrega-recomendada-del-dia-6" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del
+repositorio de GitHub.</p>
+<p>Al finalizar el día 6, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>usermanager-api/
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>  README.md
+</span><span id="__span-55-3"><a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a>  package.json
+</span><span id="__span-55-4"><a id="__codelineno-55-4" name="__codelineno-55-4" href="#__codelineno-55-4"></a>  package-lock.json
+</span><span id="__span-55-5"><a id="__codelineno-55-5" name="__codelineno-55-5" href="#__codelineno-55-5"></a>  tsconfig.json
+</span><span id="__span-55-6"><a id="__codelineno-55-6" name="__codelineno-55-6" href="#__codelineno-55-6"></a>  src/
+</span><span id="__span-55-7"><a id="__codelineno-55-7" name="__codelineno-55-7" href="#__codelineno-55-7"></a>    server.ts
+</span><span id="__span-55-8"><a id="__codelineno-55-8" name="__codelineno-55-8" href="#__codelineno-55-8"></a>  docs/
+</span><span id="__span-55-9"><a id="__codelineno-55-9" name="__codelineno-55-9" href="#__codelineno-55-9"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-55-10"><a id="__codelineno-55-10" name="__codelineno-55-10" href="#__codelineno-55-10"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-55-11"><a id="__codelineno-55-11" name="__codelineno-55-11" href="#__codelineno-55-11"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-55-12"><a id="__codelineno-55-12" name="__codelineno-55-12" href="#__codelineno-55-12"></a>    dia-04-metodos-http.md
+</span><span id="__span-55-13"><a id="__codelineno-55-13" name="__codelineno-55-13" href="#__codelineno-55-13"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-55-14"><a id="__codelineno-55-14" name="__codelineno-55-14" href="#__codelineno-55-14"></a>    dia-06-cliente-http-depuracion.md
+</span></code></pre></div>
+<p>El documento del día 6 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>docs/dia-06-cliente-http-depuracion.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Nombre de la colección de pruebas.</li>
+<li>Ruta temporal de depuración.</li>
+<li>Tabla de pruebas realizadas.</li>
+<li>Resultado de errores provocados.</li>
+<li>Guía personal de depuración.</li>
+<li>Comparación entre navegador y cliente HTTP.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<div class="language-text highlight"><span class="filename">Mensaje de ejemplo</span><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>Hola, comparto el avance del día 6 del reto UserManager API:
+</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>
+</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-57-4"><a id="__codelineno-57-4" name="__codelineno-57-4" href="#__codelineno-57-4"></a>
+</span><span id="__span-57-5"><a id="__codelineno-57-5" name="__codelineno-57-5" href="#__codelineno-57-5"></a>He organizado una colección de pruebas, he creado una ruta temporal de
+</span><span id="__span-57-6"><a id="__codelineno-57-6" name="__codelineno-57-6" href="#__codelineno-57-6"></a>depuración y he documentado las pruebas del día 6 en:
+</span><span id="__span-57-7"><a id="__codelineno-57-7" name="__codelineno-57-7" href="#__codelineno-57-7"></a>docs/dia-06-cliente-http-depuracion.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy no hemos añadido una gran funcionalidad nueva al producto, pero hemos
+trabajado una habilidad fundamental: <strong>probar y depurar una API</strong>.</p>
+<p>Antes de construir funcionalidades más complejas, necesitamos saber comprobar
+qué está pasando cuando una petición falla.</p>
+<p>Hoy hemos practicado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>Crear colecciones de pruebas.
+</span><span id="__span-58-2"><a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>Enviar peticiones con body.
+</span><span id="__span-58-3"><a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a>Enviar params y query params.
+</span><span id="__span-58-4"><a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a>Enviar headers.
+</span><span id="__span-58-5"><a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a>Provocar errores controlados.
+</span><span id="__span-58-6"><a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a>Leer status codes.
+</span><span id="__span-58-7"><a id="__codelineno-58-7" name="__codelineno-58-7" href="#__codelineno-58-7"></a>Mirar la respuesta.
+</span><span id="__span-58-8"><a id="__codelineno-58-8" name="__codelineno-58-8" href="#__codelineno-58-8"></a>Mirar la terminal.
+</span><span id="__span-58-9"><a id="__codelineno-58-9" name="__codelineno-58-9" href="#__codelineno-58-9"></a>Documentar pruebas.
+</span></code></pre></div>
+<p>A partir del próximo día empezaremos con el <strong>CRUD real en memoria</strong> de usuarios.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Programar una API no es solo escribir endpoints: también es saber probarlos,
+interpretar errores y comprobar que cada petición hace lo que esperamos.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia5/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 5">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 5
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia7/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 7">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 7
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

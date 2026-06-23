@@ -1,0 +1,2309 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 35 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia10/">
+      
+      
+        <link rel="next" href="../dia12/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 11: Eliminar o desactivar usuarios en memoria - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-11-eliminar-o-desactivar-usuarios-en-memoria" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 11: Eliminar o desactivar usuarios en memoria
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-eliminar-un-recurso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué significa eliminar un recurso
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#borrado-fisico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Borrado físico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-usaremos-borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Por qué usaremos borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-con-borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        DELETE con borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-de-estado-que-usaremos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos de estado que usaremos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-del-endpoint-de-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo del endpoint de hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-revisar-el-tipo-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Revisar el tipo <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-buscar-la-ruta-delete-apiusersid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Buscar la ruta <code>DELETE /api/users/:id</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-leer-y-validar-el-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Leer y validar el ID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-buscar-el-usuario-con-findindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Buscar el usuario con <code>findIndex</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-marcar-el-usuario-como-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Marcar el usuario como inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-devolver-la-respuesta-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Devolver la respuesta final
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-probar-desactivacion-correcta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Probar desactivación correcta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-comprobar-que-el-usuario-sigue-existiendo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Comprobar que el usuario sigue existiendo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-probar-casos-de-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Probar casos de error
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-crear-una-carpeta-de-pruebas-del-dia-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Crear una carpeta de pruebas del día 11
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-crear-el-documento-del-dia-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Crear el documento del día 11
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-anadir-mensaje-si-el-usuario-ya-estaba-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Añadir mensaje si el usuario ya estaba inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-crear-una-ruta-para-reactivar-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Crear una ruta para reactivar usuarios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-una-ruta-de-usuarios-inactivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear una ruta de usuarios inactivos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-borrado-fisico-vs-borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar borrado físico vs borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 11
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-eliminar-un-recurso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué significa eliminar un recurso
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#borrado-fisico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Borrado físico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-usaremos-borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Por qué usaremos borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delete-con-borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        DELETE con borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-de-estado-que-usaremos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos de estado que usaremos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-del-endpoint-de-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo del endpoint de hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-revisar-el-tipo-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Revisar el tipo <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-buscar-la-ruta-delete-apiusersid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Buscar la ruta <code>DELETE /api/users/:id</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-leer-y-validar-el-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Leer y validar el ID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-buscar-el-usuario-con-findindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Buscar el usuario con <code>findIndex</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-marcar-el-usuario-como-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Marcar el usuario como inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-devolver-la-respuesta-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Devolver la respuesta final
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-probar-desactivacion-correcta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Probar desactivación correcta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-comprobar-que-el-usuario-sigue-existiendo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Comprobar que el usuario sigue existiendo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-probar-casos-de-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Probar casos de error
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-crear-una-carpeta-de-pruebas-del-dia-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Crear una carpeta de pruebas del día 11
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-crear-el-documento-del-dia-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Crear el documento del día 11
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-anadir-mensaje-si-el-usuario-ya-estaba-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Añadir mensaje si el usuario ya estaba inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-crear-una-ruta-para-reactivar-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Crear una ruta para reactivar usuarios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-una-ruta-de-usuarios-inactivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear una ruta de usuarios inactivos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-borrado-fisico-vs-borrado-logico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar borrado físico vs borrado lógico
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 11
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-11-eliminar-o-desactivar-usuarios-en-memoria">Día 11: Eliminar o desactivar usuarios en memoria<a class="headerlink" href="#dia-11-eliminar-o-desactivar-usuarios-en-memoria" title="Permanent link">&para;</a></h1>
+<p>En el día 10 trabajamos la actualización de usuarios mediante:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">PATCH /api/users/:id</span>
+</span></code></pre></div>
+<p>Aprendimos a buscar un usuario por ID, validar los datos recibidos, modificar
+solo algunos campos y actualizar la fecha <code>updatedAt</code>.</p>
+<p>Hoy vamos a completar la última operación básica del CRUD: <strong>eliminar un
+usuario</strong>.</p>
+<p>Para ello trabajaremos con este endpoint:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">DELETE /api/users/:id</span>
+</span></code></pre></div>
+<p>Hasta ahora teníamos una ruta <code>DELETE /api/users/:id</code> simulada, que simplemente
+devolvía un mensaje. Hoy haremos que tenga un comportamiento real.</p>
+<p>Pero antes de programarlo tenemos que tomar una decisión importante:</p>
+<ul>
+<li>¿Queremos borrar el usuario del array?</li>
+<li>¿O queremos marcarlo como inactivo?</li>
+</ul>
+<p>En muchas aplicaciones reales, cuando se "elimina" un usuario, no se borra
+completamente de la base de datos. En lugar de eso, se desactiva. Esto permite
+conservar información histórica y evitar pérdidas accidentales de datos.</p>
+<p>En nuestro reto usaremos esta idea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>DELETE /api/users/:id no borrará físicamente el usuario.
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>Lo marcará como inactivo usando isActive = false.
+</span></code></pre></div>
+<p>A esto se le suele llamar <strong>borrado lógico</strong>.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Objetivo del día</p>
+<p>Implementar <code>DELETE /api/users/:id</code> para desactivar usuarios en memoria
+mediante borrado lógico, validando el ID, comprobando si el usuario existe
+y actualizando <code>isActive</code> y <code>updatedAt</code>.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">Qué vamos a trabajar hoy<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DELETE</code></td>
+<td>Representar la eliminación de un recurso</td>
+</tr>
+<tr>
+<td>Borrado físico</td>
+<td>Eliminar un recurso del array</td>
+</tr>
+<tr>
+<td>Borrado lógico</td>
+<td>Mantener el recurso y marcarlo como inactivo</td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td>Indicar si un usuario está activo</td>
+</tr>
+<tr>
+<td><code>req.params</code></td>
+<td>Leer el ID desde la URL</td>
+</tr>
+<tr>
+<td>Validación de ID</td>
+<td>Detectar IDs no numéricos</td>
+</tr>
+<tr>
+<td>Búsqueda por ID</td>
+<td>Localizar el usuario que queremos desactivar</td>
+</tr>
+<tr>
+<td><code>findIndex</code></td>
+<td>Obtener la posición del usuario dentro del array</td>
+</tr>
+<tr>
+<td>Actualización de estado</td>
+<td>Cambiar <code>isActive</code> a <code>false</code></td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>Registrar cuándo se modificó el usuario</td>
+</tr>
+<tr>
+<td>Errores <code>400</code> y <code>404</code></td>
+<td>Responder correctamente ante problemas</td>
+</tr>
+<tr>
+<td>Respuesta <code>200</code></td>
+<td>Confirmar que el usuario se desactivó</td>
+</tr>
+</tbody>
+</table>
+<p>El objetivo principal será que la API pueda "eliminar" usuarios de forma
+controlada, marcándolos como inactivos.</p>
+<h2 id="que-significa-eliminar-un-recurso">Qué significa eliminar un recurso<a class="headerlink" href="#que-significa-eliminar-un-recurso" title="Permanent link">&para;</a></h2>
+<p>En una API REST, eliminar un recurso suele representarse con el método
+<code>DELETE</code>.</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="err">DELETE /api/users/1</span>
+</span></code></pre></div>
+<p>Esto significa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Quiero eliminar el usuario con ID 1.
+</span></code></pre></div>
+<p>Pero en desarrollo real, eliminar no siempre significa borrar definitivamente.</p>
+<p>Hay dos enfoques principales:</p>
+<ul>
+<li>Borrado físico.</li>
+<li>Borrado lógico.</li>
+</ul>
+<h2 id="borrado-fisico">Borrado físico<a class="headerlink" href="#borrado-fisico" title="Permanent link">&para;</a></h2>
+<p>El <strong>borrado físico</strong> consiste en eliminar realmente el recurso.</p>
+<p>Si tenemos este array:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Carlos Pérez&quot;</span><span class="p">,</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="p">];</span>
+</span></code></pre></div>
+<p>Y eliminamos físicamente el usuario con ID <code>1</code>, el array quedaría así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Carlos Pérez&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">];</span>
+</span></code></pre></div>
+<p>El usuario desaparece completamente.</p>
+<p>Ventajas:</p>
+<ul>
+<li>El array queda más pequeño.</li>
+<li>El recurso desaparece de verdad.</li>
+<li>Es sencillo de entender.</li>
+</ul>
+<p>Inconvenientes:</p>
+<ul>
+<li>Se pierde información.</li>
+<li>No se puede recuperar fácilmente.</li>
+<li>Puede afectar a datos relacionados.</li>
+<li>Puede complicar auditorías o históricos.</li>
+</ul>
+<h2 id="borrado-logico">Borrado lógico<a class="headerlink" href="#borrado-logico" title="Permanent link">&para;</a></h2>
+<p>El <strong>borrado lógico</strong> consiste en no eliminar el recurso, sino marcarlo como
+inactivo.</p>
+<div class="language-json highlight"><span class="filename">Antes</span><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Después</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>El usuario sigue existiendo, pero queda desactivado.</p>
+<p>En nuestro proyecto usaremos el campo <code>isActive</code>:</p>
+<ul>
+<li>Si vale <code>true</code>, el usuario está activo.</li>
+<li>Si vale <code>false</code>, el usuario está desactivado.</li>
+</ul>
+<p>Esta decisión nos será útil más adelante, por ejemplo cuando hagamos login:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>Un usuario desactivado no podrá iniciar sesión.
+</span></code></pre></div>
+<h2 id="por-que-usaremos-borrado-logico">Por qué usaremos borrado lógico<a class="headerlink" href="#por-que-usaremos-borrado-logico" title="Permanent link">&para;</a></h2>
+<p>En una gestión de usuarios, el borrado lógico suele ser más seguro.</p>
+<p>Imaginemos una aplicación real:</p>
+<ul>
+<li>Un usuario ha hecho pedidos.</li>
+<li>Un usuario ha publicado comentarios.</li>
+<li>Un usuario aparece en registros de actividad.</li>
+<li>Un usuario tiene reservas asociadas.</li>
+</ul>
+<p>Si borramos completamente ese usuario, podríamos romper relaciones o perder
+información importante.</p>
+<p>Por eso muchas aplicaciones prefieren hacer esto:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>No borro el usuario.
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Lo marco como inactivo.
+</span></code></pre></div>
+<p>En nuestro caso:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span>
+</span></code></pre></div>
+<p>Así el usuario deja de estar operativo, pero sigue existiendo en el sistema.</p>
+<h2 id="delete-con-borrado-logico">DELETE con borrado lógico<a class="headerlink" href="#delete-con-borrado-logico" title="Permanent link">&para;</a></h2>
+<p>Aunque usemos el método <code>DELETE</code>, internamente lo que haremos será actualizar
+el usuario.</p>
+<p>La petición será:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="err">DELETE /api/users/1</span>
+</span></code></pre></div>
+<p>Pero la acción interna será:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nx">user</span><span class="p">.</span><span class="nx">isActive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Es decir:</p>
+<ul>
+<li>Desde fuera parece una eliminación.</li>
+<li>Por dentro es una desactivación.</li>
+</ul>
+<p>Esto es algo habitual en APIs reales. El cliente no necesita saber todos los
+detalles internos. Solo necesita saber que ese usuario ya no está activo.</p>
+<pre class="mermaid"><code>flowchart LR
+  A[Cliente] --&gt; B[DELETE /api/users/1]
+  B --&gt; C[API REST]
+  C --&gt; D[Buscar usuario]
+  D --&gt; E[Marcar isActive = false]
+  E --&gt; F[Responder usuario desactivado]</code></pre>
+<h2 id="codigos-de-estado-que-usaremos">Códigos de estado que usaremos<a class="headerlink" href="#codigos-de-estado-que-usaremos" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+<th>Cuándo lo usaremos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>Operación correcta</td>
+<td>Usuario desactivado correctamente</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>Petición incorrecta</td>
+<td>El ID no es válido</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Recurso no encontrado</td>
+<td>El usuario no existe</td>
+</tr>
+</tbody>
+</table>
+<p>Podríamos usar también otros códigos, como <code>204 No Content</code>, pero para este
+reto usaremos <code>200 OK</code> porque queremos devolver una respuesta clara con un
+mensaje y los datos actualizados.</p>
+<p>Ejemplo de respuesta correcta:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario desactivado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="flujo-del-endpoint-de-hoy">Flujo del endpoint de hoy<a class="headerlink" href="#flujo-del-endpoint-de-hoy" title="Permanent link">&para;</a></h2>
+<p>El endpoint <code>DELETE /api/users/:id</code> seguirá este flujo:</p>
+<pre class="mermaid"><code>flowchart TD
+  A[DELETE /api/users/:id] --&gt; B[Leer ID desde params]
+  B --&gt; C{¿ID válido?}
+  C --&gt;|No| D[400 Bad Request]
+  C --&gt;|Sí| E[Buscar usuario]
+  E --&gt; F{¿Existe?}
+  F --&gt;|No| G[404 Not Found]
+  F --&gt;|Sí| H[Marcar isActive = false]
+  H --&gt; I[Actualizar updatedAt]
+  I --&gt; J[200 OK + usuario desactivado]</code></pre>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre el repositorio:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>usermanager-api
+</span></code></pre></div>
+<p>Entra en la carpeta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Arranca el servidor:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Comprueba que el listado de usuarios funciona:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="err">GET http://localhost:3000/api/users</span>
+</span></code></pre></div>
+<h3 id="paso-2-revisar-el-tipo-user">Paso 2: Revisar el tipo <code>User</code><a class="headerlink" href="#paso-2-revisar-el-tipo-user" title="Permanent link">&para;</a></h3>
+<p>Abre el archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>src/server.ts
+</span></code></pre></div>
+<p>Comprueba que el tipo <code>User</code> tiene el campo <code>isActive</code>:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">  </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="s2">&quot;ADMIN&quot;</span><span class="p">;</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">  </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">boolean</span><span class="p">;</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">  </span><span class="nx">createdAt</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">  </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="p">};</span>
+</span></code></pre></div>
+<p>Este campo será el protagonista del día de hoy.</p>
+<h3 id="paso-3-buscar-la-ruta-delete-apiusersid">Paso 3: Buscar la ruta <code>DELETE /api/users/:id</code><a class="headerlink" href="#paso-3-buscar-la-ruta-delete-apiusersid" title="Permanent link">&para;</a></h3>
+<p>En días anteriores teníamos una ruta simulada parecida a esta:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nx">app</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario recibido para eliminar o desactivar&quot;</span><span class="p">,</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">id</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Hoy vamos a sustituirla por una versión que desactive usuarios en memoria.</p>
+<h3 id="paso-4-leer-y-validar-el-id">Paso 4: Leer y validar el ID<a class="headerlink" href="#paso-4-leer-y-validar-el-id" title="Permanent link">&para;</a></h3>
+<p>Sustituye la ruta por esta primera versión:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nx">app</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">idParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">idParam</span><span class="p">);</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">      </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">idParam</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ID recibido correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a><span class="w">    </span><span class="nx">id</span>
+</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-22-16"><a id="__codelineno-22-16" name="__codelineno-22-16" href="#__codelineno-22-16"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="err">DELETE http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p">{</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ID recibido correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Ahora prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="err">DELETE http://localhost:3000/api/users/abc</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p">{</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span><span class="nt">&quot;received&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<h3 id="paso-5-buscar-el-usuario-con-findindex">Paso 5: Buscar el usuario con <code>findIndex</code><a class="headerlink" href="#paso-5-buscar-el-usuario-con-findindex" title="Permanent link">&para;</a></h3>
+<p>Añade la búsqueda del usuario:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">userIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">userIndex</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span><span class="nx">id</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>La ruta quedará así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="nx">app</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">idParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">idParam</span><span class="p">);</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">      </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">idParam</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a>
+</span><span id="__span-29-12"><a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">userIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-29-13"><a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a>
+</span><span id="__span-29-14"><a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">userIndex</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-29-15"><a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-29-16"><a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-29-17"><a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a><span class="w">      </span><span class="nx">id</span>
+</span><span id="__span-29-18"><a id="__codelineno-29-18" name="__codelineno-29-18" href="#__codelineno-29-18"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-29-19"><a id="__codelineno-29-19" name="__codelineno-29-19" href="#__codelineno-29-19"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-29-20"><a id="__codelineno-29-20" name="__codelineno-29-20" href="#__codelineno-29-20"></a>
+</span><span id="__span-29-21"><a id="__codelineno-29-21" name="__codelineno-29-21" href="#__codelineno-29-21"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-29-22"><a id="__codelineno-29-22" name="__codelineno-29-22" href="#__codelineno-29-22"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-29-23"><a id="__codelineno-29-23" name="__codelineno-29-23" href="#__codelineno-29-23"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">]</span>
+</span><span id="__span-29-24"><a id="__codelineno-29-24" name="__codelineno-29-24" href="#__codelineno-29-24"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-29-25"><a id="__codelineno-29-25" name="__codelineno-29-25" href="#__codelineno-29-25"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="err">DELETE http://localhost:3000/api/users/999</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="p">{</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<h3 id="paso-6-marcar-el-usuario-como-inactivo">Paso 6: Marcar el usuario como inactivo<a class="headerlink" href="#paso-6-marcar-el-usuario-como-inactivo" title="Permanent link">&para;</a></h3>
+<p>Ahora vamos a desactivar el usuario.</p>
+<p>Añade esta parte:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">currentUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">];</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">updatedUser</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">  </span><span class="p">...</span><span class="nx">currentUser</span><span class="p">,</span>
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w">  </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a><span class="w">  </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+</span><span id="__span-33-7"><a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a><span class="p">};</span>
+</span><span id="__span-33-8"><a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>
+</span><span id="__span-33-9"><a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">updatedUser</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Esto hace cuatro cosas:</p>
+<ul>
+<li>Copia los datos actuales del usuario.</li>
+<li>Cambia <code>isActive</code> a <code>false</code>.</li>
+<li>Actualiza <code>updatedAt</code>.</li>
+<li>Sustituye el usuario antiguo por el actualizado.</li>
+</ul>
+<h3 id="paso-7-devolver-la-respuesta-final">Paso 7: Devolver la respuesta final<a class="headerlink" href="#paso-7-devolver-la-respuesta-final" title="Permanent link">&para;</a></h3>
+<p>Añade esta respuesta:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario desactivado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">updatedUser</span>
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>La ruta completa quedará así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="nx">app</span><span class="p">.</span><span class="ow">delete</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">idParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">idParam</span><span class="p">);</span>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="w">      </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">idParam</span>
+</span><span id="__span-35-9"><a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-35-10"><a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-35-11"><a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a>
+</span><span id="__span-35-12"><a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">userIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-35-13"><a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a>
+</span><span id="__span-35-14"><a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">userIndex</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-35-15"><a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-35-16"><a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-35-17"><a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a><span class="w">      </span><span class="nx">id</span>
+</span><span id="__span-35-18"><a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-35-19"><a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-35-20"><a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a>
+</span><span id="__span-35-21"><a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">currentUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">];</span>
+</span><span id="__span-35-22"><a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a>
+</span><span id="__span-35-23"><a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">updatedUser</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-35-24"><a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a><span class="w">    </span><span class="p">...</span><span class="nx">currentUser</span><span class="p">,</span>
+</span><span id="__span-35-25"><a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span><span class="p">,</span>
+</span><span id="__span-35-26"><a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a><span class="w">    </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+</span><span id="__span-35-27"><a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a><span class="w">  </span><span class="p">};</span>
+</span><span id="__span-35-28"><a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a>
+</span><span id="__span-35-29"><a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a><span class="w">  </span><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">updatedUser</span><span class="p">;</span>
+</span><span id="__span-35-30"><a id="__codelineno-35-30" name="__codelineno-35-30" href="#__codelineno-35-30"></a>
+</span><span id="__span-35-31"><a id="__codelineno-35-31" name="__codelineno-35-31" href="#__codelineno-35-31"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-35-32"><a id="__codelineno-35-32" name="__codelineno-35-32" href="#__codelineno-35-32"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario desactivado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-35-33"><a id="__codelineno-35-33" name="__codelineno-35-33" href="#__codelineno-35-33"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">updatedUser</span>
+</span><span id="__span-35-34"><a id="__codelineno-35-34" name="__codelineno-35-34" href="#__codelineno-35-34"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-35-35"><a id="__codelineno-35-35" name="__codelineno-35-35" href="#__codelineno-35-35"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="paso-8-probar-desactivacion-correcta">Paso 8: Probar desactivación correcta<a class="headerlink" href="#paso-8-probar-desactivacion-correcta" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="err">DELETE http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="p">{</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario desactivado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+</span><span id="__span-37-9"><a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a><span class="w">    </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-37-10"><a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a><span class="w">    </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-37-11"><a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-37-12"><a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Comprueba que el código sea:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<h3 id="paso-9-comprobar-que-el-usuario-sigue-existiendo">Paso 9: Comprobar que el usuario sigue existiendo<a class="headerlink" href="#paso-9-comprobar-que-el-usuario-sigue-existiendo" title="Permanent link">&para;</a></h3>
+<p>Después de desactivar el usuario, prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="err">GET http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>El usuario debería seguir existiendo, pero ahora con:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="p">{</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>También puedes probar:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="err">GET http://localhost:3000/api/users</span>
+</span></code></pre></div>
+<p>Y comprobar que el usuario sigue apareciendo en el listado.</p>
+<p>Esto confirma que hemos hecho un borrado lógico, no un borrado físico.</p>
+<h3 id="paso-10-probar-casos-de-error">Paso 10: Probar casos de error<a class="headerlink" href="#paso-10-probar-casos-de-error" title="Permanent link">&para;</a></h3>
+<p>Prueba estos casos:</p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Petición</th>
+<th style="text-align: right;">Código esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID no válido</td>
+<td><code>DELETE /api/users/abc</code></td>
+<td style="text-align: right;"><code>400</code></td>
+</tr>
+<tr>
+<td>Usuario inexistente</td>
+<td><code>DELETE /api/users/999</code></td>
+<td style="text-align: right;"><code>404</code></td>
+</tr>
+<tr>
+<td>Usuario ya desactivado</td>
+<td><code>DELETE /api/users/1</code> dos veces</td>
+<td style="text-align: right;"><code>200</code></td>
+</tr>
+</tbody>
+</table>
+<p>En el tercer caso, la segunda vez el usuario ya estará desactivado. De momento
+podemos aceptar que vuelva a responder correctamente con <code>200 OK</code>. Más adelante
+podríamos decidir si queremos devolver un mensaje específico.</p>
+<h3 id="paso-11-crear-una-carpeta-de-pruebas-del-dia-11">Paso 11: Crear una carpeta de pruebas del día 11<a class="headerlink" href="#paso-11-crear-una-carpeta-de-pruebas-del-dia-11" title="Permanent link">&para;</a></h3>
+<p>En Thunder Client o Postman, dentro de la colección <code>UserManager API</code>, crea una
+carpeta llamada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>Día 11 - Eliminar o desactivar usuarios
+</span></code></pre></div>
+<p>Añade estas peticiones:</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Objetivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/1</code></td>
+<td>Desactivar usuario</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/abc</code></td>
+<td>Probar ID no válido</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/999</code></td>
+<td>Probar usuario inexistente</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/1</code></td>
+<td>Comprobar usuario desactivado</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users</code></td>
+<td>Comprobar listado</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-12-actualizar-el-readme">Paso 12: Actualizar el README<a class="headerlink" href="#paso-12-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Actualiza la sección de usuarios añadiendo información sobre eliminación o
+desactivación:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="gu">## Eliminar o desactivar usuario</span>
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="sb">```http</span>
+</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="err">DELETE /api/users/:id</span>
+</span><span id="__span-43-5"><a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a><span class="sb">```</span>
+</span><span id="__span-43-6"><a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a>
+</span><span id="__span-43-7"><a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a>En este proyecto, esta ruta no borra físicamente el usuario. Realiza un borrado
+</span><span id="__span-43-8"><a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a>lógico marcando:
+</span><span id="__span-43-9"><a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a>
+</span><span id="__span-43-10"><a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a><span class="sb">```text</span>
+</span><span id="__span-43-11"><a id="__codelineno-43-11" name="__codelineno-43-11" href="#__codelineno-43-11"></a>isActive = false
+</span><span id="__span-43-12"><a id="__codelineno-43-12" name="__codelineno-43-12" href="#__codelineno-43-12"></a><span class="sb">```</span>
+</span><span id="__span-43-13"><a id="__codelineno-43-13" name="__codelineno-43-13" href="#__codelineno-43-13"></a>
+</span><span id="__span-43-14"><a id="__codelineno-43-14" name="__codelineno-43-14" href="#__codelineno-43-14"></a>Respuesta correcta:
+</span><span id="__span-43-15"><a id="__codelineno-43-15" name="__codelineno-43-15" href="#__codelineno-43-15"></a>
+</span><span id="__span-43-16"><a id="__codelineno-43-16" name="__codelineno-43-16" href="#__codelineno-43-16"></a><span class="sb">```json</span>
+</span><span id="__span-43-17"><a id="__codelineno-43-17" name="__codelineno-43-17" href="#__codelineno-43-17"></a><span class="p">{</span>
+</span><span id="__span-43-18"><a id="__codelineno-43-18" name="__codelineno-43-18" href="#__codelineno-43-18"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario desactivado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-43-19"><a id="__codelineno-43-19" name="__codelineno-43-19" href="#__codelineno-43-19"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-43-20"><a id="__codelineno-43-20" name="__codelineno-43-20" href="#__codelineno-43-20"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-43-21"><a id="__codelineno-43-21" name="__codelineno-43-21" href="#__codelineno-43-21"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-43-22"><a id="__codelineno-43-22" name="__codelineno-43-22" href="#__codelineno-43-22"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-43-23"><a id="__codelineno-43-23" name="__codelineno-43-23" href="#__codelineno-43-23"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-43-24"><a id="__codelineno-43-24" name="__codelineno-43-24" href="#__codelineno-43-24"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-43-25"><a id="__codelineno-43-25" name="__codelineno-43-25" href="#__codelineno-43-25"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-43-26"><a id="__codelineno-43-26" name="__codelineno-43-26" href="#__codelineno-43-26"></a><span class="p">}</span>
+</span><span id="__span-43-27"><a id="__codelineno-43-27" name="__codelineno-43-27" href="#__codelineno-43-27"></a><span class="sb">```</span>
+</span><span id="__span-43-28"><a id="__codelineno-43-28" name="__codelineno-43-28" href="#__codelineno-43-28"></a>
+</span><span id="__span-43-29"><a id="__codelineno-43-29" name="__codelineno-43-29" href="#__codelineno-43-29"></a>Posibles errores:
+</span><span id="__span-43-30"><a id="__codelineno-43-30" name="__codelineno-43-30" href="#__codelineno-43-30"></a>
+</span><span id="__span-43-31"><a id="__codelineno-43-31" name="__codelineno-43-31" href="#__codelineno-43-31"></a><span class="sb">```json</span>
+</span><span id="__span-43-32"><a id="__codelineno-43-32" name="__codelineno-43-32" href="#__codelineno-43-32"></a><span class="p">{</span>
+</span><span id="__span-43-33"><a id="__codelineno-43-33" name="__codelineno-43-33" href="#__codelineno-43-33"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-43-34"><a id="__codelineno-43-34" name="__codelineno-43-34" href="#__codelineno-43-34"></a><span class="w">  </span><span class="nt">&quot;received&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-43-35"><a id="__codelineno-43-35" name="__codelineno-43-35" href="#__codelineno-43-35"></a><span class="p">}</span>
+</span><span id="__span-43-36"><a id="__codelineno-43-36" name="__codelineno-43-36" href="#__codelineno-43-36"></a><span class="sb">```</span>
+</span><span id="__span-43-37"><a id="__codelineno-43-37" name="__codelineno-43-37" href="#__codelineno-43-37"></a>
+</span><span id="__span-43-38"><a id="__codelineno-43-38" name="__codelineno-43-38" href="#__codelineno-43-38"></a><span class="sb">```json</span>
+</span><span id="__span-43-39"><a id="__codelineno-43-39" name="__codelineno-43-39" href="#__codelineno-43-39"></a><span class="p">{</span>
+</span><span id="__span-43-40"><a id="__codelineno-43-40" name="__codelineno-43-40" href="#__codelineno-43-40"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-43-41"><a id="__codelineno-43-41" name="__codelineno-43-41" href="#__codelineno-43-41"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-43-42"><a id="__codelineno-43-42" name="__codelineno-43-42" href="#__codelineno-43-42"></a><span class="p">}</span>
+</span><span id="__span-43-43"><a id="__codelineno-43-43" name="__codelineno-43-43" href="#__codelineno-43-43"></a><span class="sb">```</span>
+</span></code></pre></div>
+<h3 id="paso-13-crear-el-documento-del-dia-11">Paso 13: Crear el documento del día 11<a class="headerlink" href="#paso-13-crear-el-documento-del-dia-11" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea un archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>docs/dia-11-eliminar-desactivar-usuarios.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="gh"># Día 11 - Eliminar o desactivar usuarios en memoria</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a>
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="k">-</span><span class="w"> </span>He actualizado el endpoint <span class="sb">`DELETE /api/users/:id`</span>.
+</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a><span class="k">-</span><span class="w"> </span>He leído el ID desde <span class="sb">`req.params`</span>.
+</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="k">-</span><span class="w"> </span>He validado que el ID sea numérico.
+</span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a><span class="k">-</span><span class="w"> </span>He comprobado si el usuario existe.
+</span><span id="__span-45-9"><a id="__codelineno-45-9" name="__codelineno-45-9" href="#__codelineno-45-9"></a><span class="k">-</span><span class="w"> </span>He aplicado borrado lógico usando <span class="sb">`isActive = false`</span>.
+</span><span id="__span-45-10"><a id="__codelineno-45-10" name="__codelineno-45-10" href="#__codelineno-45-10"></a><span class="k">-</span><span class="w"> </span>He actualizado <span class="sb">`updatedAt`</span>.
+</span><span id="__span-45-11"><a id="__codelineno-45-11" name="__codelineno-45-11" href="#__codelineno-45-11"></a><span class="k">-</span><span class="w"> </span>He comprobado que el usuario sigue existiendo en el listado.
+</span><span id="__span-45-12"><a id="__codelineno-45-12" name="__codelineno-45-12" href="#__codelineno-45-12"></a><span class="k">-</span><span class="w"> </span>He probado casos de error.
+</span><span id="__span-45-13"><a id="__codelineno-45-13" name="__codelineno-45-13" href="#__codelineno-45-13"></a>
+</span><span id="__span-45-14"><a id="__codelineno-45-14" name="__codelineno-45-14" href="#__codelineno-45-14"></a><span class="gu">## Endpoint trabajado</span>
+</span><span id="__span-45-15"><a id="__codelineno-45-15" name="__codelineno-45-15" href="#__codelineno-45-15"></a>
+</span><span id="__span-45-16"><a id="__codelineno-45-16" name="__codelineno-45-16" href="#__codelineno-45-16"></a><span class="sb">```http</span>
+</span><span id="__span-45-17"><a id="__codelineno-45-17" name="__codelineno-45-17" href="#__codelineno-45-17"></a><span class="err">DELETE /api/users/:id</span>
+</span><span id="__span-45-18"><a id="__codelineno-45-18" name="__codelineno-45-18" href="#__codelineno-45-18"></a><span class="sb">```</span>
+</span><span id="__span-45-19"><a id="__codelineno-45-19" name="__codelineno-45-19" href="#__codelineno-45-19"></a>
+</span><span id="__span-45-20"><a id="__codelineno-45-20" name="__codelineno-45-20" href="#__codelineno-45-20"></a><span class="gu">## Casos probados</span>
+</span><span id="__span-45-21"><a id="__codelineno-45-21" name="__codelineno-45-21" href="#__codelineno-45-21"></a>
+</span><span id="__span-45-22"><a id="__codelineno-45-22" name="__codelineno-45-22" href="#__codelineno-45-22"></a>| Caso | Código esperado | Resultado |
+</span><span id="__span-45-23"><a id="__codelineno-45-23" name="__codelineno-45-23" href="#__codelineno-45-23"></a>| --- | ---: | --- |
+</span><span id="__span-45-24"><a id="__codelineno-45-24" name="__codelineno-45-24" href="#__codelineno-45-24"></a>| Desactivar usuario existente | 200 | |
+</span><span id="__span-45-25"><a id="__codelineno-45-25" name="__codelineno-45-25" href="#__codelineno-45-25"></a>| ID no válido | 400 | |
+</span><span id="__span-45-26"><a id="__codelineno-45-26" name="__codelineno-45-26" href="#__codelineno-45-26"></a>| Usuario inexistente | 404 | |
+</span><span id="__span-45-27"><a id="__codelineno-45-27" name="__codelineno-45-27" href="#__codelineno-45-27"></a>| Consultar usuario desactivado | 200 | |
+</span><span id="__span-45-28"><a id="__codelineno-45-28" name="__codelineno-45-28" href="#__codelineno-45-28"></a>| Consultar listado después de desactivar | 200 | |
+</span><span id="__span-45-29"><a id="__codelineno-45-29" name="__codelineno-45-29" href="#__codelineno-45-29"></a>
+</span><span id="__span-45-30"><a id="__codelineno-45-30" name="__codelineno-45-30" href="#__codelineno-45-30"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-45-31"><a id="__codelineno-45-31" name="__codelineno-45-31" href="#__codelineno-45-31"></a>
+</span><span id="__span-45-32"><a id="__codelineno-45-32" name="__codelineno-45-32" href="#__codelineno-45-32"></a>En este proyecto <span class="sb">`DELETE`</span> no borra físicamente el usuario. En lugar de
+</span><span id="__span-45-33"><a id="__codelineno-45-33" name="__codelineno-45-33" href="#__codelineno-45-33"></a>eliminarlo del array, lo marcamos como inactivo cambiando <span class="sb">`isActive`</span> a <span class="sb">`false`</span>.
+</span><span id="__span-45-34"><a id="__codelineno-45-34" name="__codelineno-45-34" href="#__codelineno-45-34"></a>Esto se llama borrado lógico.
+</span></code></pre></div>
+<h3 id="paso-14-actualizar-el-indice-del-readme">Paso 14: Actualizar el índice del README<a class="headerlink" href="#paso-14-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace al documento del día 11:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>
+</span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-46-4"><a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-46-5"><a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-46-6"><a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-46-7"><a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-46-8"><a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-46-9"><a id="__codelineno-46-9" name="__codelineno-46-9" href="#__codelineno-46-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-46-10"><a id="__codelineno-46-10" name="__codelineno-46-10" href="#__codelineno-46-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-46-11"><a id="__codelineno-46-11" name="__codelineno-46-11" href="#__codelineno-46-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-46-12"><a id="__codelineno-46-12" name="__codelineno-46-12" href="#__codelineno-46-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-46-13"><a id="__codelineno-46-13" name="__codelineno-46-13" href="#__codelineno-46-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span></code></pre></div>
+<h3 id="paso-15-guardar-cambios-en-git">Paso 15: Guardar cambios en Git<a class="headerlink" href="#paso-15-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 11 - Eliminar o desactivar usuarios en memoria&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<p>Ahora toca practicar un poco sin seguir todos los pasos guiados.</p>
+<h3 id="tarea-libre-1-anadir-mensaje-si-el-usuario-ya-estaba-inactivo">Tarea libre 1: Añadir mensaje si el usuario ya estaba inactivo<a class="headerlink" href="#tarea-libre-1-anadir-mensaje-si-el-usuario-ya-estaba-inactivo" title="Permanent link">&para;</a></h3>
+<p>Modifica el endpoint para que, si el usuario ya tenía:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span>
+</span></code></pre></div>
+<p>Devuelva un mensaje diferente.</p>
+<p>Ejemplo:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="p">{</span>
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El usuario ya estaba desactivado&quot;</span><span class="p">,</span>
+</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-52-4"><a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-52-5"><a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-52-6"><a id="__codelineno-52-6" name="__codelineno-52-6" href="#__codelineno-52-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-52-7"><a id="__codelineno-52-7" name="__codelineno-52-7" href="#__codelineno-52-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Puedes mantener el código <code>200 OK</code>.</p>
+<h3 id="tarea-libre-2-crear-una-ruta-para-reactivar-usuarios">Tarea libre 2: Crear una ruta para reactivar usuarios<a class="headerlink" href="#tarea-libre-2-crear-una-ruta-para-reactivar-usuarios" title="Permanent link">&para;</a></h3>
+<p>Crea una ruta:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="err">PATCH /api/users/:id/reactivate</span>
+</span></code></pre></div>
+<p>Debe hacer lo contrario que el borrado lógico:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="nx">isActive</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Debe validar:</p>
+<ul>
+<li>El ID debe ser numérico.</li>
+<li>El usuario debe existir.</li>
+</ul>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="p">{</span>
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario reactivado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-55-3"><a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-55-4"><a id="__codelineno-55-4" name="__codelineno-55-4" href="#__codelineno-55-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-55-5"><a id="__codelineno-55-5" name="__codelineno-55-5" href="#__codelineno-55-5"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-55-6"><a id="__codelineno-55-6" name="__codelineno-55-6" href="#__codelineno-55-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-55-7"><a id="__codelineno-55-7" name="__codelineno-55-7" href="#__codelineno-55-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Importante: esta ruta debe colocarse antes de:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="err">PATCH /api/users/:id</span>
+</span></code></pre></div>
+<p>porque si no, Express puede interpretar <code>reactivate</code> como parte de otra ruta
+dinámica.</p>
+<h3 id="tarea-libre-3-crear-una-ruta-de-usuarios-inactivos">Tarea libre 3: Crear una ruta de usuarios inactivos<a class="headerlink" href="#tarea-libre-3-crear-una-ruta-de-usuarios-inactivos" title="Permanent link">&para;</a></h3>
+<p>Crea una ruta:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a><span class="err">GET /api/users/inactive</span>
+</span></code></pre></div>
+<p>Debe devolver solo los usuarios que tengan:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span>
+</span></code></pre></div>
+<p>Puedes usar:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">inactiveUsers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="nx">user</span><span class="p">.</span><span class="nx">isActive</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Importante: esta ruta debe estar antes de:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="err">GET /api/users/:id</span>
+</span></code></pre></div>
+<p>Si no, Express puede interpretar <code>inactive</code> como si fuera un ID.</p>
+<h3 id="tarea-libre-4-explicar-borrado-fisico-vs-borrado-logico">Tarea libre 4: Explicar borrado físico vs borrado lógico<a class="headerlink" href="#tarea-libre-4-explicar-borrado-fisico-vs-borrado-logico" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 11, añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a><span class="gu">## Borrado físico vs borrado lógico</span>
+</span></code></pre></div>
+<p>Explica con tus palabras:</p>
+<ul>
+<li>Qué sería borrar físicamente un usuario.</li>
+<li>Qué significa hacer un borrado lógico.</li>
+<li>Por qué en este proyecto usamos <code>isActive = false</code>.</li>
+<li>Qué ventajas tiene conservar el usuario en lugar de eliminarlo.</li>
+</ul>
+<h2 id="entrega-recomendada-del-dia-11">Entrega recomendada del día 11<a class="headerlink" href="#entrega-recomendada-del-dia-11" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del
+repositorio de GitHub.</p>
+<p>Al finalizar el día 11, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>usermanager-api/
+</span><span id="__span-62-2"><a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>  README.md
+</span><span id="__span-62-3"><a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a>  package.json
+</span><span id="__span-62-4"><a id="__codelineno-62-4" name="__codelineno-62-4" href="#__codelineno-62-4"></a>  package-lock.json
+</span><span id="__span-62-5"><a id="__codelineno-62-5" name="__codelineno-62-5" href="#__codelineno-62-5"></a>  tsconfig.json
+</span><span id="__span-62-6"><a id="__codelineno-62-6" name="__codelineno-62-6" href="#__codelineno-62-6"></a>  src/
+</span><span id="__span-62-7"><a id="__codelineno-62-7" name="__codelineno-62-7" href="#__codelineno-62-7"></a>    server.ts
+</span><span id="__span-62-8"><a id="__codelineno-62-8" name="__codelineno-62-8" href="#__codelineno-62-8"></a>  docs/
+</span><span id="__span-62-9"><a id="__codelineno-62-9" name="__codelineno-62-9" href="#__codelineno-62-9"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-62-10"><a id="__codelineno-62-10" name="__codelineno-62-10" href="#__codelineno-62-10"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-62-11"><a id="__codelineno-62-11" name="__codelineno-62-11" href="#__codelineno-62-11"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-62-12"><a id="__codelineno-62-12" name="__codelineno-62-12" href="#__codelineno-62-12"></a>    dia-04-metodos-http.md
+</span><span id="__span-62-13"><a id="__codelineno-62-13" name="__codelineno-62-13" href="#__codelineno-62-13"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-62-14"><a id="__codelineno-62-14" name="__codelineno-62-14" href="#__codelineno-62-14"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-62-15"><a id="__codelineno-62-15" name="__codelineno-62-15" href="#__codelineno-62-15"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-62-16"><a id="__codelineno-62-16" name="__codelineno-62-16" href="#__codelineno-62-16"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-62-17"><a id="__codelineno-62-17" name="__codelineno-62-17" href="#__codelineno-62-17"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-62-18"><a id="__codelineno-62-18" name="__codelineno-62-18" href="#__codelineno-62-18"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-62-19"><a id="__codelineno-62-19" name="__codelineno-62-19" href="#__codelineno-62-19"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span></code></pre></div>
+<p>El documento del día 11 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>docs/dia-11-eliminar-desactivar-usuarios.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Endpoint trabajado.</li>
+<li>Casos probados.</li>
+<li>Explicación personal del borrado lógico.</li>
+<li>Explicación de borrado físico vs borrado lógico.</li>
+<li>Pruebas de usuario desactivado.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>Hola, comparto el avance del día 11 del reto UserManager API:
+</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>
+</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-64-4"><a id="__codelineno-64-4" name="__codelineno-64-4" href="#__codelineno-64-4"></a>
+</span><span id="__span-64-5"><a id="__codelineno-64-5" name="__codelineno-64-5" href="#__codelineno-64-5"></a>He implementado la eliminación lógica de usuarios en memoria y he documentado el trabajo del día 11 en:
+</span><span id="__span-64-6"><a id="__codelineno-64-6" name="__codelineno-64-6" href="#__codelineno-64-6"></a>docs/dia-11-eliminar-desactivar-usuarios.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos completado el CRUD básico de usuarios en memoria.</p>
+<p>Ya tenemos operaciones para:</p>
+<ul>
+<li>Listar usuarios.</li>
+<li>Consultar un usuario por ID.</li>
+<li>Crear usuarios.</li>
+<li>Actualizar usuarios.</li>
+<li>Eliminar o desactivar usuarios.</li>
+</ul>
+<p>Además, hemos trabajado una decisión muy importante en desarrollo backend: no
+siempre conviene borrar los datos definitivamente.</p>
+<p>Hoy hemos visto:</p>
+<ul>
+<li><code>DELETE /api/users/:id</code></li>
+<li>Borrado físico.</li>
+<li>Borrado lógico.</li>
+<li><code>isActive</code></li>
+<li>Validación de ID.</li>
+<li><code>findIndex</code></li>
+<li><code>updatedAt</code></li>
+<li>Errores <code>400</code> y <code>404</code>.</li>
+<li>Respuesta <code>200</code>.</li>
+</ul>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Eliminar un usuario no siempre significa borrarlo: muchas veces es mejor
+desactivarlo para conservar la información y mantener la coherencia del
+sistema.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia10/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 10">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 10
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia12/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 12">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 12
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2107 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 35 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 15: Middleware centralizado de errores - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-15-middleware-centralizado-de-errores" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 15: Middleware centralizado de errores
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-middleware" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es un middleware
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es <code>next()</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-middleware-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es un middleware de errores
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-centralizar-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Por qué centralizar errores
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#formato-comun-de-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Formato común de error
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-personalizado-apperror" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error personalizado: <code>AppError</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferencia-entre-errores-controlados-y-errores-inesperados" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Diferencia entre errores controlados y errores inesperados
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diferencia entre errores controlados y errores inesperados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-controlado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error controlado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-inesperado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error inesperado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#middleware-404" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Middleware <code>404</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orden-de-middlewares" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Orden de middlewares
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-de-error-centralizado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo de error centralizado
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-importar-tipos-de-express" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Importar tipos de Express
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-crear-la-clase-apperror" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Crear la clase <code>AppError</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-crear-el-middleware-de-rutas-no-encontradas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Crear el middleware de rutas no encontradas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-crear-el-middleware-global-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Crear el middleware global de errores
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-registrar-los-middlewares-al-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Registrar los middlewares al final
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-probar-ruta-inexistente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Probar ruta inexistente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-adaptar-get-apiusersid-al-nuevo-sistema" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Adaptar <code>GET /api/users/:id</code> al nuevo sistema
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-anadir-next-a-la-ruta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Añadir <code>next</code> a la ruta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-usar-nextnew-apperror" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Usar <code>next(new AppError(...))</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-probar-id-no-valido" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Probar ID no válido
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-probar-usuario-inexistente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Probar usuario inexistente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-probar-usuario-existente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Probar usuario existente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-crear-una-ruta-temporal-para-probar-error-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Crear una ruta temporal para probar error <code>500</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-crear-una-carpeta-de-pruebas-del-dia-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Crear una carpeta de pruebas del día 15
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-crear-el-documento-del-dia-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Crear el documento del día 15
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-adaptar-otro-endpoint-al-middleware-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Adaptar otro endpoint al middleware de errores
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-mejorar-el-error-404-de-ruta-inexistente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Mejorar el error <code>404</code> de ruta inexistente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-ocultar-details-cuando-no-existan" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Ocultar <code>details</code> cuando no existan
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-el-orden-de-middlewares" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar el orden de middlewares
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 15
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-15-middleware-centralizado-de-errores">Día 15: Middleware centralizado de errores<a class="headerlink" href="#dia-15-middleware-centralizado-de-errores" title="Permanent link">&para;</a></h1>
+<p>En el día 14 revisamos los códigos de estado HTTP que está usando nuestra API:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">200 OK</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="err">201 Created</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="err">400 Bad Request</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="err">404 Not Found</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="err">409 Conflict</span>
+</span></code></pre></div>
+<p>Aprendimos que una API no solo debe devolver JSON, sino que debe usar el código
+HTTP adecuado para que el cliente entienda qué ha ocurrido.</p>
+<p>Hoy vamos a dar un paso más: vamos a empezar a <strong>centralizar la gestión de
+errores</strong>.</p>
+<p>Hasta ahora, cada ruta genera sus propios errores directamente:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Esto funciona, pero tiene un problema: si cada ruta construye los errores a su
+manera, nuestra API puede acabar devolviendo respuestas diferentes según el
+endpoint.</p>
+<p>Por ejemplo:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Error&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;msg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Email duplicado&quot;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Eso no es ideal.</p>
+<p>A partir de hoy intentaremos que todos los errores tengan un formato común.</p>
+<p>La idea será crear:</p>
+<ul>
+<li>Un tipo de error propio.</li>
+<li>Un middleware para rutas no encontradas.</li>
+<li>Un middleware global de errores.</li>
+</ul>
+<div class="admonition abstract">
+<p class="admonition-title">Objetivo del día</p>
+<p>Crear una primera gestión centralizada de errores con <code>AppError</code>, un
+middleware <code>404</code> y un middleware global de errores.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">Qué vamos a trabajar hoy<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Middleware</td>
+<td>Intervenir en el flujo de una petición</td>
+</tr>
+<tr>
+<td><code>next()</code></td>
+<td>Pasar la petición o un error al siguiente middleware</td>
+</tr>
+<tr>
+<td>Middleware de error</td>
+<td>Capturar errores en Express</td>
+</tr>
+<tr>
+<td>Error personalizado</td>
+<td>Representar errores de la aplicación</td>
+</tr>
+<tr>
+<td><code>AppError</code></td>
+<td>Guardar mensaje, código y detalles del error</td>
+</tr>
+<tr>
+<td>Formato común de error</td>
+<td>Responder siempre con una estructura coherente</td>
+</tr>
+<tr>
+<td><code>404</code> centralizado</td>
+<td>Responder en JSON cuando una ruta no existe</td>
+</tr>
+<tr>
+<td><code>500 Internal Server Error</code></td>
+<td>Gestionar errores inesperados</td>
+</tr>
+<tr>
+<td>Orden de middlewares</td>
+<td>Colocar rutas, 404 y errores en el orden correcto</td>
+</tr>
+<tr>
+<td>Delegar errores</td>
+<td>Separar la ruta de la construcción de la respuesta de error</td>
+</tr>
+</tbody>
+</table>
+<p>El objetivo es que nuestra API empiece a gestionar los errores de una forma más
+profesional y mantenible.</p>
+<h2 id="que-es-un-middleware">Qué es un middleware<a class="headerlink" href="#que-es-un-middleware" title="Permanent link">&para;</a></h2>
+<p>Un <strong>middleware</strong> es una función que se ejecuta durante el recorrido de una
+petición antes de llegar a la respuesta final.</p>
+<p>En Express, una petición puede pasar por varios middlewares.</p>
+<p>Por ejemplo, nosotros ya usamos este middleware:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+</span></code></pre></div>
+<p>Ese middleware permite que Express pueda leer cuerpos JSON en las peticiones.</p>
+<p>El flujo sería algo así:</p>
+<pre class="mermaid"><code>flowchart LR
+  A[Petición HTTP] --&gt; B[express.json]
+  B --&gt; C[Ruta]
+  C --&gt; D[Respuesta]</code></pre>
+<p>Un middleware puede hacer diferentes cosas:</p>
+<ul>
+<li>Leer datos de la petición.</li>
+<li>Modificar la request.</li>
+<li>Comprobar permisos.</li>
+<li>Validar tokens.</li>
+<li>Registrar logs.</li>
+<li>Gestionar errores.</li>
+<li>Responder directamente.</li>
+<li>Pasar la petición al siguiente paso.</li>
+</ul>
+<h2 id="que-es-next">Qué es <code>next()</code><a class="headerlink" href="#que-es-next" title="Permanent link">&para;</a></h2>
+<p>En Express, <code>next()</code> sirve para pasar la petición al siguiente middleware o al
+siguiente manejador.</p>
+<p>Ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Ha llegado una petición&quot;</span><span class="p">);</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nx">next</span><span class="p">();</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Si no llamamos a <code>next()</code> y tampoco enviamos una respuesta, la petición se queda
+bloqueada.</p>
+<p>Podemos verlo así:</p>
+<pre class="mermaid"><code>flowchart TD
+  A[Middleware 1] --&gt; B{¿Llama a next?}
+  B --&gt;|Sí| C[Middleware o ruta siguiente]
+  B --&gt;|No| D[La petición se queda sin continuar]</code></pre>
+<p>También podemos pasar un error a <code>next()</code>:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nx">next</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Cuando hacemos eso, Express salta al middleware de errores.</p>
+<h2 id="que-es-un-middleware-de-errores">Qué es un middleware de errores<a class="headerlink" href="#que-es-un-middleware-de-errores" title="Permanent link">&para;</a></h2>
+<p>Un middleware de errores es una función especial que Express ejecuta cuando
+ocurre un error.</p>
+<p>Tiene esta forma:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">((</span><span class="nx">err</span><span class="p">,</span><span class="w"> </span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Error interno del servidor&quot;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>La diferencia con un middleware normal es que recibe <strong>cuatro parámetros</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Tipo de middleware</th>
+<th>Parámetros</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Middleware normal</td>
+<td><code>req</code>, <code>res</code>, <code>next</code></td>
+</tr>
+<tr>
+<td>Middleware de errores</td>
+<td><code>err</code>, <code>req</code>, <code>res</code>, <code>next</code></td>
+</tr>
+</tbody>
+</table>
+<p>Esto es importante porque Express reconoce que es un middleware de errores por
+esa estructura.</p>
+<h2 id="por-que-centralizar-errores">Por qué centralizar errores<a class="headerlink" href="#por-que-centralizar-errores" title="Permanent link">&para;</a></h2>
+<p>Hasta ahora, cada ruta gestiona sus errores directamente.</p>
+<p>Ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Esto no está mal para empezar, pero puede volverse repetitivo.</p>
+<p>Si tenemos muchos endpoints, tendremos muchos errores repetidos:</p>
+<ul>
+<li>ID no válido.</li>
+<li>Usuario no encontrado.</li>
+<li>Email duplicado.</li>
+<li>Datos incorrectos.</li>
+<li>Ruta no encontrada.</li>
+<li>Error interno.</li>
+</ul>
+<p>Centralizar errores nos permite:</p>
+<ul>
+<li>Usar siempre el mismo formato de respuesta.</li>
+<li>Evitar repetir código.</li>
+<li>Separar la lógica normal de la lógica de error.</li>
+<li>Facilitar el mantenimiento.</li>
+<li>Mejorar la claridad de la API.</li>
+<li>Preparar el proyecto para crecer.</li>
+</ul>
+<h2 id="formato-comun-de-error">Formato común de error<a class="headerlink" href="#formato-comun-de-error" title="Permanent link">&para;</a></h2>
+<p>A partir de ahora intentaremos que los errores tengan una estructura parecida a
+esta:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/users/999&quot;</span><span class="p">,</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01T10:00:00.000Z&quot;</span>
+</span><span id="__span-10-7"><a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Este formato nos da más información que un simple mensaje.</p>
+<p>Incluye:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error</code></td>
+<td>Mensaje principal del error</td>
+</tr>
+<tr>
+<td><code>statusCode</code></td>
+<td>Código HTTP</td>
+</tr>
+<tr>
+<td><code>path</code></td>
+<td>Ruta que ha provocado el error</td>
+</tr>
+<tr>
+<td><code>method</code></td>
+<td>Método HTTP utilizado</td>
+</tr>
+<tr>
+<td><code>timestamp</code></td>
+<td>Momento en que ocurrió</td>
+</tr>
+</tbody>
+</table>
+<p>También podremos añadir detalles extra cuando sea necesario:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="p">{</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="w">    </span><span class="nt">&quot;received&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/users/abc&quot;</span><span class="p">,</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01T10:00:00.000Z&quot;</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="error-personalizado-apperror">Error personalizado: <code>AppError</code><a class="headerlink" href="#error-personalizado-apperror" title="Permanent link">&para;</a></h2>
+<p>Para centralizar errores, podemos crear una clase propia.</p>
+<p>La llamaremos <code>AppError</code>.</p>
+<p>Esta clase nos permitirá crear errores con:</p>
+<ul>
+<li>Mensaje.</li>
+<li>Código de estado.</li>
+<li>Detalles opcionales.</li>
+</ul>
+<p>Ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">);</span>
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>La ventaja es que el middleware de errores podrá leer esa información y
+construir una respuesta común.</p>
+<h2 id="diferencia-entre-errores-controlados-y-errores-inesperados">Diferencia entre errores controlados y errores inesperados<a class="headerlink" href="#diferencia-entre-errores-controlados-y-errores-inesperados" title="Permanent link">&para;</a></h2>
+<p>No todos los errores son iguales.</p>
+<h3 id="error-controlado">Error controlado<a class="headerlink" href="#error-controlado" title="Permanent link">&para;</a></h3>
+<p>Es un error que esperamos y gestionamos.</p>
+<p>Ejemplos:</p>
+<ul>
+<li>Usuario no encontrado.</li>
+<li>Email duplicado.</li>
+<li>ID no válido.</li>
+<li>Faltan campos obligatorios.</li>
+</ul>
+<p>Estos errores deberían devolver códigos como:</p>
+<ul>
+<li><code>400</code></li>
+<li><code>404</code></li>
+<li><code>409</code></li>
+</ul>
+<h3 id="error-inesperado">Error inesperado<a class="headerlink" href="#error-inesperado" title="Permanent link">&para;</a></h3>
+<p>Es un fallo que no esperábamos.</p>
+<p>Ejemplos:</p>
+<ul>
+<li>Bug en el código.</li>
+<li>Variable <code>undefined</code>.</li>
+<li>Fallo de conexión.</li>
+<li>Error interno no controlado.</li>
+</ul>
+<p>Estos errores suelen devolver:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="err">500 Internal Server Error</span>
+</span></code></pre></div>
+<p>La idea del middleware global será gestionar ambos casos.</p>
+<h2 id="middleware-404">Middleware <code>404</code><a class="headerlink" href="#middleware-404" title="Permanent link">&para;</a></h2>
+<p>También vamos a crear un middleware para rutas no encontradas.</p>
+<p>Hasta ahora, si llamamos a una ruta que no existe:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="err">GET /api/ruta-inventada</span>
+</span></code></pre></div>
+<p>Express responde de forma básica.</p>
+<p>Nosotros queremos que responda en JSON, siguiendo nuestro formato.</p>
+<p>Ejemplo:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ruta no encontrada&quot;</span><span class="p">,</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/ruta-inventada&quot;</span><span class="p">,</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01T10:00:00.000Z&quot;</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Este middleware debe colocarse <strong>después de todas las rutas</strong>.</p>
+<p>¿Por qué?</p>
+<p>Porque solo queremos que se ejecute si ninguna ruta anterior ha respondido.</p>
+<h2 id="orden-de-middlewares">Orden de middlewares<a class="headerlink" href="#orden-de-middlewares" title="Permanent link">&para;</a></h2>
+<p>El orden en Express es muy importante.</p>
+<p>Una estructura correcta sería:</p>
+<ol>
+<li>Crear <code>app</code>.</li>
+<li>Middlewares generales.</li>
+<li>Rutas.</li>
+<li>Middleware <code>404</code>.</li>
+<li>Middleware global de errores.</li>
+<li><code>app.listen</code>.</li>
+</ol>
+<p>Ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/health&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">notFoundMiddleware</span><span class="p">);</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">errorMiddleware</span><span class="p">);</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</span></code></pre></div>
+<p>El middleware de errores debe ir al final, después de las rutas y después del
+middleware <code>404</code>.</p>
+<pre class="mermaid"><code>flowchart TD
+  A[Petición] --&gt; B[express.json]
+  B --&gt; C[Rutas de la API]
+  C --&gt; D{¿Alguna ruta responde?}
+  D --&gt;|Sí| E[Respuesta normal]
+  D --&gt;|No| F[Middleware 404]
+  F --&gt; G[Middleware de errores]
+  G --&gt; H[Respuesta de error JSON]</code></pre>
+<h2 id="flujo-de-error-centralizado">Flujo de error centralizado<a class="headerlink" href="#flujo-de-error-centralizado" title="Permanent link">&para;</a></h2>
+<p>Cuando usemos <code>next(error)</code>, el flujo será este:</p>
+<pre class="mermaid"><code>sequenceDiagram
+  participant Cliente
+  participant Ruta
+  participant ErrorMiddleware as Middleware de errores
+
+  Cliente-&gt;&gt;Ruta: GET /api/users/abc
+  Ruta-&gt;&gt;Ruta: Detecta ID no válido
+  Ruta-&gt;&gt;ErrorMiddleware: next(new AppError(...))
+  ErrorMiddleware--&gt;&gt;Cliente: 400 Bad Request + JSON común</code></pre>
+<p>La ruta detecta el problema, pero no construye toda la respuesta.</p>
+<p>El middleware de errores se encarga de responder con el formato común.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre el repositorio:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>usermanager-api
+</span></code></pre></div>
+<p>Entra en la carpeta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Arranca el servidor:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Comprueba que la API sigue funcionando:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="err">GET http://localhost:3000/api/health</span>
+</span></code></pre></div>
+<h3 id="paso-2-importar-tipos-de-express">Paso 2: Importar tipos de Express<a class="headerlink" href="#paso-2-importar-tipos-de-express" title="Permanent link">&para;</a></h3>
+<p>Abre el archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>src/server.ts
+</span></code></pre></div>
+<p>Arriba del todo, modifica el import de Express.</p>
+<p>Si tienes esto:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;express&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Cámbialo por:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">express</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Request</span><span class="p">,</span><span class="w"> </span><span class="nx">Response</span><span class="p">,</span><span class="w"> </span><span class="nx">NextFunction</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;express&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Estos tipos nos ayudarán a escribir el middleware de errores con TypeScript.</p>
+<h3 id="paso-3-crear-la-clase-apperror">Paso 3: Crear la clase <code>AppError</code><a class="headerlink" href="#paso-3-crear-la-clase-apperror" title="Permanent link">&para;</a></h3>
+<p>Debajo del tipo <code>User</code> o debajo del array <code>users</code>, añade esta clase:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="kd">class</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="nx">statusCode</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">  </span><span class="nx">details?</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">;</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">statusCode</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">500</span><span class="p">,</span><span class="w"> </span><span class="nx">details?</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">statusCode</span><span class="p">;</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">details</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">details</span><span class="p">;</span>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Esta clase extiende la clase <code>Error</code> de JavaScript, pero añade:</p>
+<ul>
+<li><code>statusCode</code></li>
+<li><code>details</code></li>
+</ul>
+<p>Ejemplo de uso:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Otro ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="paso-4-crear-el-middleware-de-rutas-no-encontradas">Paso 4: Crear el middleware de rutas no encontradas<a class="headerlink" href="#paso-4-crear-el-middleware-de-rutas-no-encontradas" title="Permanent link">&para;</a></h3>
+<p>Debajo de las rutas, pero antes de <code>app.listen</code>, vamos a añadir un middleware
+<code>404</code>.</p>
+<p>Primero crea la función:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">notFoundMiddleware</span><span class="p">(</span><span class="nx">req</span><span class="o">:</span><span class="w"> </span><span class="kt">Request</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="o">:</span><span class="w"> </span><span class="kt">Response</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="kt">NextFunction</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nx">next</span><span class="p">(</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">    </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;Ruta no encontrada&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">      </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">req.method</span><span class="p">,</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="w">      </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">req.originalUrl</span>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="w">    </span><span class="p">})</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span><span class="p">);</span>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Este middleware crea un error <code>404</code> y lo pasa al middleware global usando
+<code>next()</code>.</p>
+<h3 id="paso-5-crear-el-middleware-global-de-errores">Paso 5: Crear el middleware global de errores<a class="headerlink" href="#paso-5-crear-el-middleware-global-de-errores" title="Permanent link">&para;</a></h3>
+<p>Debajo del middleware anterior, crea esta función:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="kd">function</span><span class="w"> </span><span class="nx">errorMiddleware</span><span class="p">(</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nx">err</span><span class="o">:</span><span class="w"> </span><span class="kt">AppError</span><span class="p">,</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nx">req</span><span class="o">:</span><span class="w"> </span><span class="kt">Request</span><span class="p">,</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="nx">res</span><span class="o">:</span><span class="w"> </span><span class="kt">Response</span><span class="p">,</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="nx">_next</span><span class="o">:</span><span class="w"> </span><span class="kt">NextFunction</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="mf">500</span><span class="p">;</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="nx">statusCode</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="kt">err.message</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;Error interno del servidor&quot;</span><span class="p">,</span>
+</span><span id="__span-29-11"><a id="__codelineno-29-11" name="__codelineno-29-11" href="#__codelineno-29-11"></a><span class="w">    </span><span class="nx">statusCode</span><span class="p">,</span>
+</span><span id="__span-29-12"><a id="__codelineno-29-12" name="__codelineno-29-12" href="#__codelineno-29-12"></a><span class="w">    </span><span class="nx">details</span><span class="o">:</span><span class="w"> </span><span class="kt">err.details</span><span class="p">,</span>
+</span><span id="__span-29-13"><a id="__codelineno-29-13" name="__codelineno-29-13" href="#__codelineno-29-13"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">req.originalUrl</span><span class="p">,</span>
+</span><span id="__span-29-14"><a id="__codelineno-29-14" name="__codelineno-29-14" href="#__codelineno-29-14"></a><span class="w">    </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">req.method</span><span class="p">,</span>
+</span><span id="__span-29-15"><a id="__codelineno-29-15" name="__codelineno-29-15" href="#__codelineno-29-15"></a><span class="w">    </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+</span><span id="__span-29-16"><a id="__codelineno-29-16" name="__codelineno-29-16" href="#__codelineno-29-16"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-29-17"><a id="__codelineno-29-17" name="__codelineno-29-17" href="#__codelineno-29-17"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Este middleware construye una respuesta común para todos los errores.</p>
+<p>Usamos <code>_next</code> porque Express exige el cuarto parámetro, aunque en esta función
+no lo utilicemos.</p>
+<h3 id="paso-6-registrar-los-middlewares-al-final">Paso 6: Registrar los middlewares al final<a class="headerlink" href="#paso-6-registrar-los-middlewares-al-final" title="Permanent link">&para;</a></h3>
+<p>Busca esta parte:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Servidor escuchando en http://localhost:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Justo antes de <code>app.listen</code>, añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">notFoundMiddleware</span><span class="p">);</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">errorMiddleware</span><span class="p">);</span>
+</span></code></pre></div>
+<p>La parte final del archivo debe quedar así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">notFoundMiddleware</span><span class="p">);</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">errorMiddleware</span><span class="p">);</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="nx">app</span><span class="p">.</span><span class="nx">listen</span><span class="p">(</span><span class="nx">PORT</span><span class="p">,</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Servidor escuchando en http://localhost:</span><span class="si">${</span><span class="nx">PORT</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Importante:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>Estos middlewares deben ir después de todas las rutas.
+</span></code></pre></div>
+<h3 id="paso-7-probar-ruta-inexistente">Paso 7: Probar ruta inexistente<a class="headerlink" href="#paso-7-probar-ruta-inexistente" title="Permanent link">&para;</a></h3>
+<p>Prueba en Thunder Client o Postman:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="err">GET http://localhost:3000/api/ruta-inventada</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="p">{</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ruta no encontrada&quot;</span><span class="p">,</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">    </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="w">    </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/ruta-inventada&quot;</span>
+</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/ruta-inventada&quot;</span><span class="p">,</span>
+</span><span id="__span-35-9"><a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-35-10"><a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-35-11"><a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<p>Ahora las rutas inexistentes ya responden en JSON.</p>
+<h3 id="paso-8-adaptar-get-apiusersid-al-nuevo-sistema">Paso 8: Adaptar <code>GET /api/users/:id</code> al nuevo sistema<a class="headerlink" href="#paso-8-adaptar-get-apiusersid-al-nuevo-sistema" title="Permanent link">&para;</a></h3>
+<p>Busca la ruta:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="err">GET /api/users/:id</span>
+</span></code></pre></div>
+<p>Actualmente puede tener algo parecido a esto:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span>
+</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-38-9"><a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>
+</span><span id="__span-38-10"><a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-38-11"><a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>
+</span><span id="__span-38-12"><a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-13"><a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-38-14"><a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span>
+</span><span id="__span-38-15"><a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-38-16"><a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-38-17"><a id="__codelineno-38-17" name="__codelineno-38-17" href="#__codelineno-38-17"></a>
+</span><span id="__span-38-18"><a id="__codelineno-38-18" name="__codelineno-38-18" href="#__codelineno-38-18"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-38-19"><a id="__codelineno-38-19" name="__codelineno-38-19" href="#__codelineno-38-19"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-38-20"><a id="__codelineno-38-20" name="__codelineno-38-20" href="#__codelineno-38-20"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">user</span>
+</span><span id="__span-38-21"><a id="__codelineno-38-21" name="__codelineno-38-21" href="#__codelineno-38-21"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-38-22"><a id="__codelineno-38-22" name="__codelineno-38-22" href="#__codelineno-38-22"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Vamos a cambiarla para usar <code>next()</code> y <code>AppError</code>.</p>
+<h3 id="paso-9-anadir-next-a-la-ruta">Paso 9: Añadir <code>next</code> a la ruta<a class="headerlink" href="#paso-9-anadir-next-a-la-ruta" title="Permanent link">&para;</a></h3>
+<p>Cambia la cabecera de la ruta:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span></code></pre></div>
+<p>Por:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span></code></pre></div>
+<p>Ahora la ruta puede enviar errores al middleware centralizado.</p>
+<h3 id="paso-10-usar-nextnew-apperror">Paso 10: Usar <code>next(new AppError(...))</code><a class="headerlink" href="#paso-10-usar-nextnew-apperror" title="Permanent link">&para;</a></h3>
+<p>Actualiza la ruta así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">idParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">idParam</span><span class="p">);</span>
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>
+</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-41-6"><a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span>
+</span><span id="__span-41-7"><a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a><span class="w">      </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-41-8"><a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a><span class="w">        </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">idParam</span>
+</span><span id="__span-41-9"><a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a><span class="w">      </span><span class="p">})</span>
+</span><span id="__span-41-10"><a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a><span class="w">    </span><span class="p">);</span>
+</span><span id="__span-41-11"><a id="__codelineno-41-11" name="__codelineno-41-11" href="#__codelineno-41-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-41-12"><a id="__codelineno-41-12" name="__codelineno-41-12" href="#__codelineno-41-12"></a>
+</span><span id="__span-41-13"><a id="__codelineno-41-13" name="__codelineno-41-13" href="#__codelineno-41-13"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-41-14"><a id="__codelineno-41-14" name="__codelineno-41-14" href="#__codelineno-41-14"></a>
+</span><span id="__span-41-15"><a id="__codelineno-41-15" name="__codelineno-41-15" href="#__codelineno-41-15"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-41-16"><a id="__codelineno-41-16" name="__codelineno-41-16" href="#__codelineno-41-16"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span>
+</span><span id="__span-41-17"><a id="__codelineno-41-17" name="__codelineno-41-17" href="#__codelineno-41-17"></a><span class="w">      </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">404</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-41-18"><a id="__codelineno-41-18" name="__codelineno-41-18" href="#__codelineno-41-18"></a><span class="w">        </span><span class="nx">id</span>
+</span><span id="__span-41-19"><a id="__codelineno-41-19" name="__codelineno-41-19" href="#__codelineno-41-19"></a><span class="w">      </span><span class="p">})</span>
+</span><span id="__span-41-20"><a id="__codelineno-41-20" name="__codelineno-41-20" href="#__codelineno-41-20"></a><span class="w">    </span><span class="p">);</span>
+</span><span id="__span-41-21"><a id="__codelineno-41-21" name="__codelineno-41-21" href="#__codelineno-41-21"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-41-22"><a id="__codelineno-41-22" name="__codelineno-41-22" href="#__codelineno-41-22"></a>
+</span><span id="__span-41-23"><a id="__codelineno-41-23" name="__codelineno-41-23" href="#__codelineno-41-23"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-41-24"><a id="__codelineno-41-24" name="__codelineno-41-24" href="#__codelineno-41-24"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-41-25"><a id="__codelineno-41-25" name="__codelineno-41-25" href="#__codelineno-41-25"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">user</span>
+</span><span id="__span-41-26"><a id="__codelineno-41-26" name="__codelineno-41-26" href="#__codelineno-41-26"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-41-27"><a id="__codelineno-41-27" name="__codelineno-41-27" href="#__codelineno-41-27"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Ahora la ruta ya no construye directamente los errores. Los delega al
+middleware.</p>
+<h3 id="paso-11-probar-id-no-valido">Paso 11: Probar ID no válido<a class="headerlink" href="#paso-11-probar-id-no-valido" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="err">GET http://localhost:3000/api/users/abc</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="p">{</span>
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-43-5"><a id="__codelineno-43-5" name="__codelineno-43-5" href="#__codelineno-43-5"></a><span class="w">    </span><span class="nt">&quot;received&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-43-6"><a id="__codelineno-43-6" name="__codelineno-43-6" href="#__codelineno-43-6"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-43-7"><a id="__codelineno-43-7" name="__codelineno-43-7" href="#__codelineno-43-7"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/users/abc&quot;</span><span class="p">,</span>
+</span><span id="__span-43-8"><a id="__codelineno-43-8" name="__codelineno-43-8" href="#__codelineno-43-8"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-43-9"><a id="__codelineno-43-9" name="__codelineno-43-9" href="#__codelineno-43-9"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-43-10"><a id="__codelineno-43-10" name="__codelineno-43-10" href="#__codelineno-43-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<h3 id="paso-12-probar-usuario-inexistente">Paso 12: Probar usuario inexistente<a class="headerlink" href="#paso-12-probar-usuario-inexistente" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="err">GET http://localhost:3000/api/users/999</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="p">{</span>
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span><span class="p">,</span>
+</span><span id="__span-46-4"><a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-46-5"><a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-46-6"><a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-46-7"><a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/users/999&quot;</span><span class="p">,</span>
+</span><span id="__span-46-8"><a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-46-9"><a id="__codelineno-46-9" name="__codelineno-46-9" href="#__codelineno-46-9"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-46-10"><a id="__codelineno-46-10" name="__codelineno-46-10" href="#__codelineno-46-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<h3 id="paso-13-probar-usuario-existente">Paso 13: Probar usuario existente<a class="headerlink" href="#paso-13-probar-usuario-existente" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="err">GET http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="p">{</span>
+</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-49-3"><a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-49-4"><a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-49-5"><a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-49-6"><a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-49-7"><a id="__codelineno-49-7" name="__codelineno-49-7" href="#__codelineno-49-7"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-49-8"><a id="__codelineno-49-8" name="__codelineno-49-8" href="#__codelineno-49-8"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-49-9"><a id="__codelineno-49-9" name="__codelineno-49-9" href="#__codelineno-49-9"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-49-10"><a id="__codelineno-49-10" name="__codelineno-49-10" href="#__codelineno-49-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<p>Este caso sigue siendo una respuesta normal, no pasa por el middleware de
+errores.</p>
+<h3 id="paso-14-crear-una-ruta-temporal-para-probar-error-500">Paso 14: Crear una ruta temporal para probar error <code>500</code><a class="headerlink" href="#paso-14-crear-una-ruta-temporal-para-probar-error-500" title="Permanent link">&para;</a></h3>
+<p>Añade una ruta temporal antes del middleware <code>404</code>:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;/api/debug/error&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">,</span><span class="w"> </span><span class="nx">next</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a><span class="w">  </span><span class="nx">next</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;Error de prueba interno&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">500</span><span class="p">));</span>
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="err">GET http://localhost:3000/api/debug/error</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="p">{</span>
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Error de prueba interno&quot;</span><span class="p">,</span>
+</span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">500</span><span class="p">,</span>
+</span><span id="__span-53-4"><a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/debug/error&quot;</span><span class="p">,</span>
+</span><span id="__span-53-5"><a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-53-6"><a id="__codelineno-53-6" name="__codelineno-53-6" href="#__codelineno-53-6"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-53-7"><a id="__codelineno-53-7" name="__codelineno-53-7" href="#__codelineno-53-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="err">500 Internal Server Error</span>
+</span></code></pre></div>
+<p>Esta ruta es solo para aprender. Más adelante se puede eliminar.</p>
+<h3 id="paso-15-crear-una-carpeta-de-pruebas-del-dia-15">Paso 15: Crear una carpeta de pruebas del día 15<a class="headerlink" href="#paso-15-crear-una-carpeta-de-pruebas-del-dia-15" title="Permanent link">&para;</a></h3>
+<p>En Thunder Client o Postman, dentro de la colección <code>UserManager API</code>, crea una
+carpeta llamada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>Día 15 - Middleware centralizado de errores
+</span></code></pre></div>
+<p>Añade estas peticiones:</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Objetivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/1</code></td>
+<td>Usuario existente</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/abc</code></td>
+<td>ID no válido</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/999</code></td>
+<td>Usuario no encontrado</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/ruta-inventada</code></td>
+<td>Ruta inexistente</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/debug/error</code></td>
+<td>Error interno de prueba</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-16-actualizar-el-readme">Paso 16: Actualizar el README<a class="headerlink" href="#paso-16-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Añade una sección sobre gestión de errores:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="gu">## Gestión centralizada de errores</span>
+</span><span id="__span-56-2"><a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a>
+</span><span id="__span-56-3"><a id="__codelineno-56-3" name="__codelineno-56-3" href="#__codelineno-56-3"></a>La API utiliza un middleware global para devolver errores con un formato común.
+</span><span id="__span-56-4"><a id="__codelineno-56-4" name="__codelineno-56-4" href="#__codelineno-56-4"></a>
+</span><span id="__span-56-5"><a id="__codelineno-56-5" name="__codelineno-56-5" href="#__codelineno-56-5"></a>Formato general:
+</span><span id="__span-56-6"><a id="__codelineno-56-6" name="__codelineno-56-6" href="#__codelineno-56-6"></a>
+</span><span id="__span-56-7"><a id="__codelineno-56-7" name="__codelineno-56-7" href="#__codelineno-56-7"></a><span class="sb">```json</span>
+</span><span id="__span-56-8"><a id="__codelineno-56-8" name="__codelineno-56-8" href="#__codelineno-56-8"></a><span class="p">{</span>
+</span><span id="__span-56-9"><a id="__codelineno-56-9" name="__codelineno-56-9" href="#__codelineno-56-9"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Mensaje del error&quot;</span><span class="p">,</span>
+</span><span id="__span-56-10"><a id="__codelineno-56-10" name="__codelineno-56-10" href="#__codelineno-56-10"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+</span><span id="__span-56-11"><a id="__codelineno-56-11" name="__codelineno-56-11" href="#__codelineno-56-11"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-56-12"><a id="__codelineno-56-12" name="__codelineno-56-12" href="#__codelineno-56-12"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/users/abc&quot;</span><span class="p">,</span>
+</span><span id="__span-56-13"><a id="__codelineno-56-13" name="__codelineno-56-13" href="#__codelineno-56-13"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-56-14"><a id="__codelineno-56-14" name="__codelineno-56-14" href="#__codelineno-56-14"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2026-01-01T10:00:00.000Z&quot;</span>
+</span><span id="__span-56-15"><a id="__codelineno-56-15" name="__codelineno-56-15" href="#__codelineno-56-15"></a><span class="p">}</span>
+</span><span id="__span-56-16"><a id="__codelineno-56-16" name="__codelineno-56-16" href="#__codelineno-56-16"></a><span class="sb">```</span>
+</span><span id="__span-56-17"><a id="__codelineno-56-17" name="__codelineno-56-17" href="#__codelineno-56-17"></a>
+</span><span id="__span-56-18"><a id="__codelineno-56-18" name="__codelineno-56-18" href="#__codelineno-56-18"></a>También se ha añadido un middleware para rutas no encontradas:
+</span><span id="__span-56-19"><a id="__codelineno-56-19" name="__codelineno-56-19" href="#__codelineno-56-19"></a>
+</span><span id="__span-56-20"><a id="__codelineno-56-20" name="__codelineno-56-20" href="#__codelineno-56-20"></a><span class="sb">```http</span>
+</span><span id="__span-56-21"><a id="__codelineno-56-21" name="__codelineno-56-21" href="#__codelineno-56-21"></a><span class="err">GET /api/ruta-inventada</span>
+</span><span id="__span-56-22"><a id="__codelineno-56-22" name="__codelineno-56-22" href="#__codelineno-56-22"></a><span class="sb">```</span>
+</span><span id="__span-56-23"><a id="__codelineno-56-23" name="__codelineno-56-23" href="#__codelineno-56-23"></a>
+</span><span id="__span-56-24"><a id="__codelineno-56-24" name="__codelineno-56-24" href="#__codelineno-56-24"></a>Respuesta:
+</span><span id="__span-56-25"><a id="__codelineno-56-25" name="__codelineno-56-25" href="#__codelineno-56-25"></a>
+</span><span id="__span-56-26"><a id="__codelineno-56-26" name="__codelineno-56-26" href="#__codelineno-56-26"></a><span class="sb">```json</span>
+</span><span id="__span-56-27"><a id="__codelineno-56-27" name="__codelineno-56-27" href="#__codelineno-56-27"></a><span class="p">{</span>
+</span><span id="__span-56-28"><a id="__codelineno-56-28" name="__codelineno-56-28" href="#__codelineno-56-28"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ruta no encontrada&quot;</span><span class="p">,</span>
+</span><span id="__span-56-29"><a id="__codelineno-56-29" name="__codelineno-56-29" href="#__codelineno-56-29"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span>
+</span><span id="__span-56-30"><a id="__codelineno-56-30" name="__codelineno-56-30" href="#__codelineno-56-30"></a><span class="p">}</span>
+</span><span id="__span-56-31"><a id="__codelineno-56-31" name="__codelineno-56-31" href="#__codelineno-56-31"></a><span class="sb">```</span>
+</span></code></pre></div>
+<h3 id="paso-17-crear-el-documento-del-dia-15">Paso 17: Crear el documento del día 15<a class="headerlink" href="#paso-17-crear-el-documento-del-dia-15" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea un archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>docs/dia-15-middleware-errores.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a><span class="gh"># Día 15 - Middleware centralizado de errores</span>
+</span><span id="__span-58-2"><a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>
+</span><span id="__span-58-3"><a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-58-4"><a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a>
+</span><span id="__span-58-5"><a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a><span class="k">-</span><span class="w"> </span>He aprendido qué es un middleware.
+</span><span id="__span-58-6"><a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a><span class="k">-</span><span class="w"> </span>He aprendido para qué sirve <span class="sb">`next()`</span>.
+</span><span id="__span-58-7"><a id="__codelineno-58-7" name="__codelineno-58-7" href="#__codelineno-58-7"></a><span class="k">-</span><span class="w"> </span>He creado una clase <span class="sb">`AppError`</span>.
+</span><span id="__span-58-8"><a id="__codelineno-58-8" name="__codelineno-58-8" href="#__codelineno-58-8"></a><span class="k">-</span><span class="w"> </span>He creado un middleware para rutas no encontradas.
+</span><span id="__span-58-9"><a id="__codelineno-58-9" name="__codelineno-58-9" href="#__codelineno-58-9"></a><span class="k">-</span><span class="w"> </span>He creado un middleware global de errores.
+</span><span id="__span-58-10"><a id="__codelineno-58-10" name="__codelineno-58-10" href="#__codelineno-58-10"></a><span class="k">-</span><span class="w"> </span>He adaptado <span class="sb">`GET /api/users/:id`</span> para usar <span class="sb">`next(new AppError(...))`</span>.
+</span><span id="__span-58-11"><a id="__codelineno-58-11" name="__codelineno-58-11" href="#__codelineno-58-11"></a><span class="k">-</span><span class="w"> </span>He probado errores <span class="sb">`400`</span>, <span class="sb">`404`</span> y <span class="sb">`500`</span>.
+</span><span id="__span-58-12"><a id="__codelineno-58-12" name="__codelineno-58-12" href="#__codelineno-58-12"></a><span class="k">-</span><span class="w"> </span>He comprobado que los errores tienen un formato común.
+</span><span id="__span-58-13"><a id="__codelineno-58-13" name="__codelineno-58-13" href="#__codelineno-58-13"></a>
+</span><span id="__span-58-14"><a id="__codelineno-58-14" name="__codelineno-58-14" href="#__codelineno-58-14"></a><span class="gu">## Clase AppError</span>
+</span><span id="__span-58-15"><a id="__codelineno-58-15" name="__codelineno-58-15" href="#__codelineno-58-15"></a>
+</span><span id="__span-58-16"><a id="__codelineno-58-16" name="__codelineno-58-16" href="#__codelineno-58-16"></a><span class="sb">```ts</span>
+</span><span id="__span-58-17"><a id="__codelineno-58-17" name="__codelineno-58-17" href="#__codelineno-58-17"></a><span class="kd">class</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="k">extends</span><span class="w"> </span><span class="ne">Error</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-58-18"><a id="__codelineno-58-18" name="__codelineno-58-18" href="#__codelineno-58-18"></a><span class="w">  </span><span class="nx">statusCode</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+</span><span id="__span-58-19"><a id="__codelineno-58-19" name="__codelineno-58-19" href="#__codelineno-58-19"></a><span class="w">  </span><span class="nx">details?</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">;</span>
+</span><span id="__span-58-20"><a id="__codelineno-58-20" name="__codelineno-58-20" href="#__codelineno-58-20"></a>
+</span><span id="__span-58-21"><a id="__codelineno-58-21" name="__codelineno-58-21" href="#__codelineno-58-21"></a><span class="w">  </span><span class="kr">constructor</span><span class="p">(</span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">statusCode</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">500</span><span class="p">,</span><span class="w"> </span><span class="nx">details?</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-58-22"><a id="__codelineno-58-22" name="__codelineno-58-22" href="#__codelineno-58-22"></a><span class="w">    </span><span class="k">super</span><span class="p">(</span><span class="nx">message</span><span class="p">);</span>
+</span><span id="__span-58-23"><a id="__codelineno-58-23" name="__codelineno-58-23" href="#__codelineno-58-23"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">statusCode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">statusCode</span><span class="p">;</span>
+</span><span id="__span-58-24"><a id="__codelineno-58-24" name="__codelineno-58-24" href="#__codelineno-58-24"></a><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="nx">details</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">details</span><span class="p">;</span>
+</span><span id="__span-58-25"><a id="__codelineno-58-25" name="__codelineno-58-25" href="#__codelineno-58-25"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-58-26"><a id="__codelineno-58-26" name="__codelineno-58-26" href="#__codelineno-58-26"></a><span class="p">}</span>
+</span><span id="__span-58-27"><a id="__codelineno-58-27" name="__codelineno-58-27" href="#__codelineno-58-27"></a><span class="sb">```</span>
+</span><span id="__span-58-28"><a id="__codelineno-58-28" name="__codelineno-58-28" href="#__codelineno-58-28"></a>
+</span><span id="__span-58-29"><a id="__codelineno-58-29" name="__codelineno-58-29" href="#__codelineno-58-29"></a><span class="gu">## Formato de error</span>
+</span><span id="__span-58-30"><a id="__codelineno-58-30" name="__codelineno-58-30" href="#__codelineno-58-30"></a>
+</span><span id="__span-58-31"><a id="__codelineno-58-31" name="__codelineno-58-31" href="#__codelineno-58-31"></a><span class="sb">```json</span>
+</span><span id="__span-58-32"><a id="__codelineno-58-32" name="__codelineno-58-32" href="#__codelineno-58-32"></a><span class="p">{</span>
+</span><span id="__span-58-33"><a id="__codelineno-58-33" name="__codelineno-58-33" href="#__codelineno-58-33"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Mensaje del error&quot;</span><span class="p">,</span>
+</span><span id="__span-58-34"><a id="__codelineno-58-34" name="__codelineno-58-34" href="#__codelineno-58-34"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">400</span><span class="p">,</span>
+</span><span id="__span-58-35"><a id="__codelineno-58-35" name="__codelineno-58-35" href="#__codelineno-58-35"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-58-36"><a id="__codelineno-58-36" name="__codelineno-58-36" href="#__codelineno-58-36"></a><span class="w">  </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/api/users/abc&quot;</span><span class="p">,</span>
+</span><span id="__span-58-37"><a id="__codelineno-58-37" name="__codelineno-58-37" href="#__codelineno-58-37"></a><span class="w">  </span><span class="nt">&quot;method&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+</span><span id="__span-58-38"><a id="__codelineno-58-38" name="__codelineno-58-38" href="#__codelineno-58-38"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-58-39"><a id="__codelineno-58-39" name="__codelineno-58-39" href="#__codelineno-58-39"></a><span class="p">}</span>
+</span><span id="__span-58-40"><a id="__codelineno-58-40" name="__codelineno-58-40" href="#__codelineno-58-40"></a><span class="sb">```</span>
+</span><span id="__span-58-41"><a id="__codelineno-58-41" name="__codelineno-58-41" href="#__codelineno-58-41"></a>
+</span><span id="__span-58-42"><a id="__codelineno-58-42" name="__codelineno-58-42" href="#__codelineno-58-42"></a><span class="gu">## Casos probados</span>
+</span><span id="__span-58-43"><a id="__codelineno-58-43" name="__codelineno-58-43" href="#__codelineno-58-43"></a>
+</span><span id="__span-58-44"><a id="__codelineno-58-44" name="__codelineno-58-44" href="#__codelineno-58-44"></a>| Petición | Caso | Código esperado | Resultado |
+</span><span id="__span-58-45"><a id="__codelineno-58-45" name="__codelineno-58-45" href="#__codelineno-58-45"></a>| --- | --- | ---: | --- |
+</span><span id="__span-58-46"><a id="__codelineno-58-46" name="__codelineno-58-46" href="#__codelineno-58-46"></a>| <span class="sb">`GET /api/users/1`</span> | Usuario existente | 200 | |
+</span><span id="__span-58-47"><a id="__codelineno-58-47" name="__codelineno-58-47" href="#__codelineno-58-47"></a>| <span class="sb">`GET /api/users/abc`</span> | ID no válido | 400 | |
+</span><span id="__span-58-48"><a id="__codelineno-58-48" name="__codelineno-58-48" href="#__codelineno-58-48"></a>| <span class="sb">`GET /api/users/999`</span> | Usuario no encontrado | 404 | |
+</span><span id="__span-58-49"><a id="__codelineno-58-49" name="__codelineno-58-49" href="#__codelineno-58-49"></a>| <span class="sb">`GET /api/ruta-inventada`</span> | Ruta inexistente | 404 | |
+</span><span id="__span-58-50"><a id="__codelineno-58-50" name="__codelineno-58-50" href="#__codelineno-58-50"></a>| <span class="sb">`GET /api/debug/error`</span> | Error interno de prueba | 500 | |
+</span><span id="__span-58-51"><a id="__codelineno-58-51" name="__codelineno-58-51" href="#__codelineno-58-51"></a>
+</span><span id="__span-58-52"><a id="__codelineno-58-52" name="__codelineno-58-52" href="#__codelineno-58-52"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-58-53"><a id="__codelineno-58-53" name="__codelineno-58-53" href="#__codelineno-58-53"></a>
+</span><span id="__span-58-54"><a id="__codelineno-58-54" name="__codelineno-58-54" href="#__codelineno-58-54"></a>Un middleware de errores permite centralizar la forma en que la API responde
+</span><span id="__span-58-55"><a id="__codelineno-58-55" name="__codelineno-58-55" href="#__codelineno-58-55"></a>cuando ocurre un problema. Así evitamos que cada ruta devuelva errores con
+</span><span id="__span-58-56"><a id="__codelineno-58-56" name="__codelineno-58-56" href="#__codelineno-58-56"></a>formatos diferentes.
+</span></code></pre></div>
+<h3 id="paso-18-actualizar-el-indice-del-readme">Paso 18: Actualizar el índice del README<a class="headerlink" href="#paso-18-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace al documento del día 15:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>
+</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-59-5"><a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-59-6"><a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-59-7"><a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-59-8"><a id="__codelineno-59-8" name="__codelineno-59-8" href="#__codelineno-59-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-59-9"><a id="__codelineno-59-9" name="__codelineno-59-9" href="#__codelineno-59-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-59-10"><a id="__codelineno-59-10" name="__codelineno-59-10" href="#__codelineno-59-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-59-11"><a id="__codelineno-59-11" name="__codelineno-59-11" href="#__codelineno-59-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-59-12"><a id="__codelineno-59-12" name="__codelineno-59-12" href="#__codelineno-59-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-59-13"><a id="__codelineno-59-13" name="__codelineno-59-13" href="#__codelineno-59-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-59-14"><a id="__codelineno-59-14" name="__codelineno-59-14" href="#__codelineno-59-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-59-15"><a id="__codelineno-59-15" name="__codelineno-59-15" href="#__codelineno-59-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-59-16"><a id="__codelineno-59-16" name="__codelineno-59-16" href="#__codelineno-59-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span><span id="__span-59-17"><a id="__codelineno-59-17" name="__codelineno-59-17" href="#__codelineno-59-17"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 15 - Middleware centralizado de errores</span>](<span class="na">docs/dia-15-middleware-errores.md</span>)
+</span></code></pre></div>
+<h3 id="paso-19-guardar-cambios-en-git">Paso 19: Guardar cambios en Git<a class="headerlink" href="#paso-19-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 15 - Crear middleware centralizado de errores&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<p>Ahora toca practicar sin seguir todos los pasos guiados.</p>
+<h3 id="tarea-libre-1-adaptar-otro-endpoint-al-middleware-de-errores">Tarea libre 1: Adaptar otro endpoint al middleware de errores<a class="headerlink" href="#tarea-libre-1-adaptar-otro-endpoint-al-middleware-de-errores" title="Permanent link">&para;</a></h3>
+<p>Elige una de estas rutas:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="err">PATCH /api/users/:id</span>
+</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a><span class="err">DELETE /api/users/:id</span>
+</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a><span class="err">POST /api/users</span>
+</span></code></pre></div>
+<p>Y cambia al menos un error para que use:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="nx">next</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(...));</span>
+</span></code></pre></div>
+<p>Por ejemplo, en lugar de:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">409</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-66-2"><a id="__codelineno-66-2" name="__codelineno-66-2" href="#__codelineno-66-2"></a><span class="w">  </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-66-3"><a id="__codelineno-66-3" name="__codelineno-66-3" href="#__codelineno-66-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Puedes usar:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">next</span><span class="p">(</span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El email ya está registrado&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">409</span><span class="p">));</span>
+</span></code></pre></div>
+<h3 id="tarea-libre-2-mejorar-el-error-404-de-ruta-inexistente">Tarea libre 2: Mejorar el error <code>404</code> de ruta inexistente<a class="headerlink" href="#tarea-libre-2-mejorar-el-error-404-de-ruta-inexistente" title="Permanent link">&para;</a></h3>
+<p>Modifica el mensaje de ruta no encontrada para que incluya el método y la ruta.</p>
+<p>Ejemplo:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a><span class="p">{</span>
+</span><span id="__span-68-2"><a id="__codelineno-68-2" name="__codelineno-68-2" href="#__codelineno-68-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;No existe la ruta GET /api/ruta-inventada&quot;</span><span class="p">,</span>
+</span><span id="__span-68-3"><a id="__codelineno-68-3" name="__codelineno-68-3" href="#__codelineno-68-3"></a><span class="w">  </span><span class="nt">&quot;statusCode&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">404</span>
+</span><span id="__span-68-4"><a id="__codelineno-68-4" name="__codelineno-68-4" href="#__codelineno-68-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Pista:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a><span class="nx">req</span><span class="p">.</span><span class="nx">method</span><span class="p">;</span>
+</span><span id="__span-69-2"><a id="__codelineno-69-2" name="__codelineno-69-2" href="#__codelineno-69-2"></a><span class="nx">req</span><span class="p">.</span><span class="nx">originalUrl</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="tarea-libre-3-ocultar-details-cuando-no-existan">Tarea libre 3: Ocultar <code>details</code> cuando no existan<a class="headerlink" href="#tarea-libre-3-ocultar-details-cuando-no-existan" title="Permanent link">&para;</a></h3>
+<p>Actualmente puede aparecer:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a><span class="p">{</span>
+</span><span id="__span-70-2"><a id="__codelineno-70-2" name="__codelineno-70-2" href="#__codelineno-70-2"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
+</span><span id="__span-70-3"><a id="__codelineno-70-3" name="__codelineno-70-3" href="#__codelineno-70-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a><span class="p">{</span>
+</span><span id="__span-71-2"><a id="__codelineno-71-2" name="__codelineno-71-2" href="#__codelineno-71-2"></a><span class="w">  </span><span class="nt">&quot;details&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">u</span><span class="kc">n</span><span class="err">de</span><span class="kc">f</span><span class="err">i</span><span class="kc">ne</span><span class="err">d</span>
+</span><span id="__span-71-3"><a id="__codelineno-71-3" name="__codelineno-71-3" href="#__codelineno-71-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Modifica el middleware para que <code>details</code> solo aparezca cuando exista.</p>
+<p>Pista:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-72-2"><a id="__codelineno-72-2" name="__codelineno-72-2" href="#__codelineno-72-2"></a><span class="w">  </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="kt">err.message</span><span class="p">,</span>
+</span><span id="__span-72-3"><a id="__codelineno-72-3" name="__codelineno-72-3" href="#__codelineno-72-3"></a><span class="w">  </span><span class="nx">statusCode</span><span class="p">,</span>
+</span><span id="__span-72-4"><a id="__codelineno-72-4" name="__codelineno-72-4" href="#__codelineno-72-4"></a><span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">req.originalUrl</span><span class="p">,</span>
+</span><span id="__span-72-5"><a id="__codelineno-72-5" name="__codelineno-72-5" href="#__codelineno-72-5"></a><span class="w">  </span><span class="nx">method</span><span class="o">:</span><span class="w"> </span><span class="kt">req.method</span><span class="p">,</span>
+</span><span id="__span-72-6"><a id="__codelineno-72-6" name="__codelineno-72-6" href="#__codelineno-72-6"></a><span class="w">  </span><span class="nx">timestamp</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+</span><span id="__span-72-7"><a id="__codelineno-72-7" name="__codelineno-72-7" href="#__codelineno-72-7"></a><span class="p">};</span>
+</span><span id="__span-72-8"><a id="__codelineno-72-8" name="__codelineno-72-8" href="#__codelineno-72-8"></a>
+</span><span id="__span-72-9"><a id="__codelineno-72-9" name="__codelineno-72-9" href="#__codelineno-72-9"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">err</span><span class="p">.</span><span class="nx">details</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-72-10"><a id="__codelineno-72-10" name="__codelineno-72-10" href="#__codelineno-72-10"></a><span class="w">  </span><span class="nx">response</span><span class="p">.</span><span class="nx">details</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">err</span><span class="p">.</span><span class="nx">details</span><span class="p">;</span>
+</span><span id="__span-72-11"><a id="__codelineno-72-11" name="__codelineno-72-11" href="#__codelineno-72-11"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Si TypeScript te da problemas, puedes dejar esta tarea como explicación en el
+documento.</p>
+<h3 id="tarea-libre-4-explicar-el-orden-de-middlewares">Tarea libre 4: Explicar el orden de middlewares<a class="headerlink" href="#tarea-libre-4-explicar-el-orden-de-middlewares" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 15, añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a><span class="gu">## Orden de middlewares</span>
+</span></code></pre></div>
+<p>Explica con tus palabras por qué el middleware <code>404</code> y el middleware de errores
+deben ir después de las rutas.</p>
+<p>Puedes apoyarte en esta idea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>Si los ponemos antes de las rutas, las peticiones podrían llegar al middleware de error antes de tener oportunidad de encontrar su endpoint correcto.
+</span></code></pre></div>
+<h2 id="entrega-recomendada-del-dia-15">Entrega recomendada del día 15<a class="headerlink" href="#entrega-recomendada-del-dia-15" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del
+repositorio de GitHub.</p>
+<p>Al finalizar el día 15, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>usermanager-api/
+</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>  README.md
+</span><span id="__span-75-3"><a id="__codelineno-75-3" name="__codelineno-75-3" href="#__codelineno-75-3"></a>  package.json
+</span><span id="__span-75-4"><a id="__codelineno-75-4" name="__codelineno-75-4" href="#__codelineno-75-4"></a>  package-lock.json
+</span><span id="__span-75-5"><a id="__codelineno-75-5" name="__codelineno-75-5" href="#__codelineno-75-5"></a>  tsconfig.json
+</span><span id="__span-75-6"><a id="__codelineno-75-6" name="__codelineno-75-6" href="#__codelineno-75-6"></a>  src/
+</span><span id="__span-75-7"><a id="__codelineno-75-7" name="__codelineno-75-7" href="#__codelineno-75-7"></a>    server.ts
+</span><span id="__span-75-8"><a id="__codelineno-75-8" name="__codelineno-75-8" href="#__codelineno-75-8"></a>  docs/
+</span><span id="__span-75-9"><a id="__codelineno-75-9" name="__codelineno-75-9" href="#__codelineno-75-9"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-75-10"><a id="__codelineno-75-10" name="__codelineno-75-10" href="#__codelineno-75-10"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-75-11"><a id="__codelineno-75-11" name="__codelineno-75-11" href="#__codelineno-75-11"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-75-12"><a id="__codelineno-75-12" name="__codelineno-75-12" href="#__codelineno-75-12"></a>    dia-04-metodos-http.md
+</span><span id="__span-75-13"><a id="__codelineno-75-13" name="__codelineno-75-13" href="#__codelineno-75-13"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-75-14"><a id="__codelineno-75-14" name="__codelineno-75-14" href="#__codelineno-75-14"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-75-15"><a id="__codelineno-75-15" name="__codelineno-75-15" href="#__codelineno-75-15"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-75-16"><a id="__codelineno-75-16" name="__codelineno-75-16" href="#__codelineno-75-16"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-75-17"><a id="__codelineno-75-17" name="__codelineno-75-17" href="#__codelineno-75-17"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-75-18"><a id="__codelineno-75-18" name="__codelineno-75-18" href="#__codelineno-75-18"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-75-19"><a id="__codelineno-75-19" name="__codelineno-75-19" href="#__codelineno-75-19"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-75-20"><a id="__codelineno-75-20" name="__codelineno-75-20" href="#__codelineno-75-20"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-75-21"><a id="__codelineno-75-21" name="__codelineno-75-21" href="#__codelineno-75-21"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-75-22"><a id="__codelineno-75-22" name="__codelineno-75-22" href="#__codelineno-75-22"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-75-23"><a id="__codelineno-75-23" name="__codelineno-75-23" href="#__codelineno-75-23"></a>    dia-15-middleware-errores.md
+</span></code></pre></div>
+<p>El documento del día 15 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>docs/dia-15-middleware-errores.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Clase <code>AppError</code>.</li>
+<li>Formato común de error.</li>
+<li>Casos probados.</li>
+<li>Explicación personal del middleware de errores.</li>
+<li>Explicación del orden de middlewares.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>Hola, comparto el avance del día 15 del reto UserManager API:
+</span><span id="__span-77-2"><a id="__codelineno-77-2" name="__codelineno-77-2" href="#__codelineno-77-2"></a>
+</span><span id="__span-77-3"><a id="__codelineno-77-3" name="__codelineno-77-3" href="#__codelineno-77-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-77-4"><a id="__codelineno-77-4" name="__codelineno-77-4" href="#__codelineno-77-4"></a>
+</span><span id="__span-77-5"><a id="__codelineno-77-5" name="__codelineno-77-5" href="#__codelineno-77-5"></a>He creado un middleware centralizado de errores y he documentado el trabajo del día 15 en:
+</span><span id="__span-77-6"><a id="__codelineno-77-6" name="__codelineno-77-6" href="#__codelineno-77-6"></a>docs/dia-15-middleware-errores.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos dado un paso importante hacia una API más profesional.</p>
+<p>Hasta ahora cada ruta devolvía sus propios errores. A partir de ahora empezamos
+a centralizar la gestión de errores para que todas las respuestas tengan una
+estructura común.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li>Middleware.</li>
+<li><code>next()</code>.</li>
+<li><code>AppError</code>.</li>
+<li>Middleware <code>404</code>.</li>
+<li>Middleware global de errores.</li>
+<li>Formato común de error.</li>
+<li>Errores <code>400</code>, <code>404</code> y <code>500</code>.</li>
+<li>Orden de middlewares.</li>
+</ul>
+<p>Esto nos prepara para las siguientes fases del proyecto, donde la API crecerá
+bastante y necesitaremos una estructura más mantenible.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Una API profesional no debería devolver errores desordenados: debe tener un
+formato común, códigos coherentes y una gestión centralizada de los
+problemas.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

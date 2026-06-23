@@ -1,0 +1,2800 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 35 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia9/">
+      
+      
+        <link rel="next" href="../dia11/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 10: Actualizar usuarios en memoria - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-10-actualizar-usuarios-en-memoria" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 10: Actualizar usuarios en memoria
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-actualizar-un-recurso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué significa actualizar un recurso
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-usamos-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Por qué usamos PATCH
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-datos-necesitamos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué datos necesitamos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#campos-modificables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Campos modificables
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buscar-usuario-para-actualizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Buscar usuario para actualizar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizacion-con-spread-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualización con spread operator
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validaciones-al-actualizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Validaciones al actualizar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-duplicado-al-actualizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Email duplicado al actualizar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-completo-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo completo del endpoint
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-buscar-la-ruta-patch-apiusersid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Buscar la ruta <code>PATCH /api/users/:id</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-leer-y-validar-el-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Leer y validar el ID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-buscar-el-usuario-con-findindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Buscar el usuario con <code>findIndex</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-leer-campos-del-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Leer campos del body
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-comprobar-que-el-body-no-este-vacio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Comprobar que el body no esté vacío
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-limpiar-y-validar-el-email-si-llega" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Limpiar y validar el email si llega
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-limpiar-el-nombre-si-llega" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Limpiar el nombre si llega
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-validar-isactive-si-llega" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Validar <code>isActive</code> si llega
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-actualizar-el-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Actualizar el usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-devolver-la-respuesta-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Devolver la respuesta final
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-probar-actualizacion-correcta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Probar actualización correcta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-probar-casos-de-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Probar casos de error
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-crear-una-carpeta-de-pruebas-del-dia-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Crear una carpeta de pruebas del día 10
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-el-documento-del-dia-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Crear el documento del día 10
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-impedir-actualizar-el-rol-desde-esta-ruta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Impedir actualizar el rol desde esta ruta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-impedir-actualizar-el-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Impedir actualizar el ID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-una-ruta-especifica-para-desactivar-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear una ruta específica para desactivar usuarios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-patch-con-tus-palabras" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar PATCH con tus palabras
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 10
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-actualizar-un-recurso" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué significa actualizar un recurso
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-usamos-patch" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Por qué usamos PATCH
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-datos-necesitamos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué datos necesitamos
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#campos-modificables" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Campos modificables
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#buscar-usuario-para-actualizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Buscar usuario para actualizar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizacion-con-spread-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualización con spread operator
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validaciones-al-actualizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Validaciones al actualizar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-duplicado-al-actualizar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Email duplicado al actualizar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-completo-del-endpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo completo del endpoint
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-buscar-la-ruta-patch-apiusersid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Buscar la ruta <code>PATCH /api/users/:id</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-leer-y-validar-el-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Leer y validar el ID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-buscar-el-usuario-con-findindex" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Buscar el usuario con <code>findIndex</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-leer-campos-del-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Leer campos del body
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-comprobar-que-el-body-no-este-vacio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Comprobar que el body no esté vacío
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-limpiar-y-validar-el-email-si-llega" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Limpiar y validar el email si llega
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-limpiar-el-nombre-si-llega" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Limpiar el nombre si llega
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-validar-isactive-si-llega" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Validar <code>isActive</code> si llega
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-actualizar-el-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Actualizar el usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-devolver-la-respuesta-final" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Devolver la respuesta final
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-probar-actualizacion-correcta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Probar actualización correcta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-probar-casos-de-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Probar casos de error
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-crear-una-carpeta-de-pruebas-del-dia-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Crear una carpeta de pruebas del día 10
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-el-documento-del-dia-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Crear el documento del día 10
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-impedir-actualizar-el-rol-desde-esta-ruta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Impedir actualizar el rol desde esta ruta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-impedir-actualizar-el-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Impedir actualizar el ID
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-una-ruta-especifica-para-desactivar-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear una ruta específica para desactivar usuarios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-patch-con-tus-palabras" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar PATCH con tus palabras
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 10
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-10-actualizar-usuarios-en-memoria">Día 10: Actualizar usuarios en memoria<a class="headerlink" href="#dia-10-actualizar-usuarios-en-memoria" title="Permanent link">&para;</a></h1>
+<p>En el día 9 implementamos la creación de usuarios en memoria mediante:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">POST /api/users</span>
+</span></code></pre></div>
+<p>Aprendimos a leer datos desde <code>req.body</code>, validar campos obligatorios,
+comprobar emails duplicados, generar un nuevo ID, crear un objeto <code>User</code> y
+añadirlo al array con <code>push</code>.</p>
+<p>Hoy vamos a trabajar la siguiente operación del CRUD: <strong>actualizar un usuario
+existente</strong>.</p>
+<p>Para ello usaremos:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">PATCH /api/users/:id</span>
+</span></code></pre></div>
+<p>Esta ruta permitirá modificar parcialmente los datos de un usuario. Por
+ejemplo, podremos cambiar su nombre o su email sin tener que enviar todos los
+campos del usuario.</p>
+<div class="language-http highlight"><span class="filename">Petición</span><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="err">PATCH /api/users/1</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="err">Content-Type: application/json</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>La API deberá buscar el usuario con ID <code>1</code>, aplicar los cambios recibidos y
+devolver el usuario actualizado.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Objetivo del día</p>
+<p>Implementar <code>PATCH /api/users/:id</code> para actualizar usuarios existentes en
+memoria, validando el ID, los campos permitidos, los emails duplicados y la
+fecha <code>updatedAt</code>.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">Qué vamos a trabajar hoy<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PATCH</code></td>
+<td>Actualizar parcialmente un recurso</td>
+</tr>
+<tr>
+<td>Actualización parcial</td>
+<td>Cambiar solo los campos enviados</td>
+</tr>
+<tr>
+<td><code>req.params</code></td>
+<td>Leer el ID desde la URL</td>
+</tr>
+<tr>
+<td><code>req.body</code></td>
+<td>Leer los cambios enviados por el cliente</td>
+</tr>
+<tr>
+<td><code>findIndex</code></td>
+<td>Localizar la posición de un usuario dentro del array</td>
+</tr>
+<tr>
+<td>Validación de ID</td>
+<td>Detectar IDs no numéricos</td>
+</tr>
+<tr>
+<td>Campos modificables</td>
+<td>Controlar qué datos se pueden cambiar</td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+<td>Evitar que dos usuarios compartan email</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>Registrar cuándo se modificó el usuario</td>
+</tr>
+<tr>
+<td>Errores <code>400</code>, <code>404</code> y <code>409</code></td>
+<td>Responder correctamente según el problema</td>
+</tr>
+</tbody>
+</table>
+<p>El objetivo principal es que la API pueda modificar usuarios existentes dentro
+del array <code>users</code>.</p>
+<h2 id="que-significa-actualizar-un-recurso">Qué significa actualizar un recurso<a class="headerlink" href="#que-significa-actualizar-un-recurso" title="Permanent link">&para;</a></h2>
+<p>Actualizar un recurso significa modificar datos de algo que ya existe.</p>
+<p>En nuestro caso, el recurso será un usuario.</p>
+<div class="language-json highlight"><span class="filename">Usuario original</span><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Si queremos cambiar solo el nombre, enviaremos:</p>
+<div class="language-json highlight"><span class="filename">Cambios</span><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Después de actualizarlo, el usuario quedaría así:</p>
+<div class="language-json highlight"><span class="filename">Usuario actualizado</span><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>El resto de campos se mantienen igual.</p>
+<h2 id="por-que-usamos-patch">Por qué usamos PATCH<a class="headerlink" href="#por-que-usamos-patch" title="Permanent link">&para;</a></h2>
+<p>En APIs REST podemos encontrar varios métodos para actualizar datos,
+especialmente <code>PUT</code> y <code>PATCH</code>.</p>
+<p>En este reto usaremos <code>PATCH</code>.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PATCH significa: quiero modificar solo una parte del recurso.
+</span></code></pre></div>
+<p>Por ejemplo:</p>
+<div class="language-http highlight"><span class="filename">Petición</span><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="err">PATCH /api/users/1</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nuevo@email.com&quot;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Solo cambia el email. El nombre, el rol y el estado del usuario se mantienen
+igual.</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Uso habitual</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PATCH</code></td>
+<td>Modificar algunos campos</td>
+<td>Cambiar solo el email</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td>Reemplazar todo el recurso</td>
+<td>Enviar el usuario completo actualizado</td>
+</tr>
+</tbody>
+</table>
+<p>Durante este reto usaremos <code>PATCH</code> porque es más cómodo para editar
+parcialmente usuarios.</p>
+<h2 id="que-datos-necesitamos">Qué datos necesitamos<a class="headerlink" href="#que-datos-necesitamos" title="Permanent link">&para;</a></h2>
+<p>Para actualizar un usuario necesitamos dos cosas:</p>
+<table>
+<thead>
+<tr>
+<th>Dato</th>
+<th>Dónde viaja</th>
+<th>Cómo se lee en Express</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID del usuario</td>
+<td>Params</td>
+<td><code>req.params.id</code></td>
+</tr>
+<tr>
+<td>Cambios</td>
+<td>Body</td>
+<td><code>req.body</code></td>
+</tr>
+</tbody>
+</table>
+<p>El ID viajará en la URL:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="err">PATCH /api/users/:id</span>
+</span></code></pre></div>
+<p>Ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="err">PATCH /api/users/2</span>
+</span></code></pre></div>
+<p>Los cambios viajarán en el body:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Carlos Actualizado&quot;</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>En Express leeremos:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+</span></code></pre></div>
+<h2 id="campos-modificables">Campos modificables<a class="headerlink" href="#campos-modificables" title="Permanent link">&para;</a></h2>
+<p>Para <code>PATCH /api/users/:id</code>, permitiremos modificar solo estos campos:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Se puede modificar</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>Sí</td>
+<td>Es información editable del usuario</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Sí</td>
+<td>Es información editable, pero debe validarse</td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td>Sí</td>
+<td>Permite activar o desactivar usuarios</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>No</td>
+<td>Lo genera el sistema y no debe cambiar</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>No</td>
+<td>Se cambiará más adelante desde una ruta específica</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>No</td>
+<td>Indica cuándo se creó el usuario</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>No directamente</td>
+<td>Lo actualizará automáticamente la API</td>
+</tr>
+</tbody>
+</table>
+<p>Más adelante tendremos rutas concretas para cambios más delicados:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="err">PATCH /api/users/:id/role</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="err">PATCH /api/users/:id/status</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="err">PATCH /api/users/me/password</span>
+</span></code></pre></div>
+<p>Hoy trabajaremos una edición básica del usuario.</p>
+<h2 id="buscar-usuario-para-actualizar">Buscar usuario para actualizar<a class="headerlink" href="#buscar-usuario-para-actualizar" title="Permanent link">&para;</a></h2>
+<p>En el día 8 usamos <code>find</code> para buscar un usuario:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">find</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Para actualizar un elemento dentro del array, puede ser más cómodo usar
+<code>findIndex</code>.</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">userIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Esto devuelve la posición del usuario dentro del array.</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Ana&quot;</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">2</span><span class="p">,</span><span class="w"> </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Carlos&quot;</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="p">];</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">index</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">2</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Resultado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>1
+</span></code></pre></div>
+<p>Carlos está en la posición <code>1</code> del array.</p>
+<p>Si no encuentra ningún usuario, devuelve:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>-1
+</span></code></pre></div>
+<p>Por eso podemos comprobar:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">userIndex</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="actualizacion-con-spread-operator">Actualización con spread operator<a class="headerlink" href="#actualizacion-con-spread-operator" title="Permanent link">&para;</a></h2>
+<p>Para actualizar un objeto manteniendo sus campos anteriores podemos usar el
+<strong>spread operator</strong>:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">updatedUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="p">...</span><span class="nx">oldUser</span><span class="p">,</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Nuevo nombre&quot;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="p">};</span>
+</span></code></pre></div>
+<p>Esto significa:</p>
+<ol>
+<li>Copia todos los campos de <code>oldUser</code>.</li>
+<li>Sobrescribe el campo <code>name</code>.</li>
+</ol>
+<p>En nuestro caso haremos algo parecido:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">updatedUser</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="p">...</span><span class="nx">currentUser</span><span class="p">,</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">name</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">email</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">  </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">isActive</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">isActive</span><span class="p">,</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">  </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="p">};</span>
+</span></code></pre></div>
+<p>El operador <code>??</code> significa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>Si el valor de la izquierda existe, úsalo.
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Si es null o undefined, usa el valor de la derecha.
+</span></code></pre></div>
+<p>Ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">name</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">name</span>
+</span></code></pre></div>
+<p>Si llega un nuevo <code>name</code> en el body, lo usamos. Si no llega, mantenemos el
+<code>name</code> anterior.</p>
+<h2 id="validaciones-al-actualizar">Validaciones al actualizar<a class="headerlink" href="#validaciones-al-actualizar" title="Permanent link">&para;</a></h2>
+<p>Al actualizar también debemos validar.</p>
+<table>
+<thead>
+<tr>
+<th>Validación</th>
+<th>Error recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>El ID debe ser numérico</td>
+<td><code>400 Bad Request</code></td>
+</tr>
+<tr>
+<td>El usuario debe existir</td>
+<td><code>404 Not Found</code></td>
+</tr>
+<tr>
+<td>El body no puede estar vacío</td>
+<td><code>400 Bad Request</code></td>
+</tr>
+<tr>
+<td>Si llega <code>email</code>, debe tener formato básico válido</td>
+<td><code>400 Bad Request</code></td>
+</tr>
+<tr>
+<td>Si llega <code>email</code>, no puede estar duplicado en otro usuario</td>
+<td><code>409 Conflict</code></td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo de body vacío:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">{}</span>
+</span></code></pre></div>
+<p>Respuesta:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p">{</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Debes enviar al menos un campo para actualizar&quot;</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Ejemplo de email duplicado:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p">{</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Si ese email ya lo usa otro usuario, responderemos:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="p">{</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="email-duplicado-al-actualizar">Email duplicado al actualizar<a class="headerlink" href="#email-duplicado-al-actualizar" title="Permanent link">&para;</a></h2>
+<p>Al crear usuarios ya comprobamos si un email existía. Al actualizar hay que
+tener un poco más de cuidado.</p>
+<p>Imaginemos estos usuarios:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="p">[</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-29-7"><a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+</span><span id="__span-29-8"><a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;carlos@email.com&quot;</span>
+</span><span id="__span-29-9"><a id="__codelineno-29-9" name="__codelineno-29-9" href="#__codelineno-29-9"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-29-10"><a id="__codelineno-29-10" name="__codelineno-29-10" href="#__codelineno-29-10"></a><span class="p">]</span>
+</span></code></pre></div>
+<p>Si actualizamos el usuario <code>2</code> con:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="p">{</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>No deberíamos permitirlo, porque ese email ya pertenece al usuario <code>1</code>.</p>
+<p>Pero si el usuario <code>2</code> envía su mismo email:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="p">{</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;carlos@email.com&quot;</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>No debería considerarse duplicado.</p>
+<p>La comprobación será:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">emailAlreadyExists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a><span class="w">  </span><span class="p">(</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">cleanEmail</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">id</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>Esto significa: busca si existe otro usuario con ese email, sin contar al
+usuario que estamos actualizando.</p>
+<h2 id="flujo-completo-del-endpoint">Flujo completo del endpoint<a class="headerlink" href="#flujo-completo-del-endpoint" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart TD
+    A["PATCH /api/users/:id"] --&gt; B["Leer ID desde params"]
+    B --&gt; C{"¿ID válido?"}
+    C --&gt;|No| D["400 Bad Request"]
+    C --&gt;|Sí| E["Buscar usuario"]
+    E --&gt; F{"¿Existe?"}
+    F --&gt;|No| G["404 Not Found"]
+    F --&gt;|Sí| H["Leer body"]
+    H --&gt; I{"¿Body vacío?"}
+    I --&gt;|Sí| J["400 Bad Request"]
+    I --&gt;|No| K{"¿Email válido y no duplicado?"}
+    K --&gt;|No| L["400 o 409"]
+    K --&gt;|Sí| M["Actualizar usuario"]
+    M --&gt; N["Actualizar updatedAt"]
+    N --&gt; O["200 OK + usuario actualizado"]</code></pre>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre el repositorio:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>usermanager-api
+</span></code></pre></div>
+<p>Entra en la carpeta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Arranca el servidor:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Comprueba que el listado de usuarios funciona:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="err">GET http://localhost:3000/api/users</span>
+</span></code></pre></div>
+<h3 id="paso-2-buscar-la-ruta-patch-apiusersid">Paso 2: Buscar la ruta <code>PATCH /api/users/:id</code><a class="headerlink" href="#paso-2-buscar-la-ruta-patch-apiusersid" title="Permanent link">&para;</a></h3>
+<p>En días anteriores teníamos una ruta simulada parecida a esta:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">;</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">changes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="w">  </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario recibido para actualizar&quot;</span><span class="p">,</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">id</span><span class="p">,</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="w">    </span><span class="nx">changes</span><span class="o">:</span><span class="w"> </span><span class="kt">changes</span>
+</span><span id="__span-37-9"><a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-37-10"><a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Hoy vamos a sustituirla por una versión real que actualice usuarios en el
+array.</p>
+<h3 id="paso-3-leer-y-validar-el-id">Paso 3: Leer y validar el ID<a class="headerlink" href="#paso-3-leer-y-validar-el-id" title="Permanent link">&para;</a></h3>
+<p>Sustituye la ruta por esta primera versión:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">idParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">idParam</span><span class="p">);</span>
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a><span class="w">      </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">idParam</span>
+</span><span id="__span-38-9"><a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-38-10"><a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-38-11"><a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>
+</span><span id="__span-38-12"><a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-38-13"><a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ID recibido correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-38-14"><a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a><span class="w">    </span><span class="nx">id</span>
+</span><span id="__span-38-15"><a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-38-16"><a id="__codelineno-38-16" name="__codelineno-38-16" href="#__codelineno-38-16"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="err">PATCH http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="p">{</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Actualizada&quot;</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="p">{</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ID recibido correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Ahora prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="err">PATCH http://localhost:3000/api/users/abc</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="p">{</span>
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">&quot;received&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-43-4"><a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>400 Bad Request
+</span></code></pre></div>
+<h3 id="paso-4-buscar-el-usuario-con-findindex">Paso 4: Buscar el usuario con <code>findIndex</code><a class="headerlink" href="#paso-4-buscar-el-usuario-con-findindex" title="Permanent link">&para;</a></h3>
+<p>Añade la búsqueda:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">userIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">userIndex</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-45-6"><a id="__codelineno-45-6" name="__codelineno-45-6" href="#__codelineno-45-6"></a><span class="w">    </span><span class="nx">id</span>
+</span><span id="__span-45-7"><a id="__codelineno-45-7" name="__codelineno-45-7" href="#__codelineno-45-7"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-45-8"><a id="__codelineno-45-8" name="__codelineno-45-8" href="#__codelineno-45-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>La ruta quedará así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">idParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span id="__span-46-3"><a id="__codelineno-46-3" name="__codelineno-46-3" href="#__codelineno-46-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">idParam</span><span class="p">);</span>
+</span><span id="__span-46-4"><a id="__codelineno-46-4" name="__codelineno-46-4" href="#__codelineno-46-4"></a>
+</span><span id="__span-46-5"><a id="__codelineno-46-5" name="__codelineno-46-5" href="#__codelineno-46-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-46-6"><a id="__codelineno-46-6" name="__codelineno-46-6" href="#__codelineno-46-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-46-7"><a id="__codelineno-46-7" name="__codelineno-46-7" href="#__codelineno-46-7"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-46-8"><a id="__codelineno-46-8" name="__codelineno-46-8" href="#__codelineno-46-8"></a><span class="w">      </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">idParam</span>
+</span><span id="__span-46-9"><a id="__codelineno-46-9" name="__codelineno-46-9" href="#__codelineno-46-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-46-10"><a id="__codelineno-46-10" name="__codelineno-46-10" href="#__codelineno-46-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-46-11"><a id="__codelineno-46-11" name="__codelineno-46-11" href="#__codelineno-46-11"></a>
+</span><span id="__span-46-12"><a id="__codelineno-46-12" name="__codelineno-46-12" href="#__codelineno-46-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">userIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-46-13"><a id="__codelineno-46-13" name="__codelineno-46-13" href="#__codelineno-46-13"></a>
+</span><span id="__span-46-14"><a id="__codelineno-46-14" name="__codelineno-46-14" href="#__codelineno-46-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">userIndex</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-46-15"><a id="__codelineno-46-15" name="__codelineno-46-15" href="#__codelineno-46-15"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-46-16"><a id="__codelineno-46-16" name="__codelineno-46-16" href="#__codelineno-46-16"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-46-17"><a id="__codelineno-46-17" name="__codelineno-46-17" href="#__codelineno-46-17"></a><span class="w">      </span><span class="nx">id</span>
+</span><span id="__span-46-18"><a id="__codelineno-46-18" name="__codelineno-46-18" href="#__codelineno-46-18"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-46-19"><a id="__codelineno-46-19" name="__codelineno-46-19" href="#__codelineno-46-19"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-46-20"><a id="__codelineno-46-20" name="__codelineno-46-20" href="#__codelineno-46-20"></a>
+</span><span id="__span-46-21"><a id="__codelineno-46-21" name="__codelineno-46-21" href="#__codelineno-46-21"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-46-22"><a id="__codelineno-46-22" name="__codelineno-46-22" href="#__codelineno-46-22"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-46-23"><a id="__codelineno-46-23" name="__codelineno-46-23" href="#__codelineno-46-23"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">]</span>
+</span><span id="__span-46-24"><a id="__codelineno-46-24" name="__codelineno-46-24" href="#__codelineno-46-24"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-46-25"><a id="__codelineno-46-25" name="__codelineno-46-25" href="#__codelineno-46-25"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="err">PATCH http://localhost:3000/api/users/999</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="p">{</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-48-4"><a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>404 Not Found
+</span></code></pre></div>
+<h3 id="paso-5-leer-campos-del-body">Paso 5: Leer campos del body<a class="headerlink" href="#paso-5-leer-campos-del-body" title="Permanent link">&para;</a></h3>
+<p>Ahora vamos a leer los campos que permitiremos actualizar:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">isActive</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+</span></code></pre></div>
+<p>De momento responderemos con esos datos:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a><span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Datos recibidos para actualizar&quot;</span><span class="p">,</span>
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a><span class="w">  </span><span class="nx">id</span><span class="p">,</span>
+</span><span id="__span-51-4"><a id="__codelineno-51-4" name="__codelineno-51-4" href="#__codelineno-51-4"></a><span class="w">  </span><span class="nx">changes</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-51-5"><a id="__codelineno-51-5" name="__codelineno-51-5" href="#__codelineno-51-5"></a><span class="w">    </span><span class="nx">name</span><span class="p">,</span>
+</span><span id="__span-51-6"><a id="__codelineno-51-6" name="__codelineno-51-6" href="#__codelineno-51-6"></a><span class="w">    </span><span class="nx">email</span><span class="p">,</span>
+</span><span id="__span-51-7"><a id="__codelineno-51-7" name="__codelineno-51-7" href="#__codelineno-51-7"></a><span class="w">    </span><span class="nx">isActive</span>
+</span><span id="__span-51-8"><a id="__codelineno-51-8" name="__codelineno-51-8" href="#__codelineno-51-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-51-9"><a id="__codelineno-51-9" name="__codelineno-51-9" href="#__codelineno-51-9"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="err">PATCH http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="p">{</span>
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span><span class="p">,</span>
+</span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana.martinez@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-53-4"><a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-53-5"><a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Comprueba que la API recibe los datos correctamente.</p>
+<h3 id="paso-6-comprobar-que-el-body-no-este-vacio">Paso 6: Comprobar que el body no esté vacío<a class="headerlink" href="#paso-6-comprobar-que-el-body-no-este-vacio" title="Permanent link">&para;</a></h3>
+<p>Añade esta comprobación:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">hasChanges</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-54-2"><a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a><span class="w">  </span><span class="nx">name</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="o">||</span>
+</span><span id="__span-54-3"><a id="__codelineno-54-3" name="__codelineno-54-3" href="#__codelineno-54-3"></a><span class="w">  </span><span class="nx">email</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="o">||</span>
+</span><span id="__span-54-4"><a id="__codelineno-54-4" name="__codelineno-54-4" href="#__codelineno-54-4"></a><span class="w">  </span><span class="nx">isActive</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+</span><span id="__span-54-5"><a id="__codelineno-54-5" name="__codelineno-54-5" href="#__codelineno-54-5"></a>
+</span><span id="__span-54-6"><a id="__codelineno-54-6" name="__codelineno-54-6" href="#__codelineno-54-6"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">hasChanges</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-54-7"><a id="__codelineno-54-7" name="__codelineno-54-7" href="#__codelineno-54-7"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-54-8"><a id="__codelineno-54-8" name="__codelineno-54-8" href="#__codelineno-54-8"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Debes enviar al menos un campo para actualizar&quot;</span>
+</span><span id="__span-54-9"><a id="__codelineno-54-9" name="__codelineno-54-9" href="#__codelineno-54-9"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-54-10"><a id="__codelineno-54-10" name="__codelineno-54-10" href="#__codelineno-54-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Prueba con body vacío:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="p">{}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="p">{</span>
+</span><span id="__span-56-2"><a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Debes enviar al menos un campo para actualizar&quot;</span>
+</span><span id="__span-56-3"><a id="__codelineno-56-3" name="__codelineno-56-3" href="#__codelineno-56-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>400 Bad Request
+</span></code></pre></div>
+<h3 id="paso-7-limpiar-y-validar-el-email-si-llega">Paso 7: Limpiar y validar el email si llega<a class="headerlink" href="#paso-7-limpiar-y-validar-el-email-si-llega" title="Permanent link">&para;</a></h3>
+<p>Añade esta lógica:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a><span class="kd">let</span><span class="w"> </span><span class="nx">cleanEmail</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+</span><span id="__span-58-2"><a id="__codelineno-58-2" name="__codelineno-58-2" href="#__codelineno-58-2"></a>
+</span><span id="__span-58-3"><a id="__codelineno-58-3" name="__codelineno-58-3" href="#__codelineno-58-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">email</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-58-4"><a id="__codelineno-58-4" name="__codelineno-58-4" href="#__codelineno-58-4"></a><span class="w">  </span><span class="nx">cleanEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">email</span><span class="p">).</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toLowerCase</span><span class="p">();</span>
+</span><span id="__span-58-5"><a id="__codelineno-58-5" name="__codelineno-58-5" href="#__codelineno-58-5"></a>
+</span><span id="__span-58-6"><a id="__codelineno-58-6" name="__codelineno-58-6" href="#__codelineno-58-6"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">cleanEmail</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-58-7"><a id="__codelineno-58-7" name="__codelineno-58-7" href="#__codelineno-58-7"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-58-8"><a id="__codelineno-58-8" name="__codelineno-58-8" href="#__codelineno-58-8"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El email no tiene un formato válido&quot;</span>
+</span><span id="__span-58-9"><a id="__codelineno-58-9" name="__codelineno-58-9" href="#__codelineno-58-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-58-10"><a id="__codelineno-58-10" name="__codelineno-58-10" href="#__codelineno-58-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-58-11"><a id="__codelineno-58-11" name="__codelineno-58-11" href="#__codelineno-58-11"></a>
+</span><span id="__span-58-12"><a id="__codelineno-58-12" name="__codelineno-58-12" href="#__codelineno-58-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">emailAlreadyExists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
+</span><span id="__span-58-13"><a id="__codelineno-58-13" name="__codelineno-58-13" href="#__codelineno-58-13"></a><span class="w">    </span><span class="p">(</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">cleanEmail</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">id</span>
+</span><span id="__span-58-14"><a id="__codelineno-58-14" name="__codelineno-58-14" href="#__codelineno-58-14"></a><span class="w">  </span><span class="p">);</span>
+</span><span id="__span-58-15"><a id="__codelineno-58-15" name="__codelineno-58-15" href="#__codelineno-58-15"></a>
+</span><span id="__span-58-16"><a id="__codelineno-58-16" name="__codelineno-58-16" href="#__codelineno-58-16"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">emailAlreadyExists</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-58-17"><a id="__codelineno-58-17" name="__codelineno-58-17" href="#__codelineno-58-17"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">409</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-58-18"><a id="__codelineno-58-18" name="__codelineno-58-18" href="#__codelineno-58-18"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-58-19"><a id="__codelineno-58-19" name="__codelineno-58-19" href="#__codelineno-58-19"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-58-20"><a id="__codelineno-58-20" name="__codelineno-58-20" href="#__codelineno-58-20"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-58-21"><a id="__codelineno-58-21" name="__codelineno-58-21" href="#__codelineno-58-21"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Esto solo valida el email si viene en el body. Si no se quiere cambiar el
+email, no se comprueba.</p>
+<h3 id="paso-8-limpiar-el-nombre-si-llega">Paso 8: Limpiar el nombre si llega<a class="headerlink" href="#paso-8-limpiar-el-nombre-si-llega" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="kd">let</span><span class="w"> </span><span class="nx">cleanName</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>
+</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">name</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a><span class="w">  </span><span class="nx">cleanName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">name</span><span class="p">).</span><span class="nx">trim</span><span class="p">();</span>
+</span><span id="__span-59-5"><a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a>
+</span><span id="__span-59-6"><a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cleanName</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-59-7"><a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-59-8"><a id="__codelineno-59-8" name="__codelineno-59-8" href="#__codelineno-59-8"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El nombre no puede estar vacío&quot;</span>
+</span><span id="__span-59-9"><a id="__codelineno-59-9" name="__codelineno-59-9" href="#__codelineno-59-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-59-10"><a id="__codelineno-59-10" name="__codelineno-59-10" href="#__codelineno-59-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-59-11"><a id="__codelineno-59-11" name="__codelineno-59-11" href="#__codelineno-59-11"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Así evitamos aceptar nombres vacíos o con solo espacios.</p>
+<h3 id="paso-9-validar-isactive-si-llega">Paso 9: Validar <code>isActive</code> si llega<a class="headerlink" href="#paso-9-validar-isactive-si-llega" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isActive</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">isActive</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-60-2"><a id="__codelineno-60-2" name="__codelineno-60-2" href="#__codelineno-60-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-60-3"><a id="__codelineno-60-3" name="__codelineno-60-3" href="#__codelineno-60-3"></a><span class="w">    </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;isActive debe ser true o false&quot;</span>
+</span><span id="__span-60-4"><a id="__codelineno-60-4" name="__codelineno-60-4" href="#__codelineno-60-4"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-60-5"><a id="__codelineno-60-5" name="__codelineno-60-5" href="#__codelineno-60-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Esto evita recibir valores incorrectos como:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a><span class="p">{</span>
+</span><span id="__span-61-2"><a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
+</span><span id="__span-61-3"><a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Ese valor parece falso, pero en realidad es un texto. Lo correcto sería:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a><span class="p">{</span>
+</span><span id="__span-62-2"><a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-62-3"><a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="paso-10-actualizar-el-usuario">Paso 10: Actualizar el usuario<a class="headerlink" href="#paso-10-actualizar-el-usuario" title="Permanent link">&para;</a></h3>
+<p>Ahora crea el usuario actualizado:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">currentUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">];</span>
+</span><span id="__span-63-2"><a id="__codelineno-63-2" name="__codelineno-63-2" href="#__codelineno-63-2"></a>
+</span><span id="__span-63-3"><a id="__codelineno-63-3" name="__codelineno-63-3" href="#__codelineno-63-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">updatedUser</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-63-4"><a id="__codelineno-63-4" name="__codelineno-63-4" href="#__codelineno-63-4"></a><span class="w">  </span><span class="p">...</span><span class="nx">currentUser</span><span class="p">,</span>
+</span><span id="__span-63-5"><a id="__codelineno-63-5" name="__codelineno-63-5" href="#__codelineno-63-5"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+</span><span id="__span-63-6"><a id="__codelineno-63-6" name="__codelineno-63-6" href="#__codelineno-63-6"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+</span><span id="__span-63-7"><a id="__codelineno-63-7" name="__codelineno-63-7" href="#__codelineno-63-7"></a><span class="w">  </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">isActive</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">isActive</span><span class="p">,</span>
+</span><span id="__span-63-8"><a id="__codelineno-63-8" name="__codelineno-63-8" href="#__codelineno-63-8"></a><span class="w">  </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+</span><span id="__span-63-9"><a id="__codelineno-63-9" name="__codelineno-63-9" href="#__codelineno-63-9"></a><span class="p">};</span>
+</span><span id="__span-63-10"><a id="__codelineno-63-10" name="__codelineno-63-10" href="#__codelineno-63-10"></a>
+</span><span id="__span-63-11"><a id="__codelineno-63-11" name="__codelineno-63-11" href="#__codelineno-63-11"></a><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">updatedUser</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Esto mantiene los campos anteriores y sobrescribe solo los que llegan en el
+body.</p>
+<h3 id="paso-11-devolver-la-respuesta-final">Paso 11: Devolver la respuesta final<a class="headerlink" href="#paso-11-devolver-la-respuesta-final" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a><span class="w">  </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario actualizado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a><span class="w">  </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">updatedUser</span>
+</span><span id="__span-64-4"><a id="__codelineno-64-4" name="__codelineno-64-4" href="#__codelineno-64-4"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>La ruta completa quedará así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">patch</span><span class="p">(</span><span class="s2">&quot;/api/users/:id&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="w"> </span><span class="nx">res</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-2"><a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">idParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">params</span><span class="p">.</span><span class="nx">id</span><span class="p">;</span>
+</span><span id="__span-65-3"><a id="__codelineno-65-3" name="__codelineno-65-3" href="#__codelineno-65-3"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Number</span><span class="p">(</span><span class="nx">idParam</span><span class="p">);</span>
+</span><span id="__span-65-4"><a id="__codelineno-65-4" name="__codelineno-65-4" href="#__codelineno-65-4"></a>
+</span><span id="__span-65-5"><a id="__codelineno-65-5" name="__codelineno-65-5" href="#__codelineno-65-5"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">Number</span><span class="p">.</span><span class="nb">isNaN</span><span class="p">(</span><span class="nx">id</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-6"><a id="__codelineno-65-6" name="__codelineno-65-6" href="#__codelineno-65-6"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-7"><a id="__codelineno-65-7" name="__codelineno-65-7" href="#__codelineno-65-7"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-65-8"><a id="__codelineno-65-8" name="__codelineno-65-8" href="#__codelineno-65-8"></a><span class="w">      </span><span class="nx">received</span><span class="o">:</span><span class="w"> </span><span class="kt">idParam</span>
+</span><span id="__span-65-9"><a id="__codelineno-65-9" name="__codelineno-65-9" href="#__codelineno-65-9"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-65-10"><a id="__codelineno-65-10" name="__codelineno-65-10" href="#__codelineno-65-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-65-11"><a id="__codelineno-65-11" name="__codelineno-65-11" href="#__codelineno-65-11"></a>
+</span><span id="__span-65-12"><a id="__codelineno-65-12" name="__codelineno-65-12" href="#__codelineno-65-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">userIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">findIndex</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">id</span><span class="p">);</span>
+</span><span id="__span-65-13"><a id="__codelineno-65-13" name="__codelineno-65-13" href="#__codelineno-65-13"></a>
+</span><span id="__span-65-14"><a id="__codelineno-65-14" name="__codelineno-65-14" href="#__codelineno-65-14"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">userIndex</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-15"><a id="__codelineno-65-15" name="__codelineno-65-15" href="#__codelineno-65-15"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-16"><a id="__codelineno-65-16" name="__codelineno-65-16" href="#__codelineno-65-16"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-65-17"><a id="__codelineno-65-17" name="__codelineno-65-17" href="#__codelineno-65-17"></a><span class="w">      </span><span class="nx">id</span>
+</span><span id="__span-65-18"><a id="__codelineno-65-18" name="__codelineno-65-18" href="#__codelineno-65-18"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-65-19"><a id="__codelineno-65-19" name="__codelineno-65-19" href="#__codelineno-65-19"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-65-20"><a id="__codelineno-65-20" name="__codelineno-65-20" href="#__codelineno-65-20"></a>
+</span><span id="__span-65-21"><a id="__codelineno-65-21" name="__codelineno-65-21" href="#__codelineno-65-21"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">isActive</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+</span><span id="__span-65-22"><a id="__codelineno-65-22" name="__codelineno-65-22" href="#__codelineno-65-22"></a>
+</span><span id="__span-65-23"><a id="__codelineno-65-23" name="__codelineno-65-23" href="#__codelineno-65-23"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">hasChanges</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-65-24"><a id="__codelineno-65-24" name="__codelineno-65-24" href="#__codelineno-65-24"></a><span class="w">    </span><span class="nx">name</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="o">||</span>
+</span><span id="__span-65-25"><a id="__codelineno-65-25" name="__codelineno-65-25" href="#__codelineno-65-25"></a><span class="w">    </span><span class="nx">email</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="o">||</span>
+</span><span id="__span-65-26"><a id="__codelineno-65-26" name="__codelineno-65-26" href="#__codelineno-65-26"></a><span class="w">    </span><span class="nx">isActive</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+</span><span id="__span-65-27"><a id="__codelineno-65-27" name="__codelineno-65-27" href="#__codelineno-65-27"></a>
+</span><span id="__span-65-28"><a id="__codelineno-65-28" name="__codelineno-65-28" href="#__codelineno-65-28"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">hasChanges</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-29"><a id="__codelineno-65-29" name="__codelineno-65-29" href="#__codelineno-65-29"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-30"><a id="__codelineno-65-30" name="__codelineno-65-30" href="#__codelineno-65-30"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Debes enviar al menos un campo para actualizar&quot;</span>
+</span><span id="__span-65-31"><a id="__codelineno-65-31" name="__codelineno-65-31" href="#__codelineno-65-31"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-65-32"><a id="__codelineno-65-32" name="__codelineno-65-32" href="#__codelineno-65-32"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-65-33"><a id="__codelineno-65-33" name="__codelineno-65-33" href="#__codelineno-65-33"></a>
+</span><span id="__span-65-34"><a id="__codelineno-65-34" name="__codelineno-65-34" href="#__codelineno-65-34"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">cleanName</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+</span><span id="__span-65-35"><a id="__codelineno-65-35" name="__codelineno-65-35" href="#__codelineno-65-35"></a>
+</span><span id="__span-65-36"><a id="__codelineno-65-36" name="__codelineno-65-36" href="#__codelineno-65-36"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">name</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-37"><a id="__codelineno-65-37" name="__codelineno-65-37" href="#__codelineno-65-37"></a><span class="w">    </span><span class="nx">cleanName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">name</span><span class="p">).</span><span class="nx">trim</span><span class="p">();</span>
+</span><span id="__span-65-38"><a id="__codelineno-65-38" name="__codelineno-65-38" href="#__codelineno-65-38"></a>
+</span><span id="__span-65-39"><a id="__codelineno-65-39" name="__codelineno-65-39" href="#__codelineno-65-39"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cleanName</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-40"><a id="__codelineno-65-40" name="__codelineno-65-40" href="#__codelineno-65-40"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-41"><a id="__codelineno-65-41" name="__codelineno-65-41" href="#__codelineno-65-41"></a><span class="w">        </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El nombre no puede estar vacío&quot;</span>
+</span><span id="__span-65-42"><a id="__codelineno-65-42" name="__codelineno-65-42" href="#__codelineno-65-42"></a><span class="w">      </span><span class="p">});</span>
+</span><span id="__span-65-43"><a id="__codelineno-65-43" name="__codelineno-65-43" href="#__codelineno-65-43"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-65-44"><a id="__codelineno-65-44" name="__codelineno-65-44" href="#__codelineno-65-44"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-65-45"><a id="__codelineno-65-45" name="__codelineno-65-45" href="#__codelineno-65-45"></a>
+</span><span id="__span-65-46"><a id="__codelineno-65-46" name="__codelineno-65-46" href="#__codelineno-65-46"></a><span class="w">  </span><span class="kd">let</span><span class="w"> </span><span class="nx">cleanEmail</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="kc">undefined</span><span class="p">;</span>
+</span><span id="__span-65-47"><a id="__codelineno-65-47" name="__codelineno-65-47" href="#__codelineno-65-47"></a>
+</span><span id="__span-65-48"><a id="__codelineno-65-48" name="__codelineno-65-48" href="#__codelineno-65-48"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">email</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-49"><a id="__codelineno-65-49" name="__codelineno-65-49" href="#__codelineno-65-49"></a><span class="w">    </span><span class="nx">cleanEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">String</span><span class="p">(</span><span class="nx">email</span><span class="p">).</span><span class="nx">trim</span><span class="p">().</span><span class="nx">toLowerCase</span><span class="p">();</span>
+</span><span id="__span-65-50"><a id="__codelineno-65-50" name="__codelineno-65-50" href="#__codelineno-65-50"></a>
+</span><span id="__span-65-51"><a id="__codelineno-65-51" name="__codelineno-65-51" href="#__codelineno-65-51"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">cleanEmail</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-52"><a id="__codelineno-65-52" name="__codelineno-65-52" href="#__codelineno-65-52"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-53"><a id="__codelineno-65-53" name="__codelineno-65-53" href="#__codelineno-65-53"></a><span class="w">        </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El email no tiene un formato válido&quot;</span>
+</span><span id="__span-65-54"><a id="__codelineno-65-54" name="__codelineno-65-54" href="#__codelineno-65-54"></a><span class="w">      </span><span class="p">});</span>
+</span><span id="__span-65-55"><a id="__codelineno-65-55" name="__codelineno-65-55" href="#__codelineno-65-55"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-65-56"><a id="__codelineno-65-56" name="__codelineno-65-56" href="#__codelineno-65-56"></a>
+</span><span id="__span-65-57"><a id="__codelineno-65-57" name="__codelineno-65-57" href="#__codelineno-65-57"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">emailAlreadyExists</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span>
+</span><span id="__span-65-58"><a id="__codelineno-65-58" name="__codelineno-65-58" href="#__codelineno-65-58"></a><span class="w">      </span><span class="p">(</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">email</span><span class="w"> </span><span class="o">===</span><span class="w"> </span><span class="nx">cleanEmail</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="nx">id</span>
+</span><span id="__span-65-59"><a id="__codelineno-65-59" name="__codelineno-65-59" href="#__codelineno-65-59"></a><span class="w">    </span><span class="p">);</span>
+</span><span id="__span-65-60"><a id="__codelineno-65-60" name="__codelineno-65-60" href="#__codelineno-65-60"></a>
+</span><span id="__span-65-61"><a id="__codelineno-65-61" name="__codelineno-65-61" href="#__codelineno-65-61"></a><span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">emailAlreadyExists</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-62"><a id="__codelineno-65-62" name="__codelineno-65-62" href="#__codelineno-65-62"></a><span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">409</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-63"><a id="__codelineno-65-63" name="__codelineno-65-63" href="#__codelineno-65-63"></a><span class="w">        </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-65-64"><a id="__codelineno-65-64" name="__codelineno-65-64" href="#__codelineno-65-64"></a><span class="w">      </span><span class="p">});</span>
+</span><span id="__span-65-65"><a id="__codelineno-65-65" name="__codelineno-65-65" href="#__codelineno-65-65"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-65-66"><a id="__codelineno-65-66" name="__codelineno-65-66" href="#__codelineno-65-66"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-65-67"><a id="__codelineno-65-67" name="__codelineno-65-67" href="#__codelineno-65-67"></a>
+</span><span id="__span-65-68"><a id="__codelineno-65-68" name="__codelineno-65-68" href="#__codelineno-65-68"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">isActive</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="kc">undefined</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="ow">typeof</span><span class="w"> </span><span class="nx">isActive</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">&quot;boolean&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-69"><a id="__codelineno-65-69" name="__codelineno-65-69" href="#__codelineno-65-69"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-70"><a id="__codelineno-65-70" name="__codelineno-65-70" href="#__codelineno-65-70"></a><span class="w">      </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;isActive debe ser true o false&quot;</span>
+</span><span id="__span-65-71"><a id="__codelineno-65-71" name="__codelineno-65-71" href="#__codelineno-65-71"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-65-72"><a id="__codelineno-65-72" name="__codelineno-65-72" href="#__codelineno-65-72"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-65-73"><a id="__codelineno-65-73" name="__codelineno-65-73" href="#__codelineno-65-73"></a>
+</span><span id="__span-65-74"><a id="__codelineno-65-74" name="__codelineno-65-74" href="#__codelineno-65-74"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">currentUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">];</span>
+</span><span id="__span-65-75"><a id="__codelineno-65-75" name="__codelineno-65-75" href="#__codelineno-65-75"></a>
+</span><span id="__span-65-76"><a id="__codelineno-65-76" name="__codelineno-65-76" href="#__codelineno-65-76"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">updatedUser</span><span class="o">:</span><span class="w"> </span><span class="kt">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-65-77"><a id="__codelineno-65-77" name="__codelineno-65-77" href="#__codelineno-65-77"></a><span class="w">    </span><span class="p">...</span><span class="nx">currentUser</span><span class="p">,</span>
+</span><span id="__span-65-78"><a id="__codelineno-65-78" name="__codelineno-65-78" href="#__codelineno-65-78"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+</span><span id="__span-65-79"><a id="__codelineno-65-79" name="__codelineno-65-79" href="#__codelineno-65-79"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+</span><span id="__span-65-80"><a id="__codelineno-65-80" name="__codelineno-65-80" href="#__codelineno-65-80"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">isActive</span><span class="w"> </span><span class="o">??</span><span class="w"> </span><span class="nx">currentUser</span><span class="p">.</span><span class="nx">isActive</span><span class="p">,</span>
+</span><span id="__span-65-81"><a id="__codelineno-65-81" name="__codelineno-65-81" href="#__codelineno-65-81"></a><span class="w">    </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">new</span><span class="w"> </span><span class="nb">Date</span><span class="p">().</span><span class="nx">toISOString</span><span class="p">()</span>
+</span><span id="__span-65-82"><a id="__codelineno-65-82" name="__codelineno-65-82" href="#__codelineno-65-82"></a><span class="w">  </span><span class="p">};</span>
+</span><span id="__span-65-83"><a id="__codelineno-65-83" name="__codelineno-65-83" href="#__codelineno-65-83"></a>
+</span><span id="__span-65-84"><a id="__codelineno-65-84" name="__codelineno-65-84" href="#__codelineno-65-84"></a><span class="w">  </span><span class="nx">users</span><span class="p">[</span><span class="nx">userIndex</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">updatedUser</span><span class="p">;</span>
+</span><span id="__span-65-85"><a id="__codelineno-65-85" name="__codelineno-65-85" href="#__codelineno-65-85"></a>
+</span><span id="__span-65-86"><a id="__codelineno-65-86" name="__codelineno-65-86" href="#__codelineno-65-86"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-65-87"><a id="__codelineno-65-87" name="__codelineno-65-87" href="#__codelineno-65-87"></a><span class="w">    </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario actualizado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-65-88"><a id="__codelineno-65-88" name="__codelineno-65-88" href="#__codelineno-65-88"></a><span class="w">    </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">updatedUser</span>
+</span><span id="__span-65-89"><a id="__codelineno-65-89" name="__codelineno-65-89" href="#__codelineno-65-89"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-65-90"><a id="__codelineno-65-90" name="__codelineno-65-90" href="#__codelineno-65-90"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="paso-12-probar-actualizacion-correcta">Paso 12: Probar actualización correcta<a class="headerlink" href="#paso-12-probar-actualizacion-correcta" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a><span class="err">PATCH http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<div class="language-json highlight"><span class="filename">Body</span><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="p">{</span>
+</span><span id="__span-67-2"><a id="__codelineno-67-2" name="__codelineno-67-2" href="#__codelineno-67-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span>
+</span><span id="__span-67-3"><a id="__codelineno-67-3" name="__codelineno-67-3" href="#__codelineno-67-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a><span class="p">{</span>
+</span><span id="__span-68-2"><a id="__codelineno-68-2" name="__codelineno-68-2" href="#__codelineno-68-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario actualizado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-68-3"><a id="__codelineno-68-3" name="__codelineno-68-3" href="#__codelineno-68-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-68-4"><a id="__codelineno-68-4" name="__codelineno-68-4" href="#__codelineno-68-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-68-5"><a id="__codelineno-68-5" name="__codelineno-68-5" href="#__codelineno-68-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span><span class="p">,</span>
+</span><span id="__span-68-6"><a id="__codelineno-68-6" name="__codelineno-68-6" href="#__codelineno-68-6"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-68-7"><a id="__codelineno-68-7" name="__codelineno-68-7" href="#__codelineno-68-7"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-68-8"><a id="__codelineno-68-8" name="__codelineno-68-8" href="#__codelineno-68-8"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-68-9"><a id="__codelineno-68-9" name="__codelineno-68-9" href="#__codelineno-68-9"></a><span class="w">    </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-68-10"><a id="__codelineno-68-10" name="__codelineno-68-10" href="#__codelineno-68-10"></a><span class="w">    </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-68-11"><a id="__codelineno-68-11" name="__codelineno-68-11" href="#__codelineno-68-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-68-12"><a id="__codelineno-68-12" name="__codelineno-68-12" href="#__codelineno-68-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Después prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a><span class="err">GET http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Comprueba que el cambio se mantiene mientras el servidor sigue encendido.</p>
+<h3 id="paso-13-probar-casos-de-error">Paso 13: Probar casos de error<a class="headerlink" href="#paso-13-probar-casos-de-error" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Petición o body</th>
+<th style="text-align: right;">Código esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ID no válido</td>
+<td><code>PATCH /api/users/abc</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td>Usuario inexistente</td>
+<td><code>PATCH /api/users/999</code></td>
+<td style="text-align: right;">404</td>
+</tr>
+<tr>
+<td>Body vacío</td>
+<td><code>{}</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td>Nombre vacío</td>
+<td><code>{ "name": "   " }</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td>Email inválido</td>
+<td><code>{ "email": "correo-sin-arroba" }</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+<td><code>{ "email": "ana@email.com" }</code></td>
+<td style="text-align: right;">409</td>
+</tr>
+<tr>
+<td><code>isActive</code> incorrecto</td>
+<td><code>{ "isActive": "false" }</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">Prueba del email duplicado</p>
+<p>Para comprobar el caso <code>409</code>, intenta asignar a un usuario el email de otro
+usuario distinto.</p>
+</div>
+<h3 id="paso-14-crear-una-carpeta-de-pruebas-del-dia-10">Paso 14: Crear una carpeta de pruebas del día 10<a class="headerlink" href="#paso-14-crear-una-carpeta-de-pruebas-del-dia-10" title="Permanent link">&para;</a></h3>
+<p>En Thunder Client o Postman, dentro de la colección <code>UserManager API</code>, crea una
+carpeta llamada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>Día 10 - Actualizar usuarios
+</span></code></pre></div>
+<p>Añade estas peticiones:</p>
+<table>
+<thead>
+<tr>
+<th>Petición</th>
+<th>Qué prueba</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PATCH /api/users/1</code></td>
+<td>Actualización correcta</td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/abc</code></td>
+<td>ID no válido</td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/999</code></td>
+<td>Usuario inexistente</td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/1</code></td>
+<td>Body vacío</td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/1</code></td>
+<td>Nombre vacío</td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/1</code></td>
+<td>Email inválido</td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/2</code></td>
+<td>Email duplicado</td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/1</code></td>
+<td><code>isActive</code> incorrecto</td>
+</tr>
+<tr>
+<td><code>GET /api/users/1</code></td>
+<td>Comprobar actualización</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-15-actualizar-el-readme">Paso 15: Actualizar el README<a class="headerlink" href="#paso-15-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Actualiza la sección de usuarios añadiendo información sobre actualización:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a><span class="gu">## Actualizar usuario</span>
+</span><span id="__span-71-2"><a id="__codelineno-71-2" name="__codelineno-71-2" href="#__codelineno-71-2"></a>
+</span><span id="__span-71-3"><a id="__codelineno-71-3" name="__codelineno-71-3" href="#__codelineno-71-3"></a><span class="sb">```http</span>
+</span><span id="__span-71-4"><a id="__codelineno-71-4" name="__codelineno-71-4" href="#__codelineno-71-4"></a><span class="err">PATCH /api/users/:id</span>
+</span><span id="__span-71-5"><a id="__codelineno-71-5" name="__codelineno-71-5" href="#__codelineno-71-5"></a><span class="sb">```</span>
+</span><span id="__span-71-6"><a id="__codelineno-71-6" name="__codelineno-71-6" href="#__codelineno-71-6"></a>
+</span><span id="__span-71-7"><a id="__codelineno-71-7" name="__codelineno-71-7" href="#__codelineno-71-7"></a>Permite modificar parcialmente los datos de un usuario.
+</span><span id="__span-71-8"><a id="__codelineno-71-8" name="__codelineno-71-8" href="#__codelineno-71-8"></a>
+</span><span id="__span-71-9"><a id="__codelineno-71-9" name="__codelineno-71-9" href="#__codelineno-71-9"></a>Campos permitidos:
+</span><span id="__span-71-10"><a id="__codelineno-71-10" name="__codelineno-71-10" href="#__codelineno-71-10"></a>
+</span><span id="__span-71-11"><a id="__codelineno-71-11" name="__codelineno-71-11" href="#__codelineno-71-11"></a><span class="sb">```text</span>
+</span><span id="__span-71-12"><a id="__codelineno-71-12" name="__codelineno-71-12" href="#__codelineno-71-12"></a>name
+</span><span id="__span-71-13"><a id="__codelineno-71-13" name="__codelineno-71-13" href="#__codelineno-71-13"></a>email
+</span><span id="__span-71-14"><a id="__codelineno-71-14" name="__codelineno-71-14" href="#__codelineno-71-14"></a>isActive
+</span><span id="__span-71-15"><a id="__codelineno-71-15" name="__codelineno-71-15" href="#__codelineno-71-15"></a><span class="sb">```</span>
+</span><span id="__span-71-16"><a id="__codelineno-71-16" name="__codelineno-71-16" href="#__codelineno-71-16"></a>
+</span><span id="__span-71-17"><a id="__codelineno-71-17" name="__codelineno-71-17" href="#__codelineno-71-17"></a>Body de ejemplo:
+</span><span id="__span-71-18"><a id="__codelineno-71-18" name="__codelineno-71-18" href="#__codelineno-71-18"></a>
+</span><span id="__span-71-19"><a id="__codelineno-71-19" name="__codelineno-71-19" href="#__codelineno-71-19"></a><span class="sb">```json</span>
+</span><span id="__span-71-20"><a id="__codelineno-71-20" name="__codelineno-71-20" href="#__codelineno-71-20"></a><span class="p">{</span>
+</span><span id="__span-71-21"><a id="__codelineno-71-21" name="__codelineno-71-21" href="#__codelineno-71-21"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span>
+</span><span id="__span-71-22"><a id="__codelineno-71-22" name="__codelineno-71-22" href="#__codelineno-71-22"></a><span class="p">}</span>
+</span><span id="__span-71-23"><a id="__codelineno-71-23" name="__codelineno-71-23" href="#__codelineno-71-23"></a><span class="sb">```</span>
+</span><span id="__span-71-24"><a id="__codelineno-71-24" name="__codelineno-71-24" href="#__codelineno-71-24"></a>
+</span><span id="__span-71-25"><a id="__codelineno-71-25" name="__codelineno-71-25" href="#__codelineno-71-25"></a>Respuesta correcta:
+</span><span id="__span-71-26"><a id="__codelineno-71-26" name="__codelineno-71-26" href="#__codelineno-71-26"></a>
+</span><span id="__span-71-27"><a id="__codelineno-71-27" name="__codelineno-71-27" href="#__codelineno-71-27"></a><span class="sb">```json</span>
+</span><span id="__span-71-28"><a id="__codelineno-71-28" name="__codelineno-71-28" href="#__codelineno-71-28"></a><span class="p">{</span>
+</span><span id="__span-71-29"><a id="__codelineno-71-29" name="__codelineno-71-29" href="#__codelineno-71-29"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario actualizado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-71-30"><a id="__codelineno-71-30" name="__codelineno-71-30" href="#__codelineno-71-30"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-71-31"><a id="__codelineno-71-31" name="__codelineno-71-31" href="#__codelineno-71-31"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-71-32"><a id="__codelineno-71-32" name="__codelineno-71-32" href="#__codelineno-71-32"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span><span class="p">,</span>
+</span><span id="__span-71-33"><a id="__codelineno-71-33" name="__codelineno-71-33" href="#__codelineno-71-33"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-71-34"><a id="__codelineno-71-34" name="__codelineno-71-34" href="#__codelineno-71-34"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-71-35"><a id="__codelineno-71-35" name="__codelineno-71-35" href="#__codelineno-71-35"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-71-36"><a id="__codelineno-71-36" name="__codelineno-71-36" href="#__codelineno-71-36"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-71-37"><a id="__codelineno-71-37" name="__codelineno-71-37" href="#__codelineno-71-37"></a><span class="p">}</span>
+</span><span id="__span-71-38"><a id="__codelineno-71-38" name="__codelineno-71-38" href="#__codelineno-71-38"></a><span class="sb">```</span>
+</span><span id="__span-71-39"><a id="__codelineno-71-39" name="__codelineno-71-39" href="#__codelineno-71-39"></a>
+</span><span id="__span-71-40"><a id="__codelineno-71-40" name="__codelineno-71-40" href="#__codelineno-71-40"></a>Posibles errores:
+</span><span id="__span-71-41"><a id="__codelineno-71-41" name="__codelineno-71-41" href="#__codelineno-71-41"></a>
+</span><span id="__span-71-42"><a id="__codelineno-71-42" name="__codelineno-71-42" href="#__codelineno-71-42"></a><span class="sb">```json</span>
+</span><span id="__span-71-43"><a id="__codelineno-71-43" name="__codelineno-71-43" href="#__codelineno-71-43"></a><span class="p">{</span>
+</span><span id="__span-71-44"><a id="__codelineno-71-44" name="__codelineno-71-44" href="#__codelineno-71-44"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-71-45"><a id="__codelineno-71-45" name="__codelineno-71-45" href="#__codelineno-71-45"></a><span class="w">  </span><span class="nt">&quot;received&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-71-46"><a id="__codelineno-71-46" name="__codelineno-71-46" href="#__codelineno-71-46"></a><span class="p">}</span>
+</span><span id="__span-71-47"><a id="__codelineno-71-47" name="__codelineno-71-47" href="#__codelineno-71-47"></a><span class="sb">```</span>
+</span><span id="__span-71-48"><a id="__codelineno-71-48" name="__codelineno-71-48" href="#__codelineno-71-48"></a>
+</span><span id="__span-71-49"><a id="__codelineno-71-49" name="__codelineno-71-49" href="#__codelineno-71-49"></a><span class="sb">```json</span>
+</span><span id="__span-71-50"><a id="__codelineno-71-50" name="__codelineno-71-50" href="#__codelineno-71-50"></a><span class="p">{</span>
+</span><span id="__span-71-51"><a id="__codelineno-71-51" name="__codelineno-71-51" href="#__codelineno-71-51"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-71-52"><a id="__codelineno-71-52" name="__codelineno-71-52" href="#__codelineno-71-52"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-71-53"><a id="__codelineno-71-53" name="__codelineno-71-53" href="#__codelineno-71-53"></a><span class="p">}</span>
+</span><span id="__span-71-54"><a id="__codelineno-71-54" name="__codelineno-71-54" href="#__codelineno-71-54"></a><span class="sb">```</span>
+</span><span id="__span-71-55"><a id="__codelineno-71-55" name="__codelineno-71-55" href="#__codelineno-71-55"></a>
+</span><span id="__span-71-56"><a id="__codelineno-71-56" name="__codelineno-71-56" href="#__codelineno-71-56"></a><span class="sb">```json</span>
+</span><span id="__span-71-57"><a id="__codelineno-71-57" name="__codelineno-71-57" href="#__codelineno-71-57"></a><span class="p">{</span>
+</span><span id="__span-71-58"><a id="__codelineno-71-58" name="__codelineno-71-58" href="#__codelineno-71-58"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Debes enviar al menos un campo para actualizar&quot;</span>
+</span><span id="__span-71-59"><a id="__codelineno-71-59" name="__codelineno-71-59" href="#__codelineno-71-59"></a><span class="p">}</span>
+</span><span id="__span-71-60"><a id="__codelineno-71-60" name="__codelineno-71-60" href="#__codelineno-71-60"></a><span class="sb">```</span>
+</span><span id="__span-71-61"><a id="__codelineno-71-61" name="__codelineno-71-61" href="#__codelineno-71-61"></a>
+</span><span id="__span-71-62"><a id="__codelineno-71-62" name="__codelineno-71-62" href="#__codelineno-71-62"></a><span class="sb">```json</span>
+</span><span id="__span-71-63"><a id="__codelineno-71-63" name="__codelineno-71-63" href="#__codelineno-71-63"></a><span class="p">{</span>
+</span><span id="__span-71-64"><a id="__codelineno-71-64" name="__codelineno-71-64" href="#__codelineno-71-64"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-71-65"><a id="__codelineno-71-65" name="__codelineno-71-65" href="#__codelineno-71-65"></a><span class="p">}</span>
+</span><span id="__span-71-66"><a id="__codelineno-71-66" name="__codelineno-71-66" href="#__codelineno-71-66"></a><span class="sb">```</span>
+</span></code></pre></div>
+<h3 id="paso-16-crear-el-documento-del-dia-10">Paso 16: Crear el documento del día 10<a class="headerlink" href="#paso-16-crear-el-documento-del-dia-10" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea un archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>docs/dia-10-actualizar-usuarios.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><span class="filename">docs/dia-10-actualizar-usuarios.md</span><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a><span class="gh"># Día 10: Actualizar usuarios en memoria</span>
+</span><span id="__span-73-2"><a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a>
+</span><span id="__span-73-3"><a id="__codelineno-73-3" name="__codelineno-73-3" href="#__codelineno-73-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-73-4"><a id="__codelineno-73-4" name="__codelineno-73-4" href="#__codelineno-73-4"></a>
+</span><span id="__span-73-5"><a id="__codelineno-73-5" name="__codelineno-73-5" href="#__codelineno-73-5"></a><span class="k">-</span><span class="w"> </span>He actualizado el endpoint <span class="sb">`PATCH /api/users/:id`</span>.
+</span><span id="__span-73-6"><a id="__codelineno-73-6" name="__codelineno-73-6" href="#__codelineno-73-6"></a><span class="k">-</span><span class="w"> </span>He leído el ID desde <span class="sb">`req.params`</span>.
+</span><span id="__span-73-7"><a id="__codelineno-73-7" name="__codelineno-73-7" href="#__codelineno-73-7"></a><span class="k">-</span><span class="w"> </span>He leído los cambios desde <span class="sb">`req.body`</span>.
+</span><span id="__span-73-8"><a id="__codelineno-73-8" name="__codelineno-73-8" href="#__codelineno-73-8"></a><span class="k">-</span><span class="w"> </span>He validado que el ID sea numérico.
+</span><span id="__span-73-9"><a id="__codelineno-73-9" name="__codelineno-73-9" href="#__codelineno-73-9"></a><span class="k">-</span><span class="w"> </span>He comprobado si el usuario existe.
+</span><span id="__span-73-10"><a id="__codelineno-73-10" name="__codelineno-73-10" href="#__codelineno-73-10"></a><span class="k">-</span><span class="w"> </span>He validado que el body no esté vacío.
+</span><span id="__span-73-11"><a id="__codelineno-73-11" name="__codelineno-73-11" href="#__codelineno-73-11"></a><span class="k">-</span><span class="w"> </span>He validado <span class="sb">`name`</span>, <span class="sb">`email`</span> e <span class="sb">`isActive`</span>.
+</span><span id="__span-73-12"><a id="__codelineno-73-12" name="__codelineno-73-12" href="#__codelineno-73-12"></a><span class="k">-</span><span class="w"> </span>He comprobado email duplicado al actualizar.
+</span><span id="__span-73-13"><a id="__codelineno-73-13" name="__codelineno-73-13" href="#__codelineno-73-13"></a><span class="k">-</span><span class="w"> </span>He actualizado <span class="sb">`updatedAt`</span>.
+</span><span id="__span-73-14"><a id="__codelineno-73-14" name="__codelineno-73-14" href="#__codelineno-73-14"></a><span class="k">-</span><span class="w"> </span>He sustituido el usuario dentro del array.
+</span><span id="__span-73-15"><a id="__codelineno-73-15" name="__codelineno-73-15" href="#__codelineno-73-15"></a>
+</span><span id="__span-73-16"><a id="__codelineno-73-16" name="__codelineno-73-16" href="#__codelineno-73-16"></a><span class="gu">## Endpoint trabajado</span>
+</span><span id="__span-73-17"><a id="__codelineno-73-17" name="__codelineno-73-17" href="#__codelineno-73-17"></a>
+</span><span id="__span-73-18"><a id="__codelineno-73-18" name="__codelineno-73-18" href="#__codelineno-73-18"></a><span class="sb">```http</span>
+</span><span id="__span-73-19"><a id="__codelineno-73-19" name="__codelineno-73-19" href="#__codelineno-73-19"></a><span class="err">PATCH /api/users/:id</span>
+</span><span id="__span-73-20"><a id="__codelineno-73-20" name="__codelineno-73-20" href="#__codelineno-73-20"></a><span class="sb">```</span>
+</span><span id="__span-73-21"><a id="__codelineno-73-21" name="__codelineno-73-21" href="#__codelineno-73-21"></a>
+</span><span id="__span-73-22"><a id="__codelineno-73-22" name="__codelineno-73-22" href="#__codelineno-73-22"></a><span class="gu">## Body de ejemplo</span>
+</span><span id="__span-73-23"><a id="__codelineno-73-23" name="__codelineno-73-23" href="#__codelineno-73-23"></a>
+</span><span id="__span-73-24"><a id="__codelineno-73-24" name="__codelineno-73-24" href="#__codelineno-73-24"></a><span class="sb">```json</span>
+</span><span id="__span-73-25"><a id="__codelineno-73-25" name="__codelineno-73-25" href="#__codelineno-73-25"></a><span class="p">{</span>
+</span><span id="__span-73-26"><a id="__codelineno-73-26" name="__codelineno-73-26" href="#__codelineno-73-26"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Martínez&quot;</span>
+</span><span id="__span-73-27"><a id="__codelineno-73-27" name="__codelineno-73-27" href="#__codelineno-73-27"></a><span class="p">}</span>
+</span><span id="__span-73-28"><a id="__codelineno-73-28" name="__codelineno-73-28" href="#__codelineno-73-28"></a><span class="sb">```</span>
+</span><span id="__span-73-29"><a id="__codelineno-73-29" name="__codelineno-73-29" href="#__codelineno-73-29"></a>
+</span><span id="__span-73-30"><a id="__codelineno-73-30" name="__codelineno-73-30" href="#__codelineno-73-30"></a><span class="gu">## Casos probados</span>
+</span><span id="__span-73-31"><a id="__codelineno-73-31" name="__codelineno-73-31" href="#__codelineno-73-31"></a>
+</span><span id="__span-73-32"><a id="__codelineno-73-32" name="__codelineno-73-32" href="#__codelineno-73-32"></a>| Caso | Código esperado | Resultado |
+</span><span id="__span-73-33"><a id="__codelineno-73-33" name="__codelineno-73-33" href="#__codelineno-73-33"></a>| --- | ---: | --- |
+</span><span id="__span-73-34"><a id="__codelineno-73-34" name="__codelineno-73-34" href="#__codelineno-73-34"></a>| Actualización correcta | 200 | |
+</span><span id="__span-73-35"><a id="__codelineno-73-35" name="__codelineno-73-35" href="#__codelineno-73-35"></a>| ID no válido | 400 | |
+</span><span id="__span-73-36"><a id="__codelineno-73-36" name="__codelineno-73-36" href="#__codelineno-73-36"></a>| Usuario inexistente | 404 | |
+</span><span id="__span-73-37"><a id="__codelineno-73-37" name="__codelineno-73-37" href="#__codelineno-73-37"></a>| Body vacío | 400 | |
+</span><span id="__span-73-38"><a id="__codelineno-73-38" name="__codelineno-73-38" href="#__codelineno-73-38"></a>| Nombre vacío | 400 | |
+</span><span id="__span-73-39"><a id="__codelineno-73-39" name="__codelineno-73-39" href="#__codelineno-73-39"></a>| Email inválido | 400 | |
+</span><span id="__span-73-40"><a id="__codelineno-73-40" name="__codelineno-73-40" href="#__codelineno-73-40"></a>| Email duplicado | 409 | |
+</span><span id="__span-73-41"><a id="__codelineno-73-41" name="__codelineno-73-41" href="#__codelineno-73-41"></a>| <span class="sb">`isActive`</span> incorrecto | 400 | |
+</span><span id="__span-73-42"><a id="__codelineno-73-42" name="__codelineno-73-42" href="#__codelineno-73-42"></a>
+</span><span id="__span-73-43"><a id="__codelineno-73-43" name="__codelineno-73-43" href="#__codelineno-73-43"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-73-44"><a id="__codelineno-73-44" name="__codelineno-73-44" href="#__codelineno-73-44"></a>
+</span><span id="__span-73-45"><a id="__codelineno-73-45" name="__codelineno-73-45" href="#__codelineno-73-45"></a>Para actualizar un usuario se lee el ID desde <span class="sb">`req.params`</span>, se busca el usuario
+</span><span id="__span-73-46"><a id="__codelineno-73-46" name="__codelineno-73-46" href="#__codelineno-73-46"></a>en el array, se leen los cambios desde <span class="sb">`req.body`</span> y se sustituyen solo los
+</span><span id="__span-73-47"><a id="__codelineno-73-47" name="__codelineno-73-47" href="#__codelineno-73-47"></a>campos que han llegado en la petición.
+</span></code></pre></div>
+<h3 id="paso-17-actualizar-el-indice-del-readme">Paso 17: Actualizar el índice del README<a class="headerlink" href="#paso-17-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace al documento del día 10:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-74-2"><a id="__codelineno-74-2" name="__codelineno-74-2" href="#__codelineno-74-2"></a>
+</span><span id="__span-74-3"><a id="__codelineno-74-3" name="__codelineno-74-3" href="#__codelineno-74-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-74-4"><a id="__codelineno-74-4" name="__codelineno-74-4" href="#__codelineno-74-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-74-5"><a id="__codelineno-74-5" name="__codelineno-74-5" href="#__codelineno-74-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-74-6"><a id="__codelineno-74-6" name="__codelineno-74-6" href="#__codelineno-74-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-74-7"><a id="__codelineno-74-7" name="__codelineno-74-7" href="#__codelineno-74-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-74-8"><a id="__codelineno-74-8" name="__codelineno-74-8" href="#__codelineno-74-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-74-9"><a id="__codelineno-74-9" name="__codelineno-74-9" href="#__codelineno-74-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-74-10"><a id="__codelineno-74-10" name="__codelineno-74-10" href="#__codelineno-74-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-74-11"><a id="__codelineno-74-11" name="__codelineno-74-11" href="#__codelineno-74-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-74-12"><a id="__codelineno-74-12" name="__codelineno-74-12" href="#__codelineno-74-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span></code></pre></div>
+<h3 id="paso-18-guardar-cambios-en-git">Paso 18: Guardar cambios en Git<a class="headerlink" href="#paso-18-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 10 - Actualizar usuarios en memoria&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<p>Ahora toca practicar un poco sin seguir todos los pasos guiados.</p>
+<h3 id="tarea-libre-1-impedir-actualizar-el-rol-desde-esta-ruta">Tarea libre 1: Impedir actualizar el rol desde esta ruta<a class="headerlink" href="#tarea-libre-1-impedir-actualizar-el-rol-desde-esta-ruta" title="Permanent link">&para;</a></h3>
+<p>Comprueba qué ocurre si alguien envía:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a><span class="p">{</span>
+</span><span id="__span-79-2"><a id="__codelineno-79-2" name="__codelineno-79-2" href="#__codelineno-79-2"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ADMIN&quot;</span>
+</span><span id="__span-79-3"><a id="__codelineno-79-3" name="__codelineno-79-3" href="#__codelineno-79-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>La ruta <code>PATCH /api/users/:id</code> no debería permitir cambiar el rol.</p>
+<p>Puedes hacer que la API devuelva:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a><span class="p">{</span>
+</span><span id="__span-80-2"><a id="__codelineno-80-2" name="__codelineno-80-2" href="#__codelineno-80-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;No se puede modificar el rol desde esta ruta&quot;</span>
+</span><span id="__span-80-3"><a id="__codelineno-80-3" name="__codelineno-80-3" href="#__codelineno-80-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código recomendado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>400 Bad Request
+</span></code></pre></div>
+<p>Más adelante crearemos una ruta específica para cambiar roles.</p>
+<h3 id="tarea-libre-2-impedir-actualizar-el-id">Tarea libre 2: Impedir actualizar el ID<a class="headerlink" href="#tarea-libre-2-impedir-actualizar-el-id" title="Permanent link">&para;</a></h3>
+<p>Comprueba qué ocurre si alguien envía:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a><span class="p">{</span>
+</span><span id="__span-82-2"><a id="__codelineno-82-2" name="__codelineno-82-2" href="#__codelineno-82-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">99</span>
+</span><span id="__span-82-3"><a id="__codelineno-82-3" name="__codelineno-82-3" href="#__codelineno-82-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>La API no debería permitir cambiar el identificador de un usuario.</p>
+<p>Puedes devolver:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a><span class="p">{</span>
+</span><span id="__span-83-2"><a id="__codelineno-83-2" name="__codelineno-83-2" href="#__codelineno-83-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;No se puede modificar el ID de un usuario&quot;</span>
+</span><span id="__span-83-3"><a id="__codelineno-83-3" name="__codelineno-83-3" href="#__codelineno-83-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="tarea-libre-3-crear-una-ruta-especifica-para-desactivar-usuarios">Tarea libre 3: Crear una ruta específica para desactivar usuarios<a class="headerlink" href="#tarea-libre-3-crear-una-ruta-especifica-para-desactivar-usuarios" title="Permanent link">&para;</a></h3>
+<p>Crea una ruta:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a><span class="err">PATCH /api/users/:id/status</span>
+</span></code></pre></div>
+<p>Debe recibir:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a><span class="p">{</span>
+</span><span id="__span-85-2"><a id="__codelineno-85-2" name="__codelineno-85-2" href="#__codelineno-85-2"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-85-3"><a id="__codelineno-85-3" name="__codelineno-85-3" href="#__codelineno-85-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Y actualizar solo el campo <code>isActive</code>.</p>
+<p>Debe validar:</p>
+<table>
+<thead>
+<tr>
+<th>Validación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>El ID debe ser numérico</td>
+</tr>
+<tr>
+<td>El usuario debe existir</td>
+</tr>
+<tr>
+<td><code>isActive</code> debe ser boolean</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Orden de rutas</p>
+<p>Coloca esta ruta antes de <code>PATCH /api/users/:id</code>. Si la colocas después,
+Express puede interpretar <code>status</code> como si fuera el parámetro <code>:id</code>.</p>
+</div>
+<h3 id="tarea-libre-4-explicar-patch-con-tus-palabras">Tarea libre 4: Explicar PATCH con tus palabras<a class="headerlink" href="#tarea-libre-4-explicar-patch-con-tus-palabras" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 10, añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a><span class="gu">## PATCH</span>
+</span></code></pre></div>
+<p>Explica con tus palabras:</p>
+<ul>
+<li>Qué significa actualizar parcialmente.</li>
+<li>Qué diferencia hay entre enviar solo <code>name</code> y enviar todo el usuario.</li>
+<li>Por qué no permitimos modificar campos como <code>id</code> o <code>role</code> desde esta ruta.</li>
+</ul>
+<h2 id="entrega-recomendada-del-dia-10">Entrega recomendada del día 10<a class="headerlink" href="#entrega-recomendada-del-dia-10" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del
+repositorio de GitHub.</p>
+<p>Al finalizar el día 10, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-87-1"><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a>usermanager-api/
+</span><span id="__span-87-2"><a id="__codelineno-87-2" name="__codelineno-87-2" href="#__codelineno-87-2"></a>  README.md
+</span><span id="__span-87-3"><a id="__codelineno-87-3" name="__codelineno-87-3" href="#__codelineno-87-3"></a>  package.json
+</span><span id="__span-87-4"><a id="__codelineno-87-4" name="__codelineno-87-4" href="#__codelineno-87-4"></a>  package-lock.json
+</span><span id="__span-87-5"><a id="__codelineno-87-5" name="__codelineno-87-5" href="#__codelineno-87-5"></a>  tsconfig.json
+</span><span id="__span-87-6"><a id="__codelineno-87-6" name="__codelineno-87-6" href="#__codelineno-87-6"></a>  src/
+</span><span id="__span-87-7"><a id="__codelineno-87-7" name="__codelineno-87-7" href="#__codelineno-87-7"></a>    server.ts
+</span><span id="__span-87-8"><a id="__codelineno-87-8" name="__codelineno-87-8" href="#__codelineno-87-8"></a>  docs/
+</span><span id="__span-87-9"><a id="__codelineno-87-9" name="__codelineno-87-9" href="#__codelineno-87-9"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-87-10"><a id="__codelineno-87-10" name="__codelineno-87-10" href="#__codelineno-87-10"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-87-11"><a id="__codelineno-87-11" name="__codelineno-87-11" href="#__codelineno-87-11"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-87-12"><a id="__codelineno-87-12" name="__codelineno-87-12" href="#__codelineno-87-12"></a>    dia-04-metodos-http.md
+</span><span id="__span-87-13"><a id="__codelineno-87-13" name="__codelineno-87-13" href="#__codelineno-87-13"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-87-14"><a id="__codelineno-87-14" name="__codelineno-87-14" href="#__codelineno-87-14"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-87-15"><a id="__codelineno-87-15" name="__codelineno-87-15" href="#__codelineno-87-15"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-87-16"><a id="__codelineno-87-16" name="__codelineno-87-16" href="#__codelineno-87-16"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-87-17"><a id="__codelineno-87-17" name="__codelineno-87-17" href="#__codelineno-87-17"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-87-18"><a id="__codelineno-87-18" name="__codelineno-87-18" href="#__codelineno-87-18"></a>    dia-10-actualizar-usuarios.md
+</span></code></pre></div>
+<p>El documento del día 10 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-88-1"><a id="__codelineno-88-1" name="__codelineno-88-1" href="#__codelineno-88-1"></a>docs/dia-10-actualizar-usuarios.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<table>
+<thead>
+<tr>
+<th>Contenido esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Resumen de lo realizado</td>
+</tr>
+<tr>
+<td>Endpoint trabajado</td>
+</tr>
+<tr>
+<td>Body de ejemplo</td>
+</tr>
+<tr>
+<td>Casos probados</td>
+</tr>
+<tr>
+<td>Explicación personal del proceso de actualización</td>
+</tr>
+<tr>
+<td>Explicación del uso de <code>PATCH</code></td>
+</tr>
+</tbody>
+</table>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<div class="language-text highlight"><span class="filename">Mensaje de ejemplo</span><pre><span></span><code><span id="__span-89-1"><a id="__codelineno-89-1" name="__codelineno-89-1" href="#__codelineno-89-1"></a>Hola, comparto el avance del día 10 del reto UserManager API:
+</span><span id="__span-89-2"><a id="__codelineno-89-2" name="__codelineno-89-2" href="#__codelineno-89-2"></a>
+</span><span id="__span-89-3"><a id="__codelineno-89-3" name="__codelineno-89-3" href="#__codelineno-89-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-89-4"><a id="__codelineno-89-4" name="__codelineno-89-4" href="#__codelineno-89-4"></a>
+</span><span id="__span-89-5"><a id="__codelineno-89-5" name="__codelineno-89-5" href="#__codelineno-89-5"></a>He implementado la actualización de usuarios en memoria y he documentado el
+</span><span id="__span-89-6"><a id="__codelineno-89-6" name="__codelineno-89-6" href="#__codelineno-89-6"></a>trabajo del día 10 en:
+</span><span id="__span-89-7"><a id="__codelineno-89-7" name="__codelineno-89-7" href="#__codelineno-89-7"></a>docs/dia-10-actualizar-usuarios.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos completado la operación de actualización del CRUD.</p>
+<p>Nuestra API ya puede recibir cambios desde el body, buscar un usuario por ID,
+validar los datos recibidos y actualizar solo los campos permitidos.</p>
+<p>Hoy hemos trabajado:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PATCH /api/users/:id</code></td>
+</tr>
+<tr>
+<td>Actualización parcial</td>
+</tr>
+<tr>
+<td><code>findIndex</code></td>
+</tr>
+<tr>
+<td>Validación de ID</td>
+</tr>
+<tr>
+<td>Validación de body vacío</td>
+</tr>
+<tr>
+<td>Validación de <code>name</code>, <code>email</code> e <code>isActive</code></td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+</tr>
+<tr>
+<td>Errores <code>400</code>, <code>404</code> y <code>409</code></td>
+</tr>
+</tbody>
+</table>
+<p>Cada vez estamos más cerca de tener un CRUD completo de usuarios en memoria.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Actualizar un recurso no consiste solo en sobrescribir datos: hay que
+controlar qué campos pueden cambiar, validar los valores recibidos y
+mantener la coherencia del recurso.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia9/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 9">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 9
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia11/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 11">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 11
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

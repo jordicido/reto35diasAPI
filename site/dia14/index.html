@@ -1,0 +1,2363 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 35 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 14: Códigos de estado HTTP - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-14-codigos-de-estado-http" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 14: Códigos de estado HTTP
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a trabajar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-codigo-de-estado-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es un código de estado HTTP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#familias-de-codigos-http" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Familias de códigos HTTP
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-2xx-todo-ha-ido-bien" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos <code>2xx</code>: todo ha ido bien
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Códigos 2xx: todo ha ido bien">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#200-ok" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>200 OK</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#201-created" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>201 Created</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-4xx-el-cliente-ha-enviado-algo-incorrecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos <code>4xx</code>: el cliente ha enviado algo incorrecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#400-bad-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>400 Bad Request</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#404-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>404 Not Found</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#409-conflict" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>409 Conflict</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-que-usaremos-mas-adelante" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos que usaremos más adelante
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Códigos que usaremos más adelante">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#401-unauthorized" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>401 Unauthorized</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#403-forbidden" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>403 Forbidden</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#500-internal-server-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>500 Internal Server Error</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabla-resumen-para-usermanager-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabla resumen para UserManager API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-general-de-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo general de decisión
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-revisar-get-apiusers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Revisar <code>GET /api/users</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-revisar-get-apiusersid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Revisar <code>GET /api/users/:id</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-revisar-post-apiusers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Revisar <code>POST /api/users</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-revisar-patch-apiusersid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Revisar <code>PATCH /api/users/:id</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-revisar-delete-apiusersid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Revisar <code>DELETE /api/users/:id</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-crear-una-carpeta-de-pruebas-del-dia-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Crear una carpeta de pruebas del día 14
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-revisar-que-las-respuestas-tengan-sentido" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Revisar que las respuestas tengan sentido
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-crear-una-tabla-de-revision" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Crear una tabla de revisión
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-crear-el-documento-del-dia-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Crear el documento del día 14
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-detectar-una-respuesta-incoherente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Detectar una respuesta incoherente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-crear-una-tabla-de-decisiones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Crear una tabla de decisiones
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-explicar-diferencia-entre-400-404-y-409" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Explicar diferencia entre <code>400</code>, <code>404</code> y <code>409</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-investigar-401-y-403" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Investigar <code>401</code> y <code>403</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 14
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-14-codigos-de-estado-http">Día 14: Códigos de estado HTTP<a class="headerlink" href="#dia-14-codigos-de-estado-http" title="Permanent link">&para;</a></h1>
+<p>En el día 13 mejoramos la validación del email y el control de duplicados.
+Vimos que el email debe normalizarse, validarse y comprobarse para evitar que
+dos usuarios tengan la misma dirección.</p>
+<p>Durante los últimos días ya hemos usado varios códigos HTTP:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="err">200 OK</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="err">201 Created</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="err">400 Bad Request</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="err">404 Not Found</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="err">409 Conflict</span>
+</span></code></pre></div>
+<p>Pero hasta ahora los hemos ido usando según aparecían los casos. Hoy vamos a
+dedicar la sesión a entenderlos mejor y a revisar que nuestra API los utiliza de
+forma coherente.</p>
+<p>Una API REST no solo debe devolver datos en JSON. También debe comunicar
+correctamente <strong>qué ha pasado</strong> con cada petición. Para eso usamos los
+<strong>códigos de estado HTTP</strong>.</p>
+<p>Por ejemplo:</p>
+<table>
+<thead>
+<tr>
+<th>Petición</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/users/1</code></td>
+<td><code>200 OK</code> si el usuario existe</td>
+</tr>
+<tr>
+<td><code>GET /api/users/999</code></td>
+<td><code>404 Not Found</code> si no existe</td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td><code>201 Created</code> si se crea correctamente</td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td><code>400 Bad Request</code> si faltan datos</td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td><code>409 Conflict</code> si el email ya existe</td>
+</tr>
+</tbody>
+</table>
+<p>El objetivo de hoy será revisar los endpoints que ya tenemos y asegurarnos de
+que responden con el código adecuado en cada situación.</p>
+<div class="admonition abstract">
+<p class="admonition-title">Objetivo del día</p>
+<p>Entender los códigos de estado HTTP más usados en UserManager API y revisar
+que cada endpoint responda con un código coherente.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">Qué vamos a trabajar hoy<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status code</td>
+<td>Comunicar el resultado de una petición</td>
+</tr>
+<tr>
+<td>Familias de códigos HTTP</td>
+<td>Distinguir <code>2xx</code>, <code>4xx</code> y <code>5xx</code></td>
+</tr>
+<tr>
+<td><code>200 OK</code></td>
+<td>Confirmar consultas, actualizaciones o desactivaciones correctas</td>
+</tr>
+<tr>
+<td><code>201 Created</code></td>
+<td>Confirmar creación de recursos</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>Señalar datos incorrectos o incompletos</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Indicar que un recurso no existe</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td>Indicar conflictos con datos existentes</td>
+</tr>
+<tr>
+<td>Error de cliente vs servidor</td>
+<td>Separar problemas de petición y fallos internos</td>
+</tr>
+<tr>
+<td>Respuestas coherentes</td>
+<td>Alinear código, mensaje y JSON</td>
+</tr>
+<tr>
+<td>Contrato de API</td>
+<td>Hacer que el cliente sepa qué esperar</td>
+</tr>
+<tr>
+<td>Pruebas de códigos HTTP</td>
+<td>Verificar cada caso en Postman o Thunder Client</td>
+</tr>
+<tr>
+<td>Documentación de errores</td>
+<td>Registrar cuándo se usa cada código</td>
+</tr>
+</tbody>
+</table>
+<p>La idea principal es que aprendamos a diseñar respuestas más profesionales.</p>
+<h2 id="que-es-un-codigo-de-estado-http">Qué es un código de estado HTTP<a class="headerlink" href="#que-es-un-codigo-de-estado-http" title="Permanent link">&para;</a></h2>
+<p>Un <strong>código de estado HTTP</strong> es un número que acompaña a la respuesta del
+servidor e indica el resultado de la petición.</p>
+<p>Por ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>200
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>201
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>400
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>404
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>409
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>500
+</span></code></pre></div>
+<p>Cada código tiene un significado.</p>
+<p>Cuando una API responde, normalmente devuelve dos cosas importantes:</p>
+<ul>
+<li>Código de estado.</li>
+<li>Cuerpo de respuesta.</li>
+</ul>
+<p>Ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+</span></code></pre></div>
+<p>Body:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>El código <code>200</code> indica que la petición ha ido bien. El JSON explica el resultado
+con más detalle.</p>
+<pre class="mermaid"><code>sequenceDiagram
+  participant Cliente
+  participant API
+
+  Cliente-&gt;&gt;API: GET /api/users/1
+  API--&gt;&gt;Cliente: 200 OK + JSON</code></pre>
+<h2 id="familias-de-codigos-http">Familias de códigos HTTP<a class="headerlink" href="#familias-de-codigos-http" title="Permanent link">&para;</a></h2>
+<p>Los códigos HTTP se agrupan en familias.</p>
+<p>No hace falta memorizar todos, pero sí entender la idea general.</p>
+<table>
+<thead>
+<tr>
+<th>Familia</th>
+<th>Significado general</th>
+<th>Ejemplos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>2xx</code></td>
+<td>La petición ha ido bien</td>
+<td><code>200</code>, <code>201</code></td>
+</tr>
+<tr>
+<td><code>3xx</code></td>
+<td>Redirecciones</td>
+<td><code>301</code>, <code>302</code></td>
+</tr>
+<tr>
+<td><code>4xx</code></td>
+<td>Error provocado por la petición del cliente</td>
+<td><code>400</code>, <code>401</code>, <code>403</code>, <code>404</code>, <code>409</code></td>
+</tr>
+<tr>
+<td><code>5xx</code></td>
+<td>Error del servidor</td>
+<td><code>500</code></td>
+</tr>
+</tbody>
+</table>
+<p>En este reto trabajaremos sobre todo con:</p>
+<ul>
+<li><code>2xx</code>: respuestas correctas.</li>
+<li><code>4xx</code>: errores del cliente.</li>
+<li><code>5xx</code>: errores internos.</li>
+</ul>
+<h2 id="codigos-2xx-todo-ha-ido-bien">Códigos <code>2xx</code>: todo ha ido bien<a class="headerlink" href="#codigos-2xx-todo-ha-ido-bien" title="Permanent link">&para;</a></h2>
+<p>Los códigos que empiezan por <code>2</code> indican que la petición se ha procesado
+correctamente.</p>
+<h3 id="200-ok"><code>200 OK</code><a class="headerlink" href="#200-ok" title="Permanent link">&para;</a></h3>
+<p>Usamos <code>200 OK</code> cuando la petición se ha realizado correctamente.</p>
+<p>Ejemplos:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="err">GET /api/health</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="err">GET /api/users</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="err">GET /api/users/:id</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="err">PATCH /api/users/:id</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="err">DELETE /api/users/:id</span>
+</span></code></pre></div>
+<p>Respuesta:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Uso recomendado en nuestro proyecto:</p>
+<ul>
+<li>Consultar datos.</li>
+<li>Actualizar datos correctamente.</li>
+<li>Desactivar usuarios correctamente.</li>
+</ul>
+<h3 id="201-created"><code>201 Created</code><a class="headerlink" href="#201-created" title="Permanent link">&para;</a></h3>
+<p>Usamos <code>201 Created</code> cuando se ha creado un nuevo recurso.</p>
+<p>Ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="err">POST /api/users</span>
+</span></code></pre></div>
+<p>Si el usuario se crea correctamente, la API debe responder:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="err">201 Created</span>
+</span></code></pre></div>
+<p>Respuesta:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario creado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;María López&quot;</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;maria@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Uso recomendado en nuestro proyecto:</p>
+<ul>
+<li>Crear usuarios.</li>
+<li>Registrar usuarios, cuando creemos <code>/auth/register</code> más adelante.</li>
+</ul>
+<h2 id="codigos-4xx-el-cliente-ha-enviado-algo-incorrecto">Códigos <code>4xx</code>: el cliente ha enviado algo incorrecto<a class="headerlink" href="#codigos-4xx-el-cliente-ha-enviado-algo-incorrecto" title="Permanent link">&para;</a></h2>
+<p>Los códigos que empiezan por <code>4</code> indican que la petición no se puede completar
+por algún problema relacionado con lo que ha enviado el cliente.</p>
+<p>Esto no significa que el navegador o Postman estén rotos. Significa que la
+petición no cumple lo que la API espera.</p>
+<p>Ejemplos:</p>
+<ul>
+<li>Falta un campo obligatorio.</li>
+<li>El ID no es válido.</li>
+<li>El usuario no existe.</li>
+<li>El email ya está registrado.</li>
+<li>No hay token.</li>
+<li>El usuario no tiene permisos.</li>
+</ul>
+<p>En nuestro CRUD actual usaremos principalmente:</p>
+<ul>
+<li><code>400 Bad Request</code></li>
+<li><code>404 Not Found</code></li>
+<li><code>409 Conflict</code></li>
+</ul>
+<p>Más adelante usaremos:</p>
+<ul>
+<li><code>401 Unauthorized</code></li>
+<li><code>403 Forbidden</code></li>
+</ul>
+<h2 id="400-bad-request"><code>400 Bad Request</code><a class="headerlink" href="#400-bad-request" title="Permanent link">&para;</a></h2>
+<p>Usamos <code>400 Bad Request</code> cuando la petición está mal formada o contiene datos
+incorrectos.</p>
+<p>Ejemplos:</p>
+<ul>
+<li>El ID debe ser un número.</li>
+<li>Falta un campo obligatorio.</li>
+<li>El email no tiene formato válido.</li>
+<li>La contraseña es demasiado corta.</li>
+<li><code>isActive</code> no es boolean.</li>
+<li>El body está vacío en una actualización.</li>
+</ul>
+<p>Ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="err">PATCH /api/users/abc</span>
+</span></code></pre></div>
+<p>Respuesta:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El ID debe ser un número&quot;</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">&quot;received&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;abc&quot;</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<p>Otro ejemplo:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usuario@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El nombre debe ser un texto no vacío&quot;</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<p>La idea es:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>La API entiende la ruta, pero los datos enviados no son válidos.
+</span></code></pre></div>
+<h2 id="404-not-found"><code>404 Not Found</code><a class="headerlink" href="#404-not-found" title="Permanent link">&para;</a></h2>
+<p>Usamos <code>404 Not Found</code> cuando el recurso solicitado no existe.</p>
+<p>Ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="err">GET /api/users/999</span>
+</span></code></pre></div>
+<p>Si no hay ningún usuario con ID <code>999</code>, la respuesta debe ser:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">{</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<p>También puede ocurrir cuando se llama a una ruta que no existe:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="err">GET /api/ruta-inventada</span>
+</span></code></pre></div>
+<p>De momento Express gestiona esto de forma básica. Más adelante crearemos una
+gestión de errores más ordenada.</p>
+<p>La idea es:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>La petición puede estar bien escrita, pero el recurso solicitado no existe.
+</span></code></pre></div>
+<h2 id="409-conflict"><code>409 Conflict</code><a class="headerlink" href="#409-conflict" title="Permanent link">&para;</a></h2>
+<p>Usamos <code>409 Conflict</code> cuando la petición está bien formada, pero entra en
+conflicto con el estado actual del sistema.</p>
+<p>El ejemplo más claro en nuestra API es el email duplicado.</p>
+<p>Si ya existe este usuario:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Y enviamos:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">{</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Repetida&quot;</span><span class="p">,</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>La API debe responder:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">{</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="err">409 Conflict</span>
+</span></code></pre></div>
+<p>¿Por qué no usamos <code>400</code>?</p>
+<p>Porque la estructura de la petición es correcta. Tiene <code>name</code>, <code>email</code> y
+<code>password</code>. El problema es que ese email entra en conflicto con un dato que ya
+existe.</p>
+<pre class="mermaid"><code>flowchart TD
+  A[POST /api/users] --&gt; B{¿Datos bien formados?}
+  B --&gt;|No| C[400 Bad Request]
+  B --&gt;|Sí| D{¿Email ya existe?}
+  D --&gt;|Sí| E[409 Conflict]
+  D --&gt;|No| F[201 Created]</code></pre>
+<h2 id="codigos-que-usaremos-mas-adelante">Códigos que usaremos más adelante<a class="headerlink" href="#codigos-que-usaremos-mas-adelante" title="Permanent link">&para;</a></h2>
+<p>Aunque hoy no los implementaremos del todo, conviene conocer dos códigos que
+aparecerán en la parte de seguridad.</p>
+<h3 id="401-unauthorized"><code>401 Unauthorized</code><a class="headerlink" href="#401-unauthorized" title="Permanent link">&para;</a></h3>
+<p>Se usa cuando el usuario no está autenticado.</p>
+<p>Ejemplo futuro:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="err">GET /api/users/me</span>
+</span></code></pre></div>
+<p>Sin token:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p">{</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Token no proporcionado&quot;</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="err">401 Unauthorized</span>
+</span></code></pre></div>
+<p>Significa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>No sé quién eres o no has iniciado sesión correctamente.
+</span></code></pre></div>
+<h3 id="403-forbidden"><code>403 Forbidden</code><a class="headerlink" href="#403-forbidden" title="Permanent link">&para;</a></h3>
+<p>Se usa cuando el usuario sí está autenticado, pero no tiene permisos
+suficientes.</p>
+<p>Ejemplo futuro:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="err">GET /api/users</span>
+</span></code></pre></div>
+<p>Si lo intenta un usuario normal con rol <code>USER</code>, la API podría responder:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="p">{</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;No tienes permisos para realizar esta acción&quot;</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="err">403 Forbidden</span>
+</span></code></pre></div>
+<p>Significa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>Sé quién eres, pero no puedes hacer esto.
+</span></code></pre></div>
+<p>Diferencia importante:</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>401</code></td>
+<td>No estás autenticado</td>
+</tr>
+<tr>
+<td><code>403</code></td>
+<td>Estás autenticado, pero no tienes permisos</td>
+</tr>
+</tbody>
+</table>
+<h2 id="500-internal-server-error"><code>500 Internal Server Error</code><a class="headerlink" href="#500-internal-server-error" title="Permanent link">&para;</a></h2>
+<p>El código <code>500 Internal Server Error</code> indica que ha ocurrido un error inesperado
+en el servidor.</p>
+<p>Ejemplos:</p>
+<ul>
+<li>Falló una conexión.</li>
+<li>Hay un error en el código.</li>
+<li>La base de datos no responde.</li>
+<li>Ocurre una excepción no controlada.</li>
+</ul>
+<p>En este reto intentaremos evitar que errores internos se mezclen con errores de
+validación.</p>
+<p>No es lo mismo:</p>
+<table>
+<thead>
+<tr>
+<th>Situación</th>
+<th>Código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>El cliente envía mal un ID</td>
+<td><code>400</code></td>
+</tr>
+<tr>
+<td>El usuario no existe</td>
+<td><code>404</code></td>
+</tr>
+<tr>
+<td>El servidor se rompe por un bug</td>
+<td><code>500</code></td>
+</tr>
+</tbody>
+</table>
+<p>Más adelante crearemos un middleware centralizado de errores para controlar
+mejor este tipo de situaciones.</p>
+<h2 id="tabla-resumen-para-usermanager-api">Tabla resumen para UserManager API<a class="headerlink" href="#tabla-resumen-para-usermanager-api" title="Permanent link">&para;</a></h2>
+<p>Esta tabla resume los códigos que vamos a usar en nuestro proyecto:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">Código</th>
+<th>Nombre</th>
+<th>Cuándo lo usamos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;"><code>200</code></td>
+<td>OK</td>
+<td>Consulta, actualización o desactivación correcta</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>201</code></td>
+<td>Created</td>
+<td>Usuario creado correctamente</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>400</code></td>
+<td>Bad Request</td>
+<td>Datos incorrectos o incompletos</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>404</code></td>
+<td>Not Found</td>
+<td>Usuario o ruta no encontrada</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>409</code></td>
+<td>Conflict</td>
+<td>Email duplicado</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>401</code></td>
+<td>Unauthorized</td>
+<td>Falta autenticación, más adelante</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>403</code></td>
+<td>Forbidden</td>
+<td>No hay permisos, más adelante</td>
+</tr>
+<tr>
+<td style="text-align: right;"><code>500</code></td>
+<td>Internal Server Error</td>
+<td>Error inesperado del servidor</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flujo-general-de-decision">Flujo general de decisión<a class="headerlink" href="#flujo-general-de-decision" title="Permanent link">&para;</a></h2>
+<p>Cuando respondemos a una petición, podemos pensar así:</p>
+<pre class="mermaid"><code>flowchart TD
+  A[Petición recibida] --&gt; B{¿La ruta existe?}
+  B --&gt;|No| C[404 Not Found]
+  B --&gt;|Sí| D{¿Los datos tienen formato válido?}
+  D --&gt;|No| E[400 Bad Request]
+  D --&gt;|Sí| F{¿El recurso existe si es necesario?}
+  F --&gt;|No| G[404 Not Found]
+  F --&gt;|Sí| H{¿Hay conflicto con datos existentes?}
+  H --&gt;|Sí| I[409 Conflict]
+  H --&gt;|No| J{¿Se crea un recurso nuevo?}
+  J --&gt;|Sí| K[201 Created]
+  J --&gt;|No| L[200 OK]</code></pre>
+<p>No siempre todos los pasos aplican, pero este esquema ayuda a razonar.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre el repositorio:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>usermanager-api
+</span></code></pre></div>
+<p>Entra en la carpeta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Arranca el servidor:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Comprueba que la API responde:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="err">GET http://localhost:3000/api/health</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<h3 id="paso-2-revisar-get-apiusers">Paso 2: Revisar <code>GET /api/users</code><a class="headerlink" href="#paso-2-revisar-get-apiusers" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="err">GET http://localhost:3000/api/users</span>
+</span></code></pre></div>
+<p>Debe devolver:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<p>Este endpoint consulta información, por eso usamos <code>200</code>.</p>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="p">{</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Listado de usuarios&quot;</span><span class="p">,</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Comprueba en Thunder Client o Postman que el código obtenido sea <code>200</code>.</p>
+<h3 id="paso-3-revisar-get-apiusersid">Paso 3: Revisar <code>GET /api/users/:id</code><a class="headerlink" href="#paso-3-revisar-get-apiusersid" title="Permanent link">&para;</a></h3>
+<p>Prueba un usuario existente:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="err">GET http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<p>Prueba un usuario inexistente:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="err">GET http://localhost:3000/api/users/999</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<p>Prueba un ID incorrecto:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="err">GET http://localhost:3000/api/users/abc</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<p>La lógica debería ser:</p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuario existe</td>
+<td><code>200</code></td>
+</tr>
+<tr>
+<td>Usuario no existe</td>
+<td><code>404</code></td>
+</tr>
+<tr>
+<td>ID no válido</td>
+<td><code>400</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-4-revisar-post-apiusers">Paso 4: Revisar <code>POST /api/users</code><a class="headerlink" href="#paso-4-revisar-post-apiusers" title="Permanent link">&para;</a></h3>
+<p>Prueba una creación correcta:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="err">POST http://localhost:3000/api/users</span>
+</span></code></pre></div>
+<p>Body:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="p">{</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Estado&quot;</span><span class="p">,</span>
+</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;estado@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-48-4"><a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-48-5"><a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="err">201 Created</span>
+</span></code></pre></div>
+<p>Ahora prueba datos incorrectos:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="p">{</span>
+</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-50-3"><a id="__codelineno-50-3" name="__codelineno-50-3" href="#__codelineno-50-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;estado2@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-50-4"><a id="__codelineno-50-4" name="__codelineno-50-4" href="#__codelineno-50-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-50-5"><a id="__codelineno-50-5" name="__codelineno-50-5" href="#__codelineno-50-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<p>Ahora prueba email duplicado:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="p">{</span>
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Repetido&quot;</span><span class="p">,</span>
+</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;estado@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-52-4"><a id="__codelineno-52-4" name="__codelineno-52-4" href="#__codelineno-52-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-52-5"><a id="__codelineno-52-5" name="__codelineno-52-5" href="#__codelineno-52-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="err">409 Conflict</span>
+</span></code></pre></div>
+<p>La lógica debería ser:</p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuario creado</td>
+<td><code>201</code></td>
+</tr>
+<tr>
+<td>Datos incorrectos</td>
+<td><code>400</code></td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+<td><code>409</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-5-revisar-patch-apiusersid">Paso 5: Revisar <code>PATCH /api/users/:id</code><a class="headerlink" href="#paso-5-revisar-patch-apiusersid" title="Permanent link">&para;</a></h3>
+<p>Prueba una actualización correcta:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="err">PATCH http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Body:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="p">{</span>
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana Código 200&quot;</span>
+</span><span id="__span-55-3"><a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<p>Prueba ID incorrecto:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a><span class="err">PATCH http://localhost:3000/api/users/abc</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<p>Prueba usuario inexistente:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a><span class="err">PATCH http://localhost:3000/api/users/999</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<p>Prueba body vacío:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a><span class="p">{}</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<p>Prueba email duplicado:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a><span class="p">{</span>
+</span><span id="__span-63-2"><a id="__codelineno-63-2" name="__codelineno-63-2" href="#__codelineno-63-2"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span>
+</span><span id="__span-63-3"><a id="__codelineno-63-3" name="__codelineno-63-3" href="#__codelineno-63-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Hazlo sobre un usuario distinto a Ana.</p>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="err">409 Conflict</span>
+</span></code></pre></div>
+<p>La lógica debería ser:</p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actualización correcta</td>
+<td><code>200</code></td>
+</tr>
+<tr>
+<td>ID o datos incorrectos</td>
+<td><code>400</code></td>
+</tr>
+<tr>
+<td>Usuario inexistente</td>
+<td><code>404</code></td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+<td><code>409</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-6-revisar-delete-apiusersid">Paso 6: Revisar <code>DELETE /api/users/:id</code><a class="headerlink" href="#paso-6-revisar-delete-apiusersid" title="Permanent link">&para;</a></h3>
+<p>Prueba una desactivación correcta:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="err">DELETE http://localhost:3000/api/users/1</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<p>Prueba ID incorrecto:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="err">DELETE http://localhost:3000/api/users/abc</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a><span class="err">400 Bad Request</span>
+</span></code></pre></div>
+<p>Prueba usuario inexistente:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a><span class="err">DELETE http://localhost:3000/api/users/999</span>
+</span></code></pre></div>
+<p>Código esperado:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<p>La lógica debería ser:</p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuario desactivado</td>
+<td><code>200</code></td>
+</tr>
+<tr>
+<td>ID incorrecto</td>
+<td><code>400</code></td>
+</tr>
+<tr>
+<td>Usuario inexistente</td>
+<td><code>404</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-7-crear-una-carpeta-de-pruebas-del-dia-14">Paso 7: Crear una carpeta de pruebas del día 14<a class="headerlink" href="#paso-7-crear-una-carpeta-de-pruebas-del-dia-14" title="Permanent link">&para;</a></h3>
+<p>En Thunder Client o Postman, dentro de la colección <code>UserManager API</code>, crea una
+carpeta llamada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>Día 14 - Códigos de estado HTTP
+</span></code></pre></div>
+<p>Añade estas peticiones:</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th style="text-align: right;">Código</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/health</code></td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users</code></td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/1</code></td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/999</code></td>
+<td style="text-align: right;">404</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/abc</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users</code></td>
+<td style="text-align: right;">201</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users</code></td>
+<td style="text-align: right;">409</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/1</code></td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/abc</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/999</code></td>
+<td style="text-align: right;">404</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/2</code></td>
+<td style="text-align: right;">409</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/1</code></td>
+<td style="text-align: right;">200</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/abc</code></td>
+<td style="text-align: right;">400</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/999</code></td>
+<td style="text-align: right;">404</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-8-revisar-que-las-respuestas-tengan-sentido">Paso 8: Revisar que las respuestas tengan sentido<a class="headerlink" href="#paso-8-revisar-que-las-respuestas-tengan-sentido" title="Permanent link">&para;</a></h3>
+<p>Para cada petición, no mires solo el JSON. Revisa también:</p>
+<ul>
+<li>Método.</li>
+<li>Ruta.</li>
+<li>Código HTTP.</li>
+<li>Mensaje de respuesta.</li>
+<li>Cuerpo JSON.</li>
+</ul>
+<p>Una respuesta correcta debe tener coherencia entre el código y el mensaje.</p>
+<p>Mal ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a><span class="err">200 OK</span>
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a><span class="p">{</span>
+</span><span id="__span-73-2"><a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span>
+</span><span id="__span-73-3"><a id="__codelineno-73-3" name="__codelineno-73-3" href="#__codelineno-73-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Esto es incoherente, porque si el usuario no existe no debería ser <code>200</code>.</p>
+<p>Buen ejemplo:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a><span class="err">404 Not Found</span>
+</span></code></pre></div>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a><span class="p">{</span>
+</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-75-3"><a id="__codelineno-75-3" name="__codelineno-75-3" href="#__codelineno-75-3"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-75-4"><a id="__codelineno-75-4" name="__codelineno-75-4" href="#__codelineno-75-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="paso-9-crear-una-tabla-de-revision">Paso 9: Crear una tabla de revisión<a class="headerlink" href="#paso-9-crear-una-tabla-de-revision" title="Permanent link">&para;</a></h3>
+<p>En tu documento del día 14 tendrás que crear una tabla como esta:</p>
+<table>
+<thead>
+<tr>
+<th>Petición</th>
+<th>Caso</th>
+<th style="text-align: right;">Código esperado</th>
+<th style="text-align: right;">Código obtenido</th>
+<th>¿Correcto?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GET /api/health</code></td>
+<td>Health</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>GET /api/users</code></td>
+<td>Listado</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>GET /api/users/1</code></td>
+<td>Usuario existente</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>GET /api/users/999</code></td>
+<td>Usuario inexistente</td>
+<td style="text-align: right;">404</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>GET /api/users/abc</code></td>
+<td>ID inválido</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td>Creación correcta</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td>Datos inválidos</td>
+<td style="text-align: right;">400</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td>Email duplicado</td>
+<td style="text-align: right;">409</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/1</code></td>
+<td>Actualización correcta</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PATCH /api/users/999</code></td>
+<td>Usuario inexistente</td>
+<td style="text-align: right;">404</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td><code>DELETE /api/users/1</code></td>
+<td>Desactivación correcta</td>
+<td style="text-align: right;">200</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-10-actualizar-el-readme">Paso 10: Actualizar el README<a class="headerlink" href="#paso-10-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Añade una sección sobre códigos de estado:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a><span class="gu">## Códigos de estado utilizados</span>
+</span><span id="__span-76-2"><a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>
+</span><span id="__span-76-3"><a id="__codelineno-76-3" name="__codelineno-76-3" href="#__codelineno-76-3"></a>La API utiliza códigos HTTP para indicar el resultado de cada petición.
+</span><span id="__span-76-4"><a id="__codelineno-76-4" name="__codelineno-76-4" href="#__codelineno-76-4"></a>
+</span><span id="__span-76-5"><a id="__codelineno-76-5" name="__codelineno-76-5" href="#__codelineno-76-5"></a>| Código | Significado | Uso en el proyecto |
+</span><span id="__span-76-6"><a id="__codelineno-76-6" name="__codelineno-76-6" href="#__codelineno-76-6"></a>| ---: | --- | --- |
+</span><span id="__span-76-7"><a id="__codelineno-76-7" name="__codelineno-76-7" href="#__codelineno-76-7"></a>| 200 | OK | Consulta, actualización o desactivación correcta |
+</span><span id="__span-76-8"><a id="__codelineno-76-8" name="__codelineno-76-8" href="#__codelineno-76-8"></a>| 201 | Created | Usuario creado correctamente |
+</span><span id="__span-76-9"><a id="__codelineno-76-9" name="__codelineno-76-9" href="#__codelineno-76-9"></a>| 400 | Bad Request | Datos incorrectos o incompletos |
+</span><span id="__span-76-10"><a id="__codelineno-76-10" name="__codelineno-76-10" href="#__codelineno-76-10"></a>| 404 | Not Found | Usuario no encontrado |
+</span><span id="__span-76-11"><a id="__codelineno-76-11" name="__codelineno-76-11" href="#__codelineno-76-11"></a>| 409 | Conflict | Email duplicado |
+</span><span id="__span-76-12"><a id="__codelineno-76-12" name="__codelineno-76-12" href="#__codelineno-76-12"></a>
+</span><span id="__span-76-13"><a id="__codelineno-76-13" name="__codelineno-76-13" href="#__codelineno-76-13"></a>Ejemplo de error 404:
+</span><span id="__span-76-14"><a id="__codelineno-76-14" name="__codelineno-76-14" href="#__codelineno-76-14"></a>
+</span><span id="__span-76-15"><a id="__codelineno-76-15" name="__codelineno-76-15" href="#__codelineno-76-15"></a><span class="sb">```json</span>
+</span><span id="__span-76-16"><a id="__codelineno-76-16" name="__codelineno-76-16" href="#__codelineno-76-16"></a><span class="p">{</span>
+</span><span id="__span-76-17"><a id="__codelineno-76-17" name="__codelineno-76-17" href="#__codelineno-76-17"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span><span class="p">,</span>
+</span><span id="__span-76-18"><a id="__codelineno-76-18" name="__codelineno-76-18" href="#__codelineno-76-18"></a><span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">999</span>
+</span><span id="__span-76-19"><a id="__codelineno-76-19" name="__codelineno-76-19" href="#__codelineno-76-19"></a><span class="p">}</span>
+</span><span id="__span-76-20"><a id="__codelineno-76-20" name="__codelineno-76-20" href="#__codelineno-76-20"></a><span class="sb">```</span>
+</span><span id="__span-76-21"><a id="__codelineno-76-21" name="__codelineno-76-21" href="#__codelineno-76-21"></a>
+</span><span id="__span-76-22"><a id="__codelineno-76-22" name="__codelineno-76-22" href="#__codelineno-76-22"></a>Ejemplo de error 409:
+</span><span id="__span-76-23"><a id="__codelineno-76-23" name="__codelineno-76-23" href="#__codelineno-76-23"></a>
+</span><span id="__span-76-24"><a id="__codelineno-76-24" name="__codelineno-76-24" href="#__codelineno-76-24"></a><span class="sb">```json</span>
+</span><span id="__span-76-25"><a id="__codelineno-76-25" name="__codelineno-76-25" href="#__codelineno-76-25"></a><span class="p">{</span>
+</span><span id="__span-76-26"><a id="__codelineno-76-26" name="__codelineno-76-26" href="#__codelineno-76-26"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-76-27"><a id="__codelineno-76-27" name="__codelineno-76-27" href="#__codelineno-76-27"></a><span class="p">}</span>
+</span><span id="__span-76-28"><a id="__codelineno-76-28" name="__codelineno-76-28" href="#__codelineno-76-28"></a><span class="sb">```</span>
+</span></code></pre></div>
+<h3 id="paso-11-crear-el-documento-del-dia-14">Paso 11: Crear el documento del día 14<a class="headerlink" href="#paso-11-crear-el-documento-del-dia-14" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea un archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>docs/dia-14-codigos-estado-http.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a><span class="gh"># Día 14 - Códigos de estado HTTP</span>
+</span><span id="__span-78-2"><a id="__codelineno-78-2" name="__codelineno-78-2" href="#__codelineno-78-2"></a>
+</span><span id="__span-78-3"><a id="__codelineno-78-3" name="__codelineno-78-3" href="#__codelineno-78-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-78-4"><a id="__codelineno-78-4" name="__codelineno-78-4" href="#__codelineno-78-4"></a>
+</span><span id="__span-78-5"><a id="__codelineno-78-5" name="__codelineno-78-5" href="#__codelineno-78-5"></a><span class="k">-</span><span class="w"> </span>He revisado los códigos HTTP utilizados en la API.
+</span><span id="__span-78-6"><a id="__codelineno-78-6" name="__codelineno-78-6" href="#__codelineno-78-6"></a><span class="k">-</span><span class="w"> </span>He probado respuestas correctas con <span class="sb">`200 OK`</span>.
+</span><span id="__span-78-7"><a id="__codelineno-78-7" name="__codelineno-78-7" href="#__codelineno-78-7"></a><span class="k">-</span><span class="w"> </span>He probado creación con <span class="sb">`201 Created`</span>.
+</span><span id="__span-78-8"><a id="__codelineno-78-8" name="__codelineno-78-8" href="#__codelineno-78-8"></a><span class="k">-</span><span class="w"> </span>He probado errores de validación con <span class="sb">`400 Bad Request`</span>.
+</span><span id="__span-78-9"><a id="__codelineno-78-9" name="__codelineno-78-9" href="#__codelineno-78-9"></a><span class="k">-</span><span class="w"> </span>He probado usuario inexistente con <span class="sb">`404 Not Found`</span>.
+</span><span id="__span-78-10"><a id="__codelineno-78-10" name="__codelineno-78-10" href="#__codelineno-78-10"></a><span class="k">-</span><span class="w"> </span>He probado email duplicado con <span class="sb">`409 Conflict`</span>.
+</span><span id="__span-78-11"><a id="__codelineno-78-11" name="__codelineno-78-11" href="#__codelineno-78-11"></a><span class="k">-</span><span class="w"> </span>He comprobado que el código HTTP coincide con el mensaje JSON.
+</span><span id="__span-78-12"><a id="__codelineno-78-12" name="__codelineno-78-12" href="#__codelineno-78-12"></a>
+</span><span id="__span-78-13"><a id="__codelineno-78-13" name="__codelineno-78-13" href="#__codelineno-78-13"></a><span class="gu">## Tabla resumen</span>
+</span><span id="__span-78-14"><a id="__codelineno-78-14" name="__codelineno-78-14" href="#__codelineno-78-14"></a>
+</span><span id="__span-78-15"><a id="__codelineno-78-15" name="__codelineno-78-15" href="#__codelineno-78-15"></a>| Código | Significado | Cuándo lo uso |
+</span><span id="__span-78-16"><a id="__codelineno-78-16" name="__codelineno-78-16" href="#__codelineno-78-16"></a>| ---: | --- | --- |
+</span><span id="__span-78-17"><a id="__codelineno-78-17" name="__codelineno-78-17" href="#__codelineno-78-17"></a>| 200 | OK | Cuando la petición se procesa correctamente |
+</span><span id="__span-78-18"><a id="__codelineno-78-18" name="__codelineno-78-18" href="#__codelineno-78-18"></a>| 201 | Created | Cuando se crea un usuario |
+</span><span id="__span-78-19"><a id="__codelineno-78-19" name="__codelineno-78-19" href="#__codelineno-78-19"></a>| 400 | Bad Request | Cuando la petición tiene datos incorrectos |
+</span><span id="__span-78-20"><a id="__codelineno-78-20" name="__codelineno-78-20" href="#__codelineno-78-20"></a>| 404 | Not Found | Cuando el usuario no existe |
+</span><span id="__span-78-21"><a id="__codelineno-78-21" name="__codelineno-78-21" href="#__codelineno-78-21"></a>| 409 | Conflict | Cuando el email ya está registrado |
+</span><span id="__span-78-22"><a id="__codelineno-78-22" name="__codelineno-78-22" href="#__codelineno-78-22"></a>
+</span><span id="__span-78-23"><a id="__codelineno-78-23" name="__codelineno-78-23" href="#__codelineno-78-23"></a><span class="gu">## Casos probados</span>
+</span><span id="__span-78-24"><a id="__codelineno-78-24" name="__codelineno-78-24" href="#__codelineno-78-24"></a>
+</span><span id="__span-78-25"><a id="__codelineno-78-25" name="__codelineno-78-25" href="#__codelineno-78-25"></a>| Petición | Caso | Código esperado | Código obtenido | ¿Correcto? |
+</span><span id="__span-78-26"><a id="__codelineno-78-26" name="__codelineno-78-26" href="#__codelineno-78-26"></a>| --- | --- | ---: | ---: | --- |
+</span><span id="__span-78-27"><a id="__codelineno-78-27" name="__codelineno-78-27" href="#__codelineno-78-27"></a>| <span class="sb">`GET /api/health`</span> | Health | 200 | | |
+</span><span id="__span-78-28"><a id="__codelineno-78-28" name="__codelineno-78-28" href="#__codelineno-78-28"></a>| <span class="sb">`GET /api/users`</span> | Listado | 200 | | |
+</span><span id="__span-78-29"><a id="__codelineno-78-29" name="__codelineno-78-29" href="#__codelineno-78-29"></a>| <span class="sb">`GET /api/users/1`</span> | Usuario existente | 200 | | |
+</span><span id="__span-78-30"><a id="__codelineno-78-30" name="__codelineno-78-30" href="#__codelineno-78-30"></a>| <span class="sb">`GET /api/users/999`</span> | Usuario inexistente | 404 | | |
+</span><span id="__span-78-31"><a id="__codelineno-78-31" name="__codelineno-78-31" href="#__codelineno-78-31"></a>| <span class="sb">`GET /api/users/abc`</span> | ID inválido | 400 | | |
+</span><span id="__span-78-32"><a id="__codelineno-78-32" name="__codelineno-78-32" href="#__codelineno-78-32"></a>| <span class="sb">`POST /api/users`</span> | Creación correcta | 201 | | |
+</span><span id="__span-78-33"><a id="__codelineno-78-33" name="__codelineno-78-33" href="#__codelineno-78-33"></a>| <span class="sb">`POST /api/users`</span> | Datos inválidos | 400 | | |
+</span><span id="__span-78-34"><a id="__codelineno-78-34" name="__codelineno-78-34" href="#__codelineno-78-34"></a>| <span class="sb">`POST /api/users`</span> | Email duplicado | 409 | | |
+</span><span id="__span-78-35"><a id="__codelineno-78-35" name="__codelineno-78-35" href="#__codelineno-78-35"></a>| <span class="sb">`PATCH /api/users/1`</span> | Actualización correcta | 200 | | |
+</span><span id="__span-78-36"><a id="__codelineno-78-36" name="__codelineno-78-36" href="#__codelineno-78-36"></a>| <span class="sb">`PATCH /api/users/999`</span> | Usuario inexistente | 404 | | |
+</span><span id="__span-78-37"><a id="__codelineno-78-37" name="__codelineno-78-37" href="#__codelineno-78-37"></a>| <span class="sb">`DELETE /api/users/1`</span> | Desactivación correcta | 200 | | |
+</span><span id="__span-78-38"><a id="__codelineno-78-38" name="__codelineno-78-38" href="#__codelineno-78-38"></a>
+</span><span id="__span-78-39"><a id="__codelineno-78-39" name="__codelineno-78-39" href="#__codelineno-78-39"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-78-40"><a id="__codelineno-78-40" name="__codelineno-78-40" href="#__codelineno-78-40"></a>
+</span><span id="__span-78-41"><a id="__codelineno-78-41" name="__codelineno-78-41" href="#__codelineno-78-41"></a>Los códigos de estado HTTP permiten que el cliente entienda rápidamente qué ha
+</span><span id="__span-78-42"><a id="__codelineno-78-42" name="__codelineno-78-42" href="#__codelineno-78-42"></a>pasado con una petición. No basta con devolver un JSON; el código HTTP también
+</span><span id="__span-78-43"><a id="__codelineno-78-43" name="__codelineno-78-43" href="#__codelineno-78-43"></a>debe ser coherente con el resultado.
+</span></code></pre></div>
+<h3 id="paso-12-actualizar-el-indice-del-readme">Paso 12: Actualizar el índice del README<a class="headerlink" href="#paso-12-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace al documento del día 14:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-79-2"><a id="__codelineno-79-2" name="__codelineno-79-2" href="#__codelineno-79-2"></a>
+</span><span id="__span-79-3"><a id="__codelineno-79-3" name="__codelineno-79-3" href="#__codelineno-79-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-79-4"><a id="__codelineno-79-4" name="__codelineno-79-4" href="#__codelineno-79-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-79-5"><a id="__codelineno-79-5" name="__codelineno-79-5" href="#__codelineno-79-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-79-6"><a id="__codelineno-79-6" name="__codelineno-79-6" href="#__codelineno-79-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-79-7"><a id="__codelineno-79-7" name="__codelineno-79-7" href="#__codelineno-79-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-79-8"><a id="__codelineno-79-8" name="__codelineno-79-8" href="#__codelineno-79-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-79-9"><a id="__codelineno-79-9" name="__codelineno-79-9" href="#__codelineno-79-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-79-10"><a id="__codelineno-79-10" name="__codelineno-79-10" href="#__codelineno-79-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-79-11"><a id="__codelineno-79-11" name="__codelineno-79-11" href="#__codelineno-79-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-79-12"><a id="__codelineno-79-12" name="__codelineno-79-12" href="#__codelineno-79-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-79-13"><a id="__codelineno-79-13" name="__codelineno-79-13" href="#__codelineno-79-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-79-14"><a id="__codelineno-79-14" name="__codelineno-79-14" href="#__codelineno-79-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-79-15"><a id="__codelineno-79-15" name="__codelineno-79-15" href="#__codelineno-79-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-79-16"><a id="__codelineno-79-16" name="__codelineno-79-16" href="#__codelineno-79-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span></code></pre></div>
+<h3 id="paso-13-guardar-cambios-en-git">Paso 13: Guardar cambios en Git<a class="headerlink" href="#paso-13-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 14 - Revisar codigos de estado HTTP&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<p>Ahora toca practicar sin seguir todos los pasos guiados.</p>
+<h3 id="tarea-libre-1-detectar-una-respuesta-incoherente">Tarea libre 1: Detectar una respuesta incoherente<a class="headerlink" href="#tarea-libre-1-detectar-una-respuesta-incoherente" title="Permanent link">&para;</a></h3>
+<p>Revisa tu código y busca si hay alguna ruta que pueda devolver un mensaje de
+error con código <code>200</code>.</p>
+<p>Si encuentras alguna, corrígela.</p>
+<p>Ejemplo incorrecto:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">200</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-84-2"><a id="__codelineno-84-2" name="__codelineno-84-2" href="#__codelineno-84-2"></a><span class="w">  </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span>
+</span><span id="__span-84-3"><a id="__codelineno-84-3" name="__codelineno-84-3" href="#__codelineno-84-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Ejemplo correcto:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">404</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-85-2"><a id="__codelineno-85-2" name="__codelineno-85-2" href="#__codelineno-85-2"></a><span class="w">  </span><span class="nx">error</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario no encontrado&quot;</span>
+</span><span id="__span-85-3"><a id="__codelineno-85-3" name="__codelineno-85-3" href="#__codelineno-85-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="tarea-libre-2-crear-una-tabla-de-decisiones">Tarea libre 2: Crear una tabla de decisiones<a class="headerlink" href="#tarea-libre-2-crear-una-tabla-de-decisiones" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 14, añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a><span class="gu">## Cómo decido qué código usar</span>
+</span></code></pre></div>
+<p>Completa una tabla como esta:</p>
+<table>
+<thead>
+<tr>
+<th>Situación</th>
+<th style="text-align: right;">Código que usaría</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuario creado correctamente</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td>Usuario no encontrado</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td>ID no numérico</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td>Falta un campo obligatorio</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+<tr>
+<td>Usuario actualizado correctamente</td>
+<td style="text-align: right;"></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-3-explicar-diferencia-entre-400-404-y-409">Tarea libre 3: Explicar diferencia entre <code>400</code>, <code>404</code> y <code>409</code><a class="headerlink" href="#tarea-libre-3-explicar-diferencia-entre-400-404-y-409" title="Permanent link">&para;</a></h3>
+<p>En el documento del día 14, añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-87-1"><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a><span class="gu">## Diferencia entre 400, 404 y 409</span>
+</span></code></pre></div>
+<p>Explica con tus palabras la diferencia entre estos tres códigos:</p>
+<ul>
+<li><code>400 Bad Request</code></li>
+<li><code>404 Not Found</code></li>
+<li><code>409 Conflict</code></li>
+</ul>
+<p>Puedes usar ejemplos de UserManager API.</p>
+<h3 id="tarea-libre-4-investigar-401-y-403">Tarea libre 4: Investigar <code>401</code> y <code>403</code><a class="headerlink" href="#tarea-libre-4-investigar-401-y-403" title="Permanent link">&para;</a></h3>
+<p>Aunque todavía no los vamos a implementar, busca o razona la diferencia entre:</p>
+<ul>
+<li><code>401 Unauthorized</code></li>
+<li><code>403 Forbidden</code></li>
+</ul>
+<p>Después escribe una explicación breve en el documento.</p>
+<p>Ejemplo orientativo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-88-1"><a id="__codelineno-88-1" name="__codelineno-88-1" href="#__codelineno-88-1"></a>401 se usa cuando no hay autenticación válida.
+</span><span id="__span-88-2"><a id="__codelineno-88-2" name="__codelineno-88-2" href="#__codelineno-88-2"></a>403 se usa cuando el usuario está autenticado pero no tiene permisos.
+</span></code></pre></div>
+<p>Estos códigos serán importantes cuando añadamos JWT y roles.</p>
+<h2 id="entrega-recomendada-del-dia-14">Entrega recomendada del día 14<a class="headerlink" href="#entrega-recomendada-del-dia-14" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del
+repositorio de GitHub.</p>
+<p>Al finalizar el día 14, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-89-1"><a id="__codelineno-89-1" name="__codelineno-89-1" href="#__codelineno-89-1"></a>usermanager-api/
+</span><span id="__span-89-2"><a id="__codelineno-89-2" name="__codelineno-89-2" href="#__codelineno-89-2"></a>  README.md
+</span><span id="__span-89-3"><a id="__codelineno-89-3" name="__codelineno-89-3" href="#__codelineno-89-3"></a>  package.json
+</span><span id="__span-89-4"><a id="__codelineno-89-4" name="__codelineno-89-4" href="#__codelineno-89-4"></a>  package-lock.json
+</span><span id="__span-89-5"><a id="__codelineno-89-5" name="__codelineno-89-5" href="#__codelineno-89-5"></a>  tsconfig.json
+</span><span id="__span-89-6"><a id="__codelineno-89-6" name="__codelineno-89-6" href="#__codelineno-89-6"></a>  src/
+</span><span id="__span-89-7"><a id="__codelineno-89-7" name="__codelineno-89-7" href="#__codelineno-89-7"></a>    server.ts
+</span><span id="__span-89-8"><a id="__codelineno-89-8" name="__codelineno-89-8" href="#__codelineno-89-8"></a>  docs/
+</span><span id="__span-89-9"><a id="__codelineno-89-9" name="__codelineno-89-9" href="#__codelineno-89-9"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-89-10"><a id="__codelineno-89-10" name="__codelineno-89-10" href="#__codelineno-89-10"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-89-11"><a id="__codelineno-89-11" name="__codelineno-89-11" href="#__codelineno-89-11"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-89-12"><a id="__codelineno-89-12" name="__codelineno-89-12" href="#__codelineno-89-12"></a>    dia-04-metodos-http.md
+</span><span id="__span-89-13"><a id="__codelineno-89-13" name="__codelineno-89-13" href="#__codelineno-89-13"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-89-14"><a id="__codelineno-89-14" name="__codelineno-89-14" href="#__codelineno-89-14"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-89-15"><a id="__codelineno-89-15" name="__codelineno-89-15" href="#__codelineno-89-15"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-89-16"><a id="__codelineno-89-16" name="__codelineno-89-16" href="#__codelineno-89-16"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-89-17"><a id="__codelineno-89-17" name="__codelineno-89-17" href="#__codelineno-89-17"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-89-18"><a id="__codelineno-89-18" name="__codelineno-89-18" href="#__codelineno-89-18"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-89-19"><a id="__codelineno-89-19" name="__codelineno-89-19" href="#__codelineno-89-19"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-89-20"><a id="__codelineno-89-20" name="__codelineno-89-20" href="#__codelineno-89-20"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-89-21"><a id="__codelineno-89-21" name="__codelineno-89-21" href="#__codelineno-89-21"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-89-22"><a id="__codelineno-89-22" name="__codelineno-89-22" href="#__codelineno-89-22"></a>    dia-14-codigos-estado-http.md
+</span></code></pre></div>
+<p>El documento del día 14 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-90-1"><a id="__codelineno-90-1" name="__codelineno-90-1" href="#__codelineno-90-1"></a>docs/dia-14-codigos-estado-http.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Tabla resumen de códigos HTTP.</li>
+<li>Tabla de casos probados.</li>
+<li>Explicación personal de los códigos de estado.</li>
+<li>Tabla de decisiones.</li>
+<li>Diferencia entre <code>400</code>, <code>404</code> y <code>409</code>.</li>
+<li>Explicación breve de <code>401</code> y <code>403</code>.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-91-1"><a id="__codelineno-91-1" name="__codelineno-91-1" href="#__codelineno-91-1"></a>Hola, comparto el avance del día 14 del reto UserManager API:
+</span><span id="__span-91-2"><a id="__codelineno-91-2" name="__codelineno-91-2" href="#__codelineno-91-2"></a>
+</span><span id="__span-91-3"><a id="__codelineno-91-3" name="__codelineno-91-3" href="#__codelineno-91-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-91-4"><a id="__codelineno-91-4" name="__codelineno-91-4" href="#__codelineno-91-4"></a>
+</span><span id="__span-91-5"><a id="__codelineno-91-5" name="__codelineno-91-5" href="#__codelineno-91-5"></a>He revisado los códigos de estado HTTP de la API y he documentado el trabajo del día 14 en:
+</span><span id="__span-91-6"><a id="__codelineno-91-6" name="__codelineno-91-6" href="#__codelineno-91-6"></a>docs/dia-14-codigos-estado-http.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos trabajado una parte fundamental del diseño de una API REST: los códigos
+de estado HTTP.</p>
+<p>La API no solo debe devolver JSON. También debe usar códigos adecuados para que
+cualquier cliente pueda interpretar correctamente el resultado de la petición.</p>
+<p>Hoy hemos visto:</p>
+<ul>
+<li><code>200 OK</code></li>
+<li><code>201 Created</code></li>
+<li><code>400 Bad Request</code></li>
+<li><code>404 Not Found</code></li>
+<li><code>409 Conflict</code></li>
+<li><code>401 Unauthorized</code></li>
+<li><code>403 Forbidden</code></li>
+<li><code>500 Internal Server Error</code></li>
+</ul>
+<p>También hemos revisado que cada endpoint responda de forma coherente en función
+del caso.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Una buena API no solo responde: comunica de forma clara qué ha ocurrido
+usando el código HTTP adecuado y un JSON coherente.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>
