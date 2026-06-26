@@ -1,5 +1,5 @@
 <div class="hero" markdown>
-<p class="eyebrow">Reto opcional de 35 días para 2º DAM</p>
+<p class="eyebrow">Reto opcional de 40 días para 2º DAM</p>
 <h1>UserManager API</h1>
 <p>
 Construye paso a paso una API REST completa de gestión de usuarios:
@@ -37,27 +37,25 @@ un frontend real.
 | Área | Resultado |
 | --- | --- |
 | Backend | Express + TypeScript |
-| Datos | PostgreSQL o MySQL |
-| Persistencia | ORM o acceso a datos |
+| Datos | PostgreSQL |
+| Persistencia | Prisma ORM |
 | Arquitectura | Rutas, controladores, servicios y repositorios |
 | Seguridad | Hash de contraseñas, JWT, autenticación y autorización |
 | Usuarios | Registro, login, CRUD, roles y estado activo/inactivo |
-| Integración | Frontend Next.js conectado |
+| Integración | Frontend Next.js entregado y conectado |
 | Operaciones | Docker Compose, variables de entorno y README |
 | Calidad | Validaciones, errores centralizados y pruebas básicas |
 
-```text title="Capacidades finales"
-Registrar usuarios
-Iniciar sesión
-Gestionar usuarios
-Proteger rutas con JWT
-Diferenciar roles USER y ADMIN
-Cambiar contraseña
-Activar/desactivar usuarios
-Conectarse a una base de datos
-Ejecutarse con Docker
-Ser consumida desde un frontend real
-```
+- Registrar usuarios.
+- Iniciar sesión.
+- Gestionar usuarios.
+- Proteger rutas con JWT.
+- Diferenciar roles `USER` y `ADMIN`.
+- Cambiar contraseña.
+- Activar o desactivar usuarios.
+- Conectarse a una base de datos.
+- Ejecutarse con Docker.
+- Ser consumida desde un frontend real.
 
 ## Endpoints finales
 
@@ -103,10 +101,10 @@ Ser consumida desde un frontend real
 | 1 | 1-6 | Fundamentos de API REST, HTTP, JSON y pruebas |
 | 2 | 7-11 | CRUD de usuarios en memoria |
 | 3 | 12-15 | Validaciones, códigos de estado y errores |
-| 4 | 16-22 | Base de datos, Docker, migraciones y seed |
-| 5 | 23-26 | Arquitectura por capas y DTOs |
-| 6 | 27-32 | Registro, login, hash, JWT y roles |
-| 7 | 33-35 | Frontend Next.js, CORS, pruebas y entrega |
+| 4 | 16-25 | Base de datos, Docker, Prisma, migraciones, Studio y seed |
+| 5 | 26-31 | Arquitectura por capas, repositorios, servicios y DTOs |
+| 6 | 32-37 | Registro, login, hash, JWT, autenticación y roles |
+| 7 | 38-40 | Frontend entregado, integración, pruebas finales y cierre |
 
 ## Fase 1: Fundamentos de API REST
 
@@ -173,7 +171,7 @@ DELETE /api/users/:id
 | --- | --- |
 | Concepto | Partes de una petición HTTP |
 | Producto | Lectura de parámetros y cuerpo de petición |
-| Tarea | Practicar `req.params`, `req.body` y headers |
+| Tarea | Practicar `req.params`, `req.body`, `req.query` y headers |
 | Resultado | Sabremos interpretar lo que llega al servidor |
 
 ```json title="Body de ejemplo"
@@ -220,7 +218,7 @@ const users = [
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Parametros de ruta |
+| Concepto | Parámetros de ruta |
 | Producto | `GET /api/users/:id` |
 | Tarea | Buscar un usuario por identificador |
 | Resultado | La API devuelve un usuario concreto o un `404` |
@@ -251,11 +249,9 @@ const users = [
 | Tarea | Modificar nombre, email o estado |
 | Resultado | Podremos actualizar datos básicos |
 
-```text title="Campos modificables"
-name
-email
-isActive
-```
+- `name`
+- `email`
+- `isActive`
 
 ### Día 11: Eliminar usuarios
 
@@ -266,7 +262,7 @@ isActive
 | Tarea | Debatir entre eliminar o desactivar |
 | Resultado | Introduciremos una primera decisión profesional |
 
-!!! tip "Recomendacion"
+!!! tip "Recomendación"
     En lugar de borrar físicamente, usar `isActive = false`.
 
 ## Fase 3: Validaciones y errores
@@ -278,14 +274,12 @@ isActive
 | Concepto | Validar datos antes de guardarlos |
 | Producto | Validaciones de creación de usuario |
 | Tarea | Comprobar campos obligatorios |
-| Resultado | La API no aceptara datos incompletos |
+| Resultado | La API no aceptará datos incompletos |
 
-```text title="Validaciones"
-name obligatorio
-email obligatorio
-password obligatoria
-password mínimo 6 caracteres
-```
+- `name` obligatorio.
+- `email` obligatorio.
+- `password` obligatoria.
+- `password` con mínimo de 6 caracteres.
 
 ### Día 13: Validación de email y duplicados
 
@@ -293,7 +287,7 @@ password mínimo 6 caracteres
 | --- | --- |
 | Concepto | Reglas de negocio básicas |
 | Producto | Impedir emails repetidos |
-| Tarea | Comprobar formato de email y duplicidad |
+| Tarea | Comprobar formato de email, normalización y duplicidad |
 | Resultado | Aparecerá el error `409 Conflict` |
 
 ```json title="Error de ejemplo"
@@ -311,7 +305,7 @@ password mínimo 6 caracteres
 | Tarea | Aplicar `200`, `201`, `400`, `404` y `409` |
 | Resultado | La API comunicará mejor los errores |
 
-| Codigo | Significado | Uso |
+| Código | Significado | Uso |
 | --- | --- | --- |
 | `200` | OK | Usuario encontrado |
 | `201` | Created | Usuario creado |
@@ -324,7 +318,7 @@ password mínimo 6 caracteres
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Gestión uniforme de errores |
-| Producto | `error.middleware.ts` |
+| Producto | `error.middleware.ts` o middleware inicial en `server.ts` |
 | Tarea | Crear un middleware global de errores |
 | Resultado | Todas las respuestas de error tendrán el mismo formato |
 
@@ -335,92 +329,161 @@ password mínimo 6 caracteres
 }
 ```
 
-## Fase 4: Base de datos y persistencia
+## Fase 4: Base de datos, Docker y Prisma
 
 ### Día 16: Por qué necesitamos base de datos
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Memoria frente a persistencia |
-| Producto | Diseño de la tabla `users` |
-| Tarea | Transformar el modelo en estructura de base de datos |
-| Resultado | Diseño inicial de la persistencia |
+| Producto | Reflexión sobre persistencia |
+| Tarea | Comprobar que los datos en memoria se pierden al reiniciar |
+| Resultado | Entenderemos por qué una aplicación real necesita base de datos |
 
-```text title="Tabla users"
-users
-- id
-- name
-- email
-- password_hash
-- role
-- is_active
-- created_at
-- updated_at
+```text title="Problema"
+Los datos creados en un array desaparecen al reiniciar el servidor.
 ```
 
-### Día 17: Docker para la base de datos
+### Día 17: PostgreSQL con Docker Compose
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Servicios con Docker Compose |
-| Producto | Base de datos levantada en contenedor |
+| Producto | PostgreSQL y Adminer levantados en contenedores |
 | Tarea | Crear `docker-compose.yml` |
-| Resultado | PostgreSQL/MySQL funcionando sin instalación manual |
+| Resultado | Base de datos funcionando sin instalación manual |
 
-```text title="Servicio inicial"
-database
-```
+- `postgres`
+- `adminer`
 
-### Día 18: Variables de entorno
-
-| Campo | Detalle |
-| --- | --- |
-| Concepto | Configuración externa |
-| Producto | Archivo `.env` |
-| Tarea | Configurar puerto, URL de base de datos y secretos |
-| Resultado | El proyecto dejara de tener configuracion fija en el código |
-
-```env title=".env"
-PORT=3000
-DATABASE_URL=postgresql://user:password@localhost:5432/usermanager
-JWT_SECRET=super_secret_key
-```
-
-### Día 19: Conexión desde la API
+### Día 18: Diseño del modelo persistente `User`
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Conexión backend-base de datos |
-| Producto | Módulo de conexión |
-| Tarea | Comprobar que la API puede conectarse a la base de datos |
-| Resultado | Primer contacto real entre API y persistencia |
+| Concepto | Pasar de objeto en memoria a modelo persistente |
+| Producto | Diseño conceptual del modelo `User` |
+| Tarea | Definir campos, restricciones y reglas |
+| Resultado | Tendremos claro qué debe guardar la base de datos |
 
-### Día 20: ORM o acceso a datos
+```text title="Modelo User"
+id
+name
+email
+passwordHash
+role
+isActive
+createdAt
+updatedAt
+```
+
+!!! warning "Regla importante"
+    Aunque exista `passwordHash` en la base de datos, nunca debe devolverse al cliente.
+
+### Día 19: ORM o acceso a datos
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Cómo accede el backend a la base de datos |
-| Producto | Modelo `User` |
-| Tarea | Introducir Prisma, TypeORM, Sequelize o SQL directo |
-| Resultado | Modelo persistente definido |
+| Producto | Decisión técnica razonada |
+| Tarea | Comparar SQL directo, Prisma, TypeORM y Sequelize |
+| Resultado | Elegiremos Prisma como ORM principal del reto |
 
-### Día 21: Migraciones
+| Opción | Ventaja | Inconveniente |
+| --- | --- | --- |
+| SQL directo | Muy transparente | Más código manual |
+| Prisma | Tipado, moderno y cómodo con TypeScript | Oculta parte del SQL |
+| TypeORM | Orientado a clases | Más configuración |
+| Sequelize | Muy conocido en Node.js | Menos natural con TypeScript moderno |
+
+!!! success "Decisión del reto"
+    Usaremos **Prisma** como ORM principal. SQL directo se explicará como alternativa conceptual, pero no será el camino principal.
+
+### Día 20: Instalar y configurar Prisma
+
+| Campo | Detalle |
+| --- | --- |
+| Concepto | Primer contacto con Prisma |
+| Producto | Prisma instalado en el proyecto |
+| Tarea | Instalar Prisma, Prisma Client y ejecutar `prisma init` |
+| Resultado | El proyecto estará preparado para definir modelos persistentes |
+
+```bash title="Comandos orientativos"
+npm install prisma --save-dev
+npm install @prisma/client
+npx prisma init
+```
+
+- `prisma/schema.prisma`
+- `.env`
+
+### Día 21: Modelo Prisma `User`
+
+| Campo | Detalle |
+| --- | --- |
+| Concepto | Definición de modelos en Prisma |
+| Producto | Modelo `User` y enum `Role` en `schema.prisma` |
+| Tarea | Definir campos, tipos, valores por defecto y restricciones |
+| Resultado | Modelo persistente definido en Prisma |
+
+```prisma title="Modelo conceptual"
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(USER)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+```
+
+### Día 22: Migraciones con Prisma
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Evolución controlada del esquema |
-| Producto | Migracion inicial |
-| Tarea | Crear la tabla de usuarios mediante migracion |
-| Resultado | La base de datos se podrá reconstruir de forma reproducible |
+| Producto | Migración inicial |
+| Tarea | Ejecutar `prisma migrate dev` |
+| Resultado | La tabla `User` se creará de forma reproducible |
 
-### Día 22: Seed y usuario administrador
+```bash title="Comando"
+npx prisma migrate dev --name init
+```
+
+```text title="Resultado"
+prisma/migrations/
+```
+
+### Día 23: Prisma Studio
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Datos iniciales |
-| Producto | Usuario `ADMIN` creado automaticamente |
-| Tarea | Crear un seed inicial |
-| Resultado | Podremos probar la administración desde el primer momento |
+| Concepto | Exploración visual de datos |
+| Producto | Prisma Studio funcionando |
+| Tarea | Abrir Studio y revisar la tabla `User` |
+| Resultado | Podremos inspeccionar datos sin escribir SQL manual |
+
+```bash title="Comando"
+npx prisma studio
+```
+
+!!! note "Uso"
+    Prisma Studio no sustituye a la API. Es una herramienta de apoyo para ver y comprobar los datos.
+
+### Día 24: Seed y usuario administrador
+
+| Campo | Detalle |
+| --- | --- |
+| Concepto | Datos iniciales del sistema |
+| Producto | Script de seed |
+| Tarea | Crear un usuario `ADMIN` inicial |
+| Resultado | Podremos probar administración desde el primer momento |
 
 ```text title="Usuario inicial"
 name: Admin
@@ -430,65 +493,100 @@ role: ADMIN
 isActive: true
 ```
 
+!!! warning "Nota de seguridad"
+    En esta fase la contraseña puede ser temporal. Más adelante se sustituirá por `passwordHash` con `bcrypt`.
+
+### Día 25: Consultas básicas con Prisma
+
+| Campo | Detalle |
+| --- | --- |
+| Concepto | Leer y escribir usando Prisma Client |
+| Producto | Primeras operaciones con Prisma |
+| Tarea | Practicar `findMany`, `findUnique` y `create` |
+| Resultado | Entenderemos cómo Prisma sustituye consultas SQL directas |
+
+```ts title="Ejemplos"
+await prisma.user.findMany();
+await prisma.user.findUnique({ where: { id } });
+await prisma.user.create({ data: { name, email, passwordHash } });
+```
+
 ## Fase 5: Arquitectura por capas
 
-### Día 23: Separar rutas y controladores
+### Día 26: Separar rutas
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Separación de responsabilidades |
-| Producto | `user.routes.ts` y `user.controller.ts` |
-| Tarea | Mover rutas y controladores fuera de `server.ts` |
-| Resultado | Proyecto más limpio |
+| Producto | `user.routes.ts` |
+| Tarea | Mover rutas de usuario fuera de `server.ts` |
+| Resultado | `server.ts` será más limpio |
 
-```text title="Estructura inicial"
+```text title="Estructura"
 src/
   routes/
     user.routes.ts
-  controllers/
-    user.controller.ts
 ```
 
-### Día 24: Repository
+### Día 27: Controladores
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Capa de acceso a datos |
-| Producto | `user.repository.ts` |
-| Tarea | Mover consultas a base de datos al repositorio |
-| Resultado | El controlador dejara de acceder directamente a la base de datos |
+| Concepto | Controlar request y response |
+| Producto | `user.controller.ts` |
+| Tarea | Mover la lógica HTTP a controladores |
+| Resultado | Las rutas solo definirán caminos y delegarán trabajo |
 
-!!! info "Responsabilidad"
-    `Repository = leer y escribir datos`
+```text title="Responsabilidad"
+Controller = recibe req, llama al servicio y devuelve res
+```
 
-### Día 25: Service
+### Día 28: Servicios
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Lógica de negocio |
 | Producto | `user.service.ts` |
 | Tarea | Mover reglas como email duplicado, usuario inexistente o usuario inactivo |
-| Resultado | La lógica no quedara mezclada con HTTP ni con SQL |
+| Resultado | La lógica no quedará mezclada con HTTP |
 
-!!! info "Responsabilidad"
-    `Service = reglas de negocio`
+```text title="Responsabilidad"
+Service = reglas de negocio
+```
 
-### Día 26: DTOs y respuestas seguras
+### Día 29: Repository con Prisma
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Controlar que entra y que sale de la API |
+| Concepto | Capa de acceso a datos |
+| Producto | `user.repository.ts` |
+| Tarea | Centralizar operaciones Prisma sobre usuarios |
+| Resultado | El servicio no usará Prisma directamente |
+
+```text title="Responsabilidad"
+Repository = leer y escribir datos con Prisma
+```
+
+```ts title="Ejemplo conceptual"
+userRepository.findById(id)
+userRepository.findByEmail(email)
+userRepository.create(data)
+```
+
+### Día 30: DTOs y respuestas seguras
+
+| Campo | Detalle |
+| --- | --- |
+| Concepto | Controlar qué entra y qué sale de la API |
 | Producto | DTOs y mapper de usuario |
 | Tarea | Crear modelos de entrada y salida |
 | Resultado | Nunca devolveremos información sensible |
 
-```text title="DTOs"
-CreateUserDto
-UpdateUserDto
-UserResponseDto
-RegisterDto
-LoginDto
-```
+- `CreateUserDto`
+- `UpdateUserDto`
+- `RegisterDto`
+- `LoginDto`
+- `UserResponseDto`
 
 ```json title="Respuesta correcta"
 {
@@ -503,31 +601,31 @@ LoginDto
 !!! danger "Dato prohibido en respuestas"
     `passwordHash`
 
-## Fase 6: Seguridad y autenticación
-
-### Día 27: Registro de usuarios
+### Día 31: CRUD persistente y refactor final de usuarios
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Registro público |
-| Producto | `POST /api/auth/register` |
-| Tarea | Crear usuario desde ruta publica |
-| Resultado | Cualquier persona podrá registrarse |
+| Concepto | CRUD completo con arquitectura por capas |
+| Producto | CRUD de usuarios persistente y ordenado |
+| Tarea | Completar `GET`, `POST`, `PATCH` y `DELETE` usando servicio y repositorio |
+| Resultado | La API ya no dependerá del array en memoria |
 
-```json title="Body"
-{
-  "name": "Laura Martinez",
-  "email": "laura@email.com",
-  "password": "123456"
-}
+```text title="Rutas principales"
+GET    /api/users
+GET    /api/users/:id
+POST   /api/users
+PATCH  /api/users/:id
+DELETE /api/users/:id
 ```
 
-### Día 28: Hash de contraseñas
+## Fase 6: Seguridad y autenticación
+
+### Día 32: Hash de contraseñas
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Seguridad de credenciales |
-| Producto | Integración de bcrypt o similar |
+| Producto | Integración de `bcrypt` o similar |
 | Tarea | Guardar `passwordHash`, nunca `password` |
 | Resultado | Las contraseñas no se almacenarán en texto plano |
 
@@ -539,7 +637,24 @@ password: "123456"
 passwordHash: "$2b$10$..."
 ```
 
-### Día 29: Login
+### Día 33: Registro de usuarios
+
+| Campo | Detalle |
+| --- | --- |
+| Concepto | Registro público |
+| Producto | `POST /api/auth/register` |
+| Tarea | Crear usuario desde una ruta pública |
+| Resultado | Cualquier persona podrá registrarse |
+
+```json title="Body"
+{
+  "name": "Laura Martinez",
+  "email": "laura@email.com",
+  "password": "123456"
+}
+```
+
+### Día 34: Login
 
 | Campo | Detalle |
 | --- | --- |
@@ -554,7 +669,7 @@ La contraseña debe coincidir.
 El usuario debe estar activo.
 ```
 
-### Día 30: JWT
+### Día 35: JWT
 
 | Campo | Detalle |
 | --- | --- |
@@ -569,18 +684,16 @@ El usuario debe estar activo.
 }
 ```
 
-```text title="Payload conceptual"
-userId
-role
-```
+- `userId`
+- `role`
 
-### Día 31: Middleware de autenticación
+### Día 36: Middleware de autenticación y usuario actual
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Proteger rutas |
-| Producto | `auth.middleware.ts` |
-| Tarea | Leer y validar el token envíado en la cabecera |
+| Producto | `auth.middleware.ts` y `GET /api/users/me` |
+| Tarea | Leer y validar el token enviado en la cabecera |
 | Resultado | Solo usuarios autenticados podrán acceder a rutas protegidas |
 
 ```http title="Cabecera"
@@ -591,13 +704,13 @@ Authorization: Bearer token
 GET /api/users/me
 ```
 
-### Día 32: Roles y autorización
+### Día 37: Roles, autorización y acciones protegidas
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Autenticación no es autorización |
-| Producto | `role.middleware.ts` |
-| Tarea | Permitir acciones según rol |
+| Producto | `role.middleware.ts` y rutas protegidas por rol |
+| Tarea | Permitir acciones según rol y proteger acciones sensibles |
 | Resultado | La API diferenciará usuarios normales y administradores |
 
 | Caso | Resultado |
@@ -607,9 +720,15 @@ GET /api/users/me
 | `USER` | No lista usuarios |
 | `ADMIN` | Lista usuarios |
 | `ADMIN` | Cambia roles |
-| `ADMIN` | Desactiva usuarios |
+| `ADMIN` | Activa/desactiva usuarios |
 
-## Fase 7: Frontend Next.js e integración real
+```text title="Rutas protegidas"
+PATCH /api/users/me/password
+PATCH /api/users/:id/role
+PATCH /api/users/:id/status
+```
+
+## Fase 7: Frontend entregado, integración y cierre
 
 En este punto os entregaré un **frontend ya funcional en Next.js**. No tendréis
 que construir la interfaz desde cero. Lo usaremos como cliente real para
@@ -620,7 +739,7 @@ comprobar si vuestra API funciona correctamente.
     Ahora la API tendrá que funcionar con una aplicación real, respetando
     rutas, formatos de respuesta, códigos de estado, cabeceras y autenticación.
 
-### Día 33: Presentación del frontend y contrato de API
+### Día 38: Presentación del frontend y contrato de API
 
 | Campo | Detalle |
 | --- | --- |
@@ -656,13 +775,13 @@ DELETE /api/users/:id
     El frontend no se adapta mágicamente a cualquier API. Frontend y backend
     necesitan acordar rutas, datos y errores.
 
-### Día 34: Configurar endpoint y resolver CORS
+### Día 39: Configurar endpoint, CORS y probar integración
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Variables de entorno en frontend y comunicación entre aplicaciones |
+| Concepto | Comunicación entre aplicaciones |
 | Producto | Frontend conectado a la API local |
-| Tarea | Configurar `NEXT_PUBLIC_API_URL` |
+| Tarea | Configurar `NEXT_PUBLIC_API_URL` y resolver posibles errores de CORS |
 | Resultado | El frontend empezará a enviar peticiones al backend |
 
 ```env title=".env.local del frontend"
@@ -689,7 +808,7 @@ app.use(cors({
 }));
 ```
 
-### Día 35: Integración final, pruebas y entrega
+### Día 40: Integración final, documentación y entrega
 
 | Campo | Detalle |
 | --- | --- |
@@ -698,36 +817,37 @@ app.use(cors({
 | Tarea | Probar todos los flujos, documentar y dejar el proyecto preparado |
 | Resultado | Proyecto final completo |
 
-```text title="Pruebas mínimas desde el frontend"
-Registrar usuario.
-Iniciar sesión.
-Consultar mi perfil.
-Cambiar contraseña.
-Entrar como ADMIN.
-Listar usuarios.
-Editar usuario.
-Cambiar rol.
-Activar/desactivar usuario.
-Eliminar usuario.
-Comprobar que un USER no accede a zonas de ADMIN.
-```
+Pruebas mínimas desde el frontend:
 
-```text title="Entrega final recomendada"
-Backend funcionando
-Frontend conectado
-Base de datos persistente
-Usuario ADMIN inicial
-Registro y login
-JWT
-Roles
-CRUD de usuarios
-Validaciones
-Errores centralizados
-CORS configurado
-README
-Docker Compose
-Colección Postman o documentación Swagger
-```
+- Registrar usuario.
+- Iniciar sesión.
+- Consultar mi perfil.
+- Cambiar contraseña.
+- Entrar como `ADMIN`.
+- Listar usuarios.
+- Editar usuario.
+- Cambiar rol.
+- Activar o desactivar usuario.
+- Eliminar usuario.
+- Comprobar que un `USER` no accede a zonas de `ADMIN`.
+
+Entrega final recomendada:
+
+- Backend funcionando.
+- Frontend entregado conectado.
+- Base de datos persistente.
+- Prisma configurado.
+- Usuario `ADMIN` inicial.
+- Registro y login.
+- JWT.
+- Roles.
+- CRUD de usuarios.
+- Validaciones.
+- Errores centralizados.
+- CORS configurado.
+- README.
+- Docker Compose.
+- Colección Postman o documentación Swagger.
 
 ## Estructura final del backend
 
@@ -790,8 +910,8 @@ src/
 2. Instalar dependencias.
 3. Crear archivo .env.
 4. Levantar base de datos.
-5. Ejecutar migraciones.
-6. Ejecutar seed.
+5. Ejecutar migraciones de Prisma.
+6. Ejecutar seed de Prisma.
 7. Arrancar servidor.
 
 ## Variables de entorno backend
@@ -827,10 +947,10 @@ DELETE /api/users/:id
 | --- | --- |
 | 1 | Fundamentos de API, HTTP, JSON y pruebas con cliente HTTP |
 | 2 | CRUD de usuarios en memoria y validaciones |
-| 3 | Base de datos, Docker, conexión, migraciones y seed |
-| 4 | Arquitectura por capas, DTOs y errores centralizados |
-| 5 | Registro, login, hash, JWT, middleware y roles |
-| 6 | Frontend Next.js, integración, CORS, pruebas finales y cierre |
+| 3 | Base de datos, Docker y decisión de ORM |
+| 4 | Prisma, migraciones, Studio, seed y primeras consultas |
+| 5 | Arquitectura por capas, repositorios, servicios, DTOs y CRUD persistente |
+| 6 | Hash, registro, login, JWT, middleware, roles e integración con frontend entregado |
 
 ## Idea final del reto
 
@@ -839,17 +959,15 @@ importante es entender cómo se construye un backend paso a paso.
 
 Al final, deberíais poder explicar:
 
-```text
-Qué rutas tiene vuestra API.
-Cómo se conecta a la base de datos.
-Dónde se valida la información.
-Dónde está la lógica de negocio.
-Cómo se protege una ruta.
-Cómo se genera y valida un JWT.
-Qué puede hacer un USER y qué puede hacer un ADMIN.
-Cómo se conecta el frontend con el backend.
-Cómo se arranca el proyecto desde cero.
-```
+- Qué rutas tiene vuestra API.
+- Cómo se conecta a la base de datos.
+- Dónde se valida la información.
+- Dónde está la lógica de negocio.
+- Cómo se protege una ruta.
+- Cómo se genera y valida un JWT.
+- Qué puede hacer un `USER` y qué puede hacer un `ADMIN`.
+- Cómo se conecta el frontend con el backend.
+- Cómo se arranca el proyecto desde cero.
 
 !!! success "Mensaje de cierre"
     Una API no está terminada cuando responde. Una API está terminada cuando es
