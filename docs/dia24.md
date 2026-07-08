@@ -2,33 +2,35 @@
 
 En los últimos días hemos avanzado mucho en la parte de persistencia del proyecto.
 
-Primero diseñamos el modelo persistente `User`.
+Ya tenemos:
 
-Después instalamos Prisma.
-
-Luego definimos el modelo `User` dentro de `schema.prisma`.
-
-A continuación ejecutamos la primera migración y comprobamos con Prisma Studio que la tabla existía correctamente en PostgreSQL.
+- El modelo persistente `User`.
+- Prisma instalado.
+- El modelo `User` definido en `prisma/schema.prisma`.
+- Una migración inicial aplicada sobre PostgreSQL.
+- Prisma Client generado en `src/generated/prisma`.
 
 Ahora tenemos una base de datos con estructura, pero todavía sin datos útiles.
-
-La tabla `User` existe, pero probablemente está vacía.
 
 Hoy vamos a crear datos iniciales de forma controlada mediante un **seed**.
 
 Un seed es un script que inserta datos iniciales en la base de datos.
 
-Por ejemplo:
+En nuestro caso crearemos:
 
 - Un usuario `ADMIN`.
 - Un usuario `USER` activo.
 - Un usuario `USER` inactivo.
 
-Estos usuarios nos servirán para probar la API durante los próximos días.
+## Objetivo
 
-!!! tip "Objetivo"
-    No queremos crear datos manualmente cada vez desde Prisma Studio o Adminer.
-    El proyecto debe poder generar sus datos iniciales con un comando.
+No queremos crear datos manualmente cada vez desde Prisma Studio o Adminer.
+
+El proyecto debe poder generar sus datos iniciales con un comando:
+
+```bash
+npm run prisma:seed
+```
 
 ## ¿Qué vamos a trabajar hoy?
 
@@ -324,7 +326,7 @@ prisma/
 Añade este código a `prisma/seed.ts`:
 
 ```ts
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient, Role } from "../src/generated/prisma";
 
 const prisma = new PrismaClient();
 
@@ -395,7 +397,7 @@ Si ya existen, no los duplica.
 La primera parte crea Prisma Client:
 
 ```ts
-import { PrismaClient, Role } from "@prisma/client";
+import { PrismaClient, Role } from "../src/generated/prisma";
 
 const prisma = new PrismaClient();
 ```
