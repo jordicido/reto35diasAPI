@@ -22,15 +22,10 @@ En nuestro caso crearemos:
 - Un usuario `USER` activo.
 - Un usuario `USER` inactivo.
 
-## Objetivo
-
-No queremos crear datos manualmente cada vez desde Prisma Studio o Adminer.
-
-El proyecto debe poder generar sus datos iniciales con un comando:
-
-```bash
-npm run prisma:seed
-```
+!!! info "Objetivo"
+    No queremos crear datos manualmente cada vez desde Prisma Studio o Adminer.
+    El proyecto debe poder generar sus datos iniciales con un comando:
+    `npm run prisma:seed`.
 
 ## ¿Qué vamos a trabajar hoy?
 
