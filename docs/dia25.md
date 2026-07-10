@@ -1,302 +1,270 @@
 # Día 25: Consultas básicas con Prisma Client
 
-En el día 24 creamos un seed de datos iniciales.
+En el día 24 dejamos la base de datos preparada con datos iniciales mediante un seed.
 
-Gracias a ese seed, nuestra base de datos ya tiene usuarios de prueba:
+Creamos usuarios como:
 
 - `admin@email.com`
 - `user@email.com`
 - `inactive@email.com`
 
-También comprobamos esos datos con Prisma Studio.
+También vimos que, en este proyecto, estamos usando Prisma 7 con PostgreSQL y un adapter específico:
 
-Hasta ahora hemos trabajado con Prisma desde fuera de la API mediante
-`schema.prisma`, las migraciones, Prisma Studio y el seed.
+`@prisma/adapter-pg`.
 
-Pero todavía no hemos usado Prisma desde nuestro código de Express.
+Además, nuestro cliente de Prisma no se importa desde:
 
-Hoy vamos a dar ese paso.
+```ts
+import { PrismaClient } from "@prisma/client";
+```
 
-El objetivo será usar **Prisma Client** dentro de la API para consultar y crear usuarios.
+sino desde el cliente generado dentro del proyecto:
 
-No vamos a reorganizar todavía todo el proyecto por capas. Eso empezará en el día 26.
+```ts
+import { PrismaClient } from "./generated/prisma/client";
+```
 
-Hoy haremos pruebas controladas, preferiblemente en rutas temporales de debug, para entender cómo se consulta la base de datos desde TypeScript.
+Esto es importante porque en `schema.prisma` hemos configurado un `output` personalizado:
 
-!!! info "Objetivo"
-    Prisma Client será el puente entre nuestro código TypeScript y PostgreSQL.
+```prisma
+output = "../src/generated/prisma"
+```
+
+Hoy vamos a usar Prisma Client desde nuestra API Express.
+
+Hasta ahora hemos usado Prisma en:
+
+`prisma/seed.ts`.
+
+Pero todavía no lo hemos usado desde rutas de Express.
+
+El objetivo de hoy será crear algunas rutas temporales de prueba para consultar datos reales desde PostgreSQL.
+
+!!! info "Idea principal"
+    La API ya no leerá usuarios desde un array en memoria, sino desde PostgreSQL usando Prisma Client.
 
 ## ¿Qué vamos a trabajar hoy?
 
 Hoy trabajaremos estos conceptos:
 
-| Concepto | Qué aprenderemos |
-| --- | --- |
-| Prisma Client | Cómo comunicar TypeScript con PostgreSQL |
-| `findMany` | Cómo obtener varios registros |
-| `findUnique` | Cómo buscar un registro por un campo único |
-| `create` | Cómo insertar un registro |
-| `select` | Cómo controlar los campos devueltos |
-| `where` | Cómo filtrar resultados |
-| `orderBy` | Cómo ordenar resultados |
-| `data` | Cómo proporcionar los datos de escritura |
-| `async` / `await` | Cómo ejecutar consultas asíncronas |
-| Rutas de debug | Cómo probar Prisma sin alterar todavía el CRUD principal |
+- Prisma Client.
+- Cliente generado personalizado.
+- Prisma 7.
+- Adapter PostgreSQL.
+- Consultas básicas.
+- `findMany`.
+- `findUnique`.
+- `create`.
+- `select`.
+- `where`.
+- `orderBy`.
+- Rutas temporales de debug.
+- Conexión API → Prisma → PostgreSQL.
 
-El producto del día serán las primeras consultas a la base de datos desde
-Express usando Prisma Client.
+El producto del día será:
 
-El resultado esperado será poder probar rutas temporales que consultan usuarios reales desde PostgreSQL.
+**Rutas temporales que consultan y crean usuarios reales usando Prisma Client.**
 
-## ¿Dónde estamos en el reto?
-
-Hasta ahora teníamos este recorrido:
-
-1. **Día 18:** diseño del modelo persistente `User`.
-2. **Día 19:** decisión técnica: Prisma.
-3. **Día 20:** instalación y configuración de Prisma.
-4. **Día 21:** modelo Prisma `User`.
-5. **Día 22:** primera migración.
-6. **Día 23:** Prisma Studio.
-7. **Día 24:** seed de datos iniciales.
-
-Hoy empezamos a usar Prisma desde la API.
-
-Pero todavía no vamos a hacer la arquitectura final.
-
-Es decir, hoy todavía no crearemos las carpetas `routes/`, `controllers/`,
-`services/` y `repositories/`.
-
-Eso empezará en la siguiente fase.
-
-Hoy trabajaremos directamente desde `server.ts` o con un pequeño archivo de conexión para entender el funcionamiento básico.
-
-## ¿Qué es Prisma Client?
-
-Prisma Client es el cliente generado por Prisma a partir de `prisma/schema.prisma`.
-
-Como tenemos un modelo `User`, Prisma genera métodos para trabajar con usuarios.
-
-Por ejemplo:
-
-```ts
-prisma.user.findMany()
-prisma.user.findUnique()
-prisma.user.create()
-prisma.user.update()
-prisma.user.delete()
-```
-
-Hoy trabajaremos solo con tres operaciones:
-
-| Operación | Uso |
-| --- | --- |
-| `findMany` | Buscar varios registros |
-| `findUnique` | Buscar un registro único |
-| `create` | Crear un registro |
-
-Visualmente:
-
-```mermaid
-flowchart LR
-    A[Express] --> B[Prisma Client]
-    B --> C[PostgreSQL]
-    C --> B
-    B --> A
-```
-
-## ¿Qué es `findMany`?
-
-`findMany` permite obtener varios registros de una tabla.
-
-Ejemplo simple:
-
-```ts
-const users = await prisma.user.findMany();
-```
-
-Eso devuelve todos los usuarios.
-
-Pero hay un problema importante.
-
-Si hacemos eso sin controlar los campos, Prisma puede devolver también
-`passwordHash`.
-
-Y eso no nos interesa.
-
-Por eso usaremos `select`.
-
-Ejemplo seguro:
-
-```ts
-const users = await prisma.user.findMany({
-  select: {
-    id: true,
-    name: true,
-    email: true,
-    role: true,
-    isActive: true,
-    createdAt: true,
-    updatedAt: true
-  }
-});
-```
-
-Así indicamos exactamente qué campos queremos devolver.
-
-## ¿Qué es `select`?
-
-`select` permite elegir qué campos devuelve Prisma.
-
-Ejemplo:
-
-```ts
-select: {
-  id: true,
-  name: true,
-  email: true
-}
-```
-
-Esto significa que Prisma devolverá `id`, `name` y `email`, pero no el resto de
-los campos.
-
-En nuestro proyecto esto será fundamental, porque el modelo `User` contiene
-`passwordHash`.
-
-Pero la API nunca debe devolverlo.
-
-!!! danger "Protege los datos sensibles"
-    Siempre que devolvamos usuarios al cliente, debemos controlar los campos de
-    salida. `passwordHash` nunca debe formar parte de la respuesta.
-
-## ¿Qué es `findUnique`?
-
-`findUnique` permite buscar un único registro usando un campo único.
-
-Por ejemplo, podemos buscar por `id`:
-
-```ts
-const user = await prisma.user.findUnique({
-  where: {
-    id: 1
-  }
-});
-```
-
-También podríamos buscar por `email`, porque en nuestro modelo el email es único:
-
-```ts
-const user = await prisma.user.findUnique({
-  where: {
-    email: "admin@email.com"
-  }
-});
-```
-
-Esto funciona porque en `schema.prisma` definimos:
-
-```prisma
-email String @unique
-```
-
-Si el usuario no existe, `findUnique` devuelve `null`.
-
-Por eso la API deberá comprobarlo y responder con `404`.
-
-## ¿Qué es `create`?
-
-`create` permite insertar un nuevo registro.
-
-Ejemplo:
-
-```ts
-const user = await prisma.user.create({
-  data: {
-    name: "Nuevo Usuario",
-    email: "nuevo@email.com",
-    passwordHash: "hash_temporal_123456",
-    role: "USER",
-    isActive: true
-  }
-});
-```
-
-La parte importante es:
-
-```ts
-data: {
-  ...
-}
-```
-
-Ahí indicamos los datos del usuario que queremos crear.
-
-Como nuestro modelo tiene valores por defecto, podríamos omitir algunos campos:
-
-| Campo | Valor |
-| --- | --- |
-| `role` | `USER` por defecto |
-| `isActive` | `true` por defecto |
-| `createdAt` | Automático |
-| `updatedAt` | Automático |
-
-Pero hoy los veremos de forma explícita para entender qué se guarda.
-
-## Rutas temporales de debug
-
-Hoy no queremos sustituir todavía todo el CRUD en memoria por Prisma.
-
-Eso lo haremos más adelante, después de empezar la arquitectura por capas.
-
-Por eso crearemos rutas temporales, por ejemplo:
+El resultado esperado será poder probar desde un cliente HTTP rutas como:
 
 - `GET /api/debug/prisma/users`
 - `GET /api/debug/prisma/users/:id`
 - `POST /api/debug/prisma/users`
 
-Estas rutas nos permitirán practicar Prisma sin romper todavía las rutas principales.
+Estas rutas serán temporales.
 
-Más adelante, cuando el código esté organizado por capas, llevaremos esta
-lógica a `user.repository.ts`, `user.service.ts`, `user.controller.ts` y
-`user.routes.ts`.
+Más adelante las reorganizaremos dentro de rutas, controladores, servicios y repositorios.
 
-## Flujo del día
+## Qué venimos de hacer
 
-El flujo de trabajo será:
+En los días anteriores ya hicimos esta secuencia:
+
+- Día 20: Instalación y configuración inicial de Prisma.
+- Día 21: Modelo Prisma User.
+- Día 22: Primera migración.
+- Día 23: Prisma Studio.
+- Día 24: Seed de datos iniciales.
+
+Ahora tenemos:
+
+- PostgreSQL funcionando.
+- Tabla `User` creada.
+- Usuarios iniciales insertados.
+- Prisma Client generado.
+- Seed ejecutable.
+- Prisma Studio para visualizar datos.
+
+Hoy vamos a conectar esa base de datos con Express.
+
+## Recordatorio de la estructura actual
+
+Después del día 24, el proyecto debería tener una estructura parecida a esta:
+
+```text
+usermanager-api/
+  .env
+  .env.example
+  docker-compose.yml
+  package.json
+  prisma.config.ts
+  tsconfig.json
+  prisma/
+    schema.prisma
+    seed.ts
+    migrations/
+  src/
+    generated/
+      prisma/
+        client/
+    server.ts
+  docs/
+```
+
+El cliente generado está dentro de:
+
+`src/generated/prisma/client`.
+
+Por tanto, desde archivos que estén dentro de `src/`, lo importaremos con rutas relativas.
+
+## Diferencia importante respecto a otros proyectos Prisma
+
+En muchos tutoriales se usa esto:
+
+```ts
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+```
+
+Pero en este proyecto no lo haremos así.
+
+Usaremos:
+
+```ts
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "./generated/prisma/client";
+
+const adapter = new PrismaPg({
+  connectionString: process.env.DATABASE_URL
+});
+
+const prisma = new PrismaClient({ adapter });
+```
+
+Esto es coherente con lo trabajado en el día 24.
+
+En el seed ya usamos una idea parecida:
+
+```ts
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient, Role } from "../src/generated/prisma/client";
+```
+
+En el código de la API, como estaremos dentro de `src/`, la ruta será:
+
+```ts
+import { PrismaClient } from "./generated/prisma/client";
+```
+
+## Qué rutas vamos a crear hoy
+
+Hoy crearemos rutas temporales bajo el prefijo:
+
+`/api/debug/prisma`.
+
+Concretamente:
+
+| Método | Ruta                             | Acción                  |
+| ------ | -------------------------------- | ----------------------- |
+| `GET`  | `/api/debug/prisma/users`        | Listar usuarios         |
+| `GET`  | `/api/debug/prisma/users-active` | Listar usuarios activos |
+| `GET`  | `/api/debug/prisma/users/:id`    | Buscar usuario por ID   |
+| `POST` | `/api/debug/prisma/users`        | Crear usuario de prueba |
+
+Estas rutas no serán las rutas finales del proyecto.
+
+Son rutas de aprendizaje para comprobar que Express ya puede comunicarse con Prisma y PostgreSQL.
+
+## Regla importante: no devolver `passwordHash`
+
+Aunque todavía usamos valores temporales como:
+
+`hash_temporal_admin123`,
+
+el campo `passwordHash` sigue siendo un dato sensible.
+
+La API no debe devolverlo en las respuestas.
+
+Por eso usaremos `select`.
+
+Ejemplo:
+
+```ts
+const userSafeSelect = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  isActive: true,
+  createdAt: true,
+  updatedAt: true
+} as const;
+```
+
+Este selector indica qué campos sí queremos devolver.
+
+No incluye:
+
+```text
+passwordHash
+```
+
+## Flujo de una consulta con Prisma
+
+Cuando hagamos:
+
+`GET /api/debug/prisma/users`
+
+ocurrirá esto:
 
 ```mermaid
-flowchart TD
-    A[Crear src/prisma.ts] --> B[Importar Prisma Client]
-    B --> C[Crear rutas debug]
-    C --> D[Probar findMany]
-    D --> E[Probar findUnique]
-    E --> F[Probar create]
-    F --> G[Comprobar datos con Prisma Studio]
-    G --> H[Documentar resultados]
+flowchart LR
+    A[Cliente HTTP] --> B[Express]
+    B --> C[Prisma Client]
+    C --> D[Adapter PostgreSQL]
+    D --> E[PostgreSQL]
+    E --> D
+    D --> C
+    C --> B
+    B --> A
 ```
+
+La API recibirá la petición, Prisma consultará PostgreSQL y Express devolverá la respuesta en JSON.
 
 ## Parte guiada
 
 ### Paso 1: Abrir el proyecto
 
-Abre el repositorio:
+Abre una terminal y entra en el repositorio:
 
 ```bash
 cd usermanager-api
 ```
 
-Comprueba que tienes:
+Comprueba que estás en la raíz del proyecto.
+
+Deberías ver:
 
 ```text
+package.json
+docker-compose.yml
+prisma.config.ts
 prisma/
 src/
 docs/
-package.json
-docker-compose.yml
 ```
 
-### Paso 2: Arrancar PostgreSQL
+### Paso 2: Comprobar que PostgreSQL está arrancado
 
 Ejecuta:
 
@@ -304,17 +272,19 @@ Ejecuta:
 docker compose up -d
 ```
 
-Comprueba:
+Después comprueba:
 
 ```bash
 docker compose ps
 ```
 
-La base de datos debe estar funcionando.
+El contenedor de PostgreSQL debería estar activo.
 
-### Paso 3: Comprobar que hay datos iniciales
+### Paso 3: Comprobar que el seed funciona
 
-Ejecuta el seed si todavía no lo has hecho:
+Antes de consultar desde Express, asegúrate de que la base de datos tiene datos.
+
+Ejecuta:
 
 ```bash
 npm run prisma:seed
@@ -326,48 +296,171 @@ O:
 npx prisma db seed
 ```
 
-Después puedes comprobar con Prisma Studio:
+Deberías ver algo parecido a:
+
+```text
+Seed ejecutado correctamente:
+{
+  admin: { ... },
+  user: { ... },
+  inactiveUser: { ... }
+}
+```
+
+### Paso 4: Generar Prisma Client
+
+Ejecuta:
 
 ```bash
-npm run prisma:studio
+npm run prisma:generate
 ```
 
-Deberías tener usuarios como `admin@email.com`, `user@email.com` e
-`inactive@email.com`.
+O:
 
-### Paso 4: Crear `src/prisma.ts`
+```bash
+npx prisma generate
+```
 
-Dentro de `src/`, crea el archivo `src/prisma.ts`.
+Esto es especialmente importante porque el cliente se genera en:
 
-Añade:
+`src/generated/prisma`.
+
+Si el cliente no está generado, los imports desde `src/generated/prisma/client` fallarán.
+
+## Crear un cliente Prisma reutilizable
+
+### Paso 5: Crear `src/prisma.ts`
+
+Dentro de `src/`, crea el archivo:
+
+```text
+src/prisma.ts
+```
+
+Este archivo tendrá una única responsabilidad:
+
+Crear y exportar una instancia de Prisma Client para usarla en la API.
+
+Añade este contenido:
 
 ```ts
-import { PrismaClient } from "@prisma/client";
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "./generated/prisma/client";
 
-export const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL no está configurada");
+}
+
+const adapter = new PrismaPg({
+  connectionString
+});
+
+export const prisma = new PrismaClient({ adapter });
 ```
 
-Este archivo crea una instancia de Prisma Client que podremos usar desde el backend.
+### Paso 6: Entender `src/prisma.ts`
 
-Más adelante, cuando organicemos el proyecto por capas, este archivo nos servirá como punto común de acceso a Prisma.
+Este archivo hace varias cosas importantes.
 
-### Paso 5: Importar Prisma en `server.ts`
+Primero carga variables de entorno:
 
-Abre `src/server.ts`.
+```ts
+import "dotenv/config";
+```
 
-Añade arriba:
+Esto permite leer:
+
+`DATABASE_URL`
+
+desde `.env`.
+
+Después crea el adapter de PostgreSQL:
+
+```ts
+const adapter = new PrismaPg({
+  connectionString
+});
+```
+
+Y finalmente crea Prisma Client:
+
+```ts
+export const prisma = new PrismaClient({ adapter });
+```
+
+A partir de ahora, en otros archivos podremos importar:
 
 ```ts
 import { prisma } from "./prisma";
 ```
 
-Esto nos permitirá usar Prisma dentro de las rutas temporales.
+### Paso 7: Por qué usamos un archivo separado
 
-### Paso 6: Crear un selector seguro de usuario
+Podríamos crear Prisma directamente dentro de `server.ts`, pero no es buena idea.
 
-Para no repetir `select` en cada consulta, podemos crear una constante.
+Mejor tener:
 
-En `server.ts`, antes de las rutas, añade:
+`src/prisma.ts`,
+
+porque más adelante lo usaremos desde:
+
+- `repositories/`
+- `services/`
+
+El objetivo es no repetir la creación del cliente en muchos archivos.
+
+## Preparar `server.ts`
+
+### Paso 8: Abrir `src/server.ts`
+
+Abre el archivo:
+
+```text
+src/server.ts
+```
+
+Comprueba que tiene una estructura parecida a esta:
+
+```ts
+import express from "express";
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "UserManager API"
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+});
+```
+
+### Paso 9: Importar Prisma
+
+Añade al principio:
+
+```ts
+import { prisma } from "./prisma";
+```
+
+El inicio del archivo podría quedar así:
+
+```ts
+import express from "express";
+import { prisma } from "./prisma";
+```
+
+### Paso 10: Crear selector seguro de usuario
+
+Debajo de la configuración inicial, añade:
 
 ```ts
 const userSafeSelect = {
@@ -378,16 +471,22 @@ const userSafeSelect = {
   isActive: true,
   createdAt: true,
   updatedAt: true
-};
+} as const;
 ```
 
-Este selector evita devolver `passwordHash`.
+Este selector se usará en todas las consultas de hoy.
 
-Lo usaremos en `findMany`, `findUnique` y `create`.
+Recuerda:
 
-### Paso 7: Ruta `findMany`
+```text
+No incluimos passwordHash.
+```
 
-Añade esta ruta temporal:
+## Crear rutas de consulta
+
+### Paso 11: Crear `GET /api/debug/prisma/users`
+
+Añade esta ruta:
 
 ```ts
 app.get("/api/debug/prisma/users", async (req, res, next) => {
@@ -410,10 +509,27 @@ app.get("/api/debug/prisma/users", async (req, res, next) => {
 });
 ```
 
-Esta ruta usa `findMany`, `select` y `orderBy`.
+Esta ruta usa:
 
-Prueba `GET http://localhost:3000/api/debug/prisma/users` en Thunder Client o
-Postman.
+```text
+findMany
+select
+orderBy
+```
+
+### Paso 12: Probar listado de usuarios
+
+Arranca la API:
+
+```bash
+npm run dev
+```
+
+Prueba:
+
+```text
+GET http://localhost:3000/api/debug/prisma/users
+```
 
 Respuesta esperada:
 
@@ -435,11 +551,67 @@ Respuesta esperada:
 }
 ```
 
-Comprueba que no aparece `passwordHash`.
+Comprueba que no aparece:
 
-### Paso 8: Ruta `findUnique` por ID
+```text
+passwordHash
+```
 
-Añade esta ruta temporal:
+### Paso 13: Crear `GET /api/debug/prisma/users-active`
+
+Añade esta ruta:
+
+```ts
+app.get("/api/debug/prisma/users-active", async (req, res, next) => {
+  try {
+    const users = await prisma.user.findMany({
+      where: {
+        isActive: true
+      },
+      select: userSafeSelect,
+      orderBy: {
+        id: "asc"
+      }
+    });
+
+    return res.status(200).json({
+      message: "Usuarios activos obtenidos con Prisma",
+      total: users.length,
+      data: users
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+```
+
+Esta ruta usa:
+
+```text
+where
+```
+
+para filtrar usuarios activos.
+
+### Paso 14: Probar usuarios activos
+
+Prueba:
+
+```text
+GET http://localhost:3000/api/debug/prisma/users-active
+```
+
+Respuesta esperada:
+
+```text
+Solo deben aparecer usuarios con isActive = true.
+```
+
+Si el seed tiene tres usuarios y uno está inactivo, deberían aparecer dos usuarios activos.
+
+### Paso 15: Crear `GET /api/debug/prisma/users/:id`
+
+Añade:
 
 ```ts
 app.get("/api/debug/prisma/users/:id", async (req, res, next) => {
@@ -475,22 +647,80 @@ app.get("/api/debug/prisma/users/:id", async (req, res, next) => {
 });
 ```
 
-Prueba estas peticiones:
+Esta ruta usa:
 
-- `GET http://localhost:3000/api/debug/prisma/users/1`
-- `GET http://localhost:3000/api/debug/prisma/users/999`
+```text
+findUnique
+where
+id
+```
 
-Resultados esperados:
+### Paso 16: Probar búsqueda por ID
 
-| Caso | Estado HTTP |
-| --- | --- |
-| Usuario existente | `200 OK` |
-| Usuario inexistente | `404 Not Found` |
-| ID no numérico | `400 Bad Request` |
+Prueba:
 
-### Paso 9: Ruta `create`
+```text
+GET http://localhost:3000/api/debug/prisma/users/1
+```
 
-Añade esta ruta temporal:
+Respuesta esperada:
+
+```text
+200 OK
+```
+
+Prueba también:
+
+```text
+GET http://localhost:3000/api/debug/prisma/users/999
+```
+
+Respuesta esperada:
+
+```text
+404 Not Found
+```
+
+Y:
+
+```text
+GET http://localhost:3000/api/debug/prisma/users/abc
+```
+
+Respuesta esperada:
+
+```text
+400 Bad Request
+```
+
+## Crear usuarios con Prisma
+
+### Paso 17: Crear función auxiliar para errores únicos
+
+Cuando intentemos crear un usuario con un email repetido, Prisma devolverá un error con código:
+
+```text
+P2002
+```
+
+Para evitar usar `any`, podemos crear una función auxiliar:
+
+```ts
+function isPrismaUniqueError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: string }).code === "P2002"
+  );
+}
+```
+
+Añádela cerca de `userSafeSelect`.
+
+### Paso 18: Crear `POST /api/debug/prisma/users`
+
+Añade esta ruta:
 
 ```ts
 app.post("/api/debug/prisma/users", async (req, res, next) => {
@@ -539,12 +769,24 @@ app.post("/api/debug/prisma/users", async (req, res, next) => {
       data: createdUser
     });
   } catch (error) {
+    if (isPrismaUniqueError(error)) {
+      return res.status(409).json({
+        error: "El email ya está registrado"
+      });
+    }
+
     next(error);
   }
 });
 ```
 
-Prueba `POST http://localhost:3000/api/debug/prisma/users`.
+### Paso 19: Probar creación de usuario
+
+Prueba:
+
+```text
+POST http://localhost:3000/api/debug/prisma/users
+```
 
 Body:
 
@@ -558,87 +800,47 @@ Body:
 
 Respuesta esperada:
 
-```json
-{
-  "message": "Usuario creado con Prisma",
-  "data": {
-    "id": 4,
-    "name": "Usuario Prisma",
-    "email": "usuario.prisma@email.com",
-    "role": "USER",
-    "isActive": true,
-    "createdAt": "...",
-    "updatedAt": "..."
-  }
-}
+```text
+201 Created
 ```
 
-Observa que no hemos indicado `role` ni `isActive`.
+La respuesta debe incluir:
 
-Prisma aplica los valores por defecto del modelo: `role` será `USER` e
-`isActive` será `true`.
-
-### Paso 10: Comprobar el usuario en Prisma Studio
-
-Abre Prisma Studio:
-
-```bash
-npm run prisma:studio
+```text
+id
+name
+email
+role
+isActive
+createdAt
+updatedAt
 ```
 
-Entra en la tabla `User`.
+Pero no debe incluir:
 
-Deberías ver el usuario creado desde la API.
+```text
+passwordHash
+```
 
-Esto demuestra que la ruta Express ha escrito realmente en PostgreSQL mediante Prisma.
+### Paso 20: Probar email duplicado
 
-### Paso 11: Probar email duplicado
-
-Vuelve a crear el mismo usuario con el mismo email:
+Vuelve a enviar el mismo body:
 
 ```json
 {
-  "name": "Usuario Prisma Repetido",
+  "name": "Usuario Prisma",
   "email": "usuario.prisma@email.com",
   "password": "123456"
 }
 ```
 
-Es probable que la API devuelva un error de base de datos, porque el email es único.
+Respuesta esperada:
 
-Más adelante gestionaremos este error de forma más limpia.
-
-Hoy basta con observar que la restricción existe.
-
-La regla viene del modelo:
-
-```prisma
-email String @unique
+```text
+409 Conflict
 ```
 
-### Paso 12: Mejorar temporalmente el error de email duplicado
-
-Puedes capturar el error de forma sencilla.
-
-Sustituye el `catch` de la ruta `POST` por:
-
-```ts
-  } catch (error: any) {
-    if (error.code === "P2002") {
-      return res.status(409).json({
-        error: "El email ya está registrado"
-      });
-    }
-
-    next(error);
-  }
-```
-
-El código `P2002` indica una restricción única incumplida.
-
-Con esto, el email duplicado devolverá `409 Conflict`.
-
-Respuesta:
+Mensaje esperado:
 
 ```json
 {
@@ -646,13 +848,63 @@ Respuesta:
 }
 ```
 
-Más adelante moveremos esta lógica a servicios y repositorios.
+## Código orientativo completo de `server.ts`
 
-### Paso 13: Filtrar usuarios activos con `where`
-
-Añade otra ruta temporal:
+Después de añadir las rutas, tu `server.ts` podría tener una estructura parecida a esta:
 
 ```ts
+import express from "express";
+import { prisma } from "./prisma";
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.use(express.json());
+
+const userSafeSelect = {
+  id: true,
+  name: true,
+  email: true,
+  role: true,
+  isActive: true,
+  createdAt: true,
+  updatedAt: true
+} as const;
+
+function isPrismaUniqueError(error: unknown) {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: string }).code === "P2002"
+  );
+}
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "UserManager API"
+  });
+});
+
+app.get("/api/debug/prisma/users", async (req, res, next) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: userSafeSelect,
+      orderBy: {
+        id: "asc"
+      }
+    });
+
+    return res.status(200).json({
+      message: "Usuarios obtenidos con Prisma",
+      total: users.length,
+      data: users
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 app.get("/api/debug/prisma/users-active", async (req, res, next) => {
   try {
     const users = await prisma.user.findMany({
@@ -674,40 +926,257 @@ app.get("/api/debug/prisma/users-active", async (req, res, next) => {
     next(error);
   }
 });
+
+app.get("/api/debug/prisma/users/:id", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+
+    if (Number.isNaN(id)) {
+      return res.status(400).json({
+        error: "El ID debe ser un número"
+      });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        id
+      },
+      select: userSafeSelect
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        error: "Usuario no encontrado"
+      });
+    }
+
+    return res.status(200).json({
+      message: "Usuario encontrado con Prisma",
+      data: user
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.post("/api/debug/prisma/users", async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        error: "name, email y password son obligatorios"
+      });
+    }
+
+    const cleanName = String(name).trim();
+    const cleanEmail = String(email).trim().toLowerCase();
+    const cleanPassword = String(password).trim();
+
+    if (cleanName.length === 0) {
+      return res.status(400).json({
+        error: "El nombre no puede estar vacío"
+      });
+    }
+
+    if (!cleanEmail.includes("@") || !cleanEmail.includes(".")) {
+      return res.status(400).json({
+        error: "El email no tiene un formato válido"
+      });
+    }
+
+    if (cleanPassword.length < 6) {
+      return res.status(400).json({
+        error: "La contraseña debe tener al menos 6 caracteres"
+      });
+    }
+
+    const createdUser = await prisma.user.create({
+      data: {
+        name: cleanName,
+        email: cleanEmail,
+        passwordHash: `hash_temporal_${cleanPassword}`
+      },
+      select: userSafeSelect
+    });
+
+    return res.status(201).json({
+      message: "Usuario creado con Prisma",
+      data: createdUser
+    });
+  } catch (error) {
+    if (isPrismaUniqueError(error)) {
+      return res.status(409).json({
+        error: "El email ya está registrado"
+      });
+    }
+
+    next(error);
+  }
+});
+
+app.listen(PORT, () => {
+  console.log(`Servidor escuchando en http://localhost:${PORT}`);
+});
 ```
 
-!!! warning "Orden de las rutas"
-    La ruta de usuarios activos debe ir antes de la ruta dinámica. Si esta
-    última va primero, Express podría interpretar `users-active` como un `id`.
+## Comprobar con Prisma Studio
+
+Después de crear un usuario desde la API, abre Prisma Studio:
+
+```bash
+npm run prisma:studio
+```
+
+O:
+
+```bash
+npx prisma studio
+```
+
+Comprueba la tabla:
+
+```text
+User
+```
+
+Deberías ver:
+
+```text
+Los usuarios del seed.
+El usuario creado desde la API.
+El campo passwordHash rellenado con valor temporal.
+```
+
+Recuerda que el valor temporal se sustituirá más adelante por `bcrypt`.
+
+## Ejecutar build
+
+Ejecuta:
+
+```bash
+npm run build
+```
+
+Si has ajustado `tsconfig.json` como en el día 24:
+
+```json
+{
+  "include": ["src"]
+}
+```
+
+el build compilará solo el código de `src`.
+
+El seed no formará parte del build de producción porque está fuera de `src`.
+
+Esto es correcto.
+
+## Problemas frecuentes
+
+### Error: no se encuentra `./generated/prisma/client`
+
+Ejecuta:
+
+```bash
+npm run prisma:generate
+```
+
+O:
+
+```bash
+npx prisma generate
+```
+
+Después comprueba que existe:
+
+```text
+src/generated/prisma/client
+```
+
+### Error: `DATABASE_URL no está configurada`
+
+Revisa el archivo:
+
+```text
+.env
+```
+
+Debe contener algo parecido a:
+
+```env
+DATABASE_URL="postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db"
+```
+
+También comprueba que en `src/prisma.ts` tienes:
 
 ```ts
-app.get("/api/debug/prisma/users/:id", ...)
+import "dotenv/config";
 ```
 
-Prueba `GET http://localhost:3000/api/debug/prisma/users-active`.
+### Error relacionado con `@prisma/adapter-pg`
 
-Aquí practicamos `where`, `isActive` y `findMany`.
+Asegúrate de haber instalado el adapter en el día 24:
 
-### Paso 14: Orden recomendado de rutas
+```bash
+npm install @prisma/adapter-pg
+```
 
-El orden de rutas debería ser:
+Si no aparece en `package.json`, instálalo.
+
+### Error por usar `@prisma/client`
+
+En este proyecto no debemos importar así:
 
 ```ts
-app.get("/api/debug/prisma/users-active", ...);
-
-app.get("/api/debug/prisma/users", ...);
-
-app.get("/api/debug/prisma/users/:id", ...);
-
-app.post("/api/debug/prisma/users", ...);
+import { PrismaClient } from "@prisma/client";
 ```
 
-!!! tip "Regla general"
-    Las rutas más concretas deben ir antes que las rutas con parámetros.
+Debemos importar desde el cliente generado:
 
-### Paso 15: Crear el documento del día 25
+```ts
+import { PrismaClient } from "./generated/prisma/client";
+```
 
-Dentro de la carpeta `docs/`, crea:
+En el seed, como está dentro de `prisma/`, la ruta es distinta:
+
+```ts
+import { PrismaClient, Role } from "../src/generated/prisma/client";
+```
+
+### Error al crear usuario duplicado
+
+Si intentas crear dos usuarios con el mismo email, es correcto recibir:
+
+```text
+409 Conflict
+```
+
+El campo `email` es único.
+
+### Aparece `passwordHash` en la respuesta
+
+Revisa que usas:
+
+```ts
+select: userSafeSelect
+```
+
+en todas las consultas que devuelven usuarios.
+
+### No aparecen usuarios del seed
+
+Ejecuta:
+
+```bash
+npm run prisma:seed
+```
+
+Después abre Prisma Studio y comprueba la tabla `User`.
+
+## Crear el documento del día 25
+
+Dentro de `docs/`, crea:
 
 ```text
 docs/dia-25-consultas-basicas-prisma.md
@@ -720,17 +1189,29 @@ Añade este contenido inicial:
 
 ## Qué he hecho
 
-- He creado el archivo src/prisma.ts.
-- He importado Prisma Client en la API.
+- He comprobado que PostgreSQL está funcionando.
+- He ejecutado el seed del día 24.
+- He generado Prisma Client.
+- He creado src/prisma.ts.
+- He configurado Prisma Client con PrismaPg.
+- He importado el cliente generado desde src/generated/prisma/client.
 - He creado rutas temporales de debug.
-- He usado findMany para listar usuarios.
-- He usado findUnique para consultar un usuario por id.
-- He usado create para crear un usuario.
+- He consultado usuarios con findMany.
+- He consultado usuarios activos con where.
+- He buscado usuarios por ID con findUnique.
+- He creado usuarios con prisma.user.create.
 - He usado select para no devolver passwordHash.
-- He usado where para filtrar usuarios activos.
-- He usado orderBy para ordenar resultados.
 - He comprobado los datos con Prisma Studio.
-- He probado el error de email duplicado.
+- He ejecutado npm run build.
+
+## Rutas creadas
+
+| Método | Ruta | Acción |
+| --- | --- |---|
+| GET | `/api/debug/prisma/users` | Listar usuarios |
+| GET | `/api/debug/prisma/users-active` | Listar usuarios activos |
+| GET | `/api/debug/prisma/users/:id` | Buscar usuario por ID |
+| POST | `/api/debug/prisma/users` | Crear usuario |
 
 ## Archivo creado
 
@@ -738,42 +1219,30 @@ Añade este contenido inicial:
 src/prisma.ts
 ```
 
-## Código principal
+## Configuración usada
 
 ```ts
-import { PrismaClient } from "@prisma/client";
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "./generated/prisma/client";
 
-export const prisma = new PrismaClient();
+const connectionString = process.env.DATABASE_URL;
+
+if (!connectionString) {
+  throw new Error("DATABASE_URL no está configurada");
+}
+
+const adapter = new PrismaPg({
+  connectionString
+});
+
+export const prisma = new PrismaClient({ adapter });
 ```
 
-## Rutas temporales creadas
-
-```text
-GET  /api/debug/prisma/users
-GET  /api/debug/prisma/users/:id
-GET  /api/debug/prisma/users-active
-POST /api/debug/prisma/users
-```
-
-## Operaciones Prisma usadas
-
-| Operación | Para qué sirve |
-|---|---|
-| `findMany` | Obtener varios usuarios |
-| `findUnique` | Obtener un usuario único |
-| `create` | Crear un usuario |
-| `select` | Elegir campos devueltos |
-| `where` | Filtrar registros |
-| `orderBy` | Ordenar resultados |
-
-## Nota de seguridad
-
-Aunque el modelo User contiene passwordHash, la API no debe devolverlo.
-
-Por eso usamos:
+## Selector seguro
 
 ```ts
-select: {
+const userSafeSelect = {
   id: true,
   name: true,
   email: true,
@@ -781,55 +1250,107 @@ select: {
   isActive: true,
   createdAt: true,
   updatedAt: true
-}
+} as const;
 ```
 
-## Explicación personal
-
-Prisma Client permite consultar y modificar PostgreSQL desde TypeScript usando métodos como findMany, findUnique y create. En este día hemos usado rutas temporales para entender el funcionamiento antes de organizar el código por capas.
-````
-
-### Paso 16: Actualizar el README
-
-Añade una sección al README:
-
-````md
-## Consultas básicas con Prisma Client
-
-El proyecto ya utiliza Prisma Client desde Express.
-
-Archivo principal:
+## Regla importante
 
 ```text
-src/prisma.ts
+passwordHash no debe devolverse en las respuestas de la API.
 ```
 
-Operaciones trabajadas:
+## Consultas trabajadas
 
 ```text
 findMany
 findUnique
 create
-select
 where
+select
 orderBy
+```
+
+## Explicación personal
+
+Hoy la API ha empezado a comunicarse con PostgreSQL mediante Prisma Client. Las rutas creadas son temporales y sirven para comprobar que Express puede leer y crear usuarios reales en la base de datos.
+````
+
+## Añadir diagrama Mermaid
+
+Añade al documento:
+
+```mermaid
+flowchart LR
+    A[Cliente HTTP] --> B[Express]
+    B --> C[src/prisma.ts]
+    C --> D[Prisma Client generado]
+    D --> E[PrismaPg Adapter]
+    E --> F[PostgreSQL]
+```
+
+Explicación sugerida:
+
+```md
+La API usa una instancia compartida de Prisma Client configurada con el adapter de PostgreSQL. Las rutas de Express llaman a Prisma y Prisma consulta la base de datos.
+```
+
+## Añadir comparación con el CRUD en memoria
+
+Añade:
+
+```md
+## Antes y después
+
+| Antes | Ahora |
+| --- | --- |
+| Los usuarios estaban en un array | Los usuarios están en PostgreSQL |
+| Al reiniciar se perdían los datos | Los datos persisten |
+| Se usaba `users.find(...)` | Se usa `prisma.user.findUnique(...)` |
+| Se usaba `users.push(...)` | Se usa `prisma.user.create(...)` |
+| No había base de datos real | Prisma consulta PostgreSQL |
+```
+
+## Actualizar README
+
+Añade una sección:
+
+````md
+## Consultas básicas con Prisma
+
+La API ya puede consultar usuarios desde PostgreSQL usando Prisma Client.
+
+Archivo de cliente compartido:
+
+```text
+src/prisma.ts
+```
+
+Este proyecto usa Prisma 7 con adapter PostgreSQL:
+
+```ts
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "./generated/prisma/client";
 ```
 
 Rutas temporales de prueba:
 
-```text
-GET  /api/debug/prisma/users
-GET  /api/debug/prisma/users/:id
-GET  /api/debug/prisma/users-active
-POST /api/debug/prisma/users
-```
+| Método | Ruta | Acción |
+| --- | --- |---|
+| GET | `/api/debug/prisma/users` | Listar usuarios |
+| GET | `/api/debug/prisma/users-active` | Listar usuarios activos |
+| GET | `/api/debug/prisma/users/:id` | Buscar usuario por ID |
+| POST | `/api/debug/prisma/users` | Crear usuario |
 
-Estas rutas son temporales. Más adelante la lógica se moverá a rutas, controladores, servicios y repositorios.
+Regla:
+
+```text
+Las respuestas no deben incluir passwordHash.
+```
 ````
 
-### Paso 17: Actualizar el índice del README
+## Actualizar índice del README
 
-Añade el enlace:
+Añade:
 
 ```md
 - [Día 25 - Consultas básicas con Prisma Client](docs/dia-25-consultas-basicas-prisma.md)
@@ -845,7 +1366,7 @@ El bloque debería quedar parecido a:
 - [Día 3 - Primer endpoint](docs/dia-03-primer-endpoint.md)
 - [Día 4 - Métodos HTTP](docs/dia-04-metodos-http.md)
 - [Día 5 - JSON, body, params y headers](docs/dia-05-json-body-params-headers.md)
-- [Día 6 - Cliente HTTP y depuración](docs/dia-06-cliente-depuracion.md)
+- [Día 6 - Cliente HTTP y depuración](docs/dia-06-cliente-http-depuracion.md)
 - [Día 7 - Listado de usuarios en memoria](docs/dia-07-listado-usuarios.md)
 - [Día 8 - Consultar usuario por ID](docs/dia-08-consultar-usuario-id.md)
 - [Día 9 - Crear usuarios en memoria](docs/dia-09-crear-usuarios.md)
@@ -867,12 +1388,21 @@ El bloque debería quedar parecido a:
 - [Día 25 - Consultas básicas con Prisma Client](docs/dia-25-consultas-basicas-prisma.md)
 ```
 
-### Paso 18: Guardar cambios en Git
+## Guardar cambios en Git
 
 Comprueba los cambios:
 
 ```bash
 git status
+```
+
+Deberías ver cambios en archivos como:
+
+```text
+src/prisma.ts
+src/server.ts
+README.md
+docs/dia-25-consultas-basicas-prisma.md
 ```
 
 Añade los archivos:
@@ -893,148 +1423,93 @@ Sube los cambios:
 git push
 ```
 
-## Problemas frecuentes
-
-### Error: Prisma Client no está generado
-
-Ejecuta:
-
-```bash
-npx prisma generate
-```
-
-Después reinicia el servidor.
-
-### Error de conexión con PostgreSQL
-
-Comprueba:
-
-```bash
-docker compose up -d
-docker compose ps
-```
-
-Y revisa:
-
-```env
-DATABASE_URL="postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db"
-```
-
-### No aparecen usuarios
-
-Ejecuta el seed:
-
-```bash
-npm run prisma:seed
-```
-
-Después comprueba con Prisma Studio.
-
-### Aparece `passwordHash` en la respuesta
-
-Revisa que estés usando `select`.
-
-No uses:
-
-```ts
-const users = await prisma.user.findMany();
-```
-
-Usa:
-
-```ts
-const users = await prisma.user.findMany({
-  select: userSafeSelect
-});
-```
-
-### Error al crear email duplicado
-
-Es normal.
-
-El email es único.
-
-Puedes capturar temporalmente el error `P2002` y devolver `409`.
-
-### Express interpreta una ruta como ID
-
-Si tienes:
-
-```ts
-app.get("/api/debug/prisma/users/:id", ...)
-```
-
-antes de:
-
-```ts
-app.get("/api/debug/prisma/users-active", ...)
-```
-
-Express puede interpretar `users-active` como un parámetro.
-
-**Solución:** pon las rutas más concretas antes que las rutas con parámetros.
-
 ## Parte libre
 
-### Tarea libre 1: Buscar usuario por email
+### Tarea libre 1: Añadir ruta de conteo
 
-Crea la ruta temporal `GET /api/debug/prisma/users-by-email/:email`.
+Crea una ruta:
 
-Debe buscar usando:
-
-```ts
-findUnique({
-  where: {
-    email
-  }
-})
+```text
+GET /api/debug/prisma/users-count
 ```
 
-Recuerda no devolver `passwordHash`.
+Debe devolver:
 
-### Tarea libre 2: Listar usuarios inactivos
-
-Crea la ruta temporal `GET /api/debug/prisma/users-inactive`.
-
-Debe devolver usuarios con:
-
-```ts
-isActive: false
+```json
+{
+  "total": 4
+}
 ```
 
-### Tarea libre 3: Crear usuario con rol ADMIN
+Pista:
 
-Crea una ruta temporal o prueba en el código cómo crear un usuario con
-`role: "ADMIN"`.
+```ts
+const total = await prisma.user.count();
+```
 
-Después comprueba en Prisma Studio que aparece correctamente.
+### Tarea libre 2: Añadir filtro por rol
 
-### Tarea libre 4: Comparar memoria y Prisma
+Crea una ruta:
 
-Completa esta tabla:
+```text
+GET /api/debug/prisma/users-role/:role
+```
 
-| Operación       | Array en memoria    | Prisma |
-| --------------- | ------------------- | ------ |
-| Listar usuarios | `users`             |        |
-| Buscar por id   | `users.find(...)`   |        |
-| Crear usuario   | `users.push(...)`   |        |
-| Filtrar activos | `users.filter(...)` |        |
+Debe permitir probar:
 
-### Tarea libre 5: Explicar por qué estas rutas son temporales
+```text
+/api/debug/prisma/users-role/USER
+/api/debug/prisma/users-role/ADMIN
+```
+
+Valida que el rol sea `USER` o `ADMIN`.
+
+### Tarea libre 3: Explicar `select`
+
+Añade al documento una sección:
+
+```md
+## Para qué sirve select
+```
+
+Explica por qué usamos `select` y qué problema tendríamos si devolviéramos todos los campos.
+
+### Tarea libre 4: Explicar el adapter
 
 Añade una sección:
 
 ```md
-## Por qué usamos rutas debug
+## Por qué usamos PrismaPg
 ```
 
-Explica por qué hoy no hemos migrado directamente las rutas finales `/api/users`.
+Explica que este proyecto usa Prisma 7 con adapter PostgreSQL y por eso la instancia de Prisma Client se crea con:
 
-Idea orientativa:
+```ts
+const adapter = new PrismaPg({
+  connectionString
+});
 
-```text
-Primero queremos entender las operaciones básicas de Prisma. Después moveremos esta lógica a una arquitectura por capas con rutas, controladores, servicios y repositorios.
+export const prisma = new PrismaClient({ adapter });
 ```
+
+### Tarea libre 5: Preparar el día 26
+
+Añade una sección:
+
+```md
+## Preparación para separar rutas
+```
+
+Responde:
+
+- ¿Qué rutas de debug hemos creado?
+- ¿Por qué `server.ts` empieza a crecer demasiado?
+- ¿Qué código podríamos mover a una carpeta `routes`?
+- ¿Qué pasará cuando añadamos más endpoints?
+
+Pista:
+
+En el día 26 empezaremos a separar rutas para que `server.ts` no concentre todo el código.
 
 ## Entrega recomendada del día 25
 
@@ -1047,9 +1522,9 @@ usermanager-api/
   .env.example
   .gitignore
   docker-compose.yml
-  README.md
   package.json
   package-lock.json
+  prisma.config.ts
   tsconfig.json
   prisma/
     schema.prisma
@@ -1058,6 +1533,9 @@ usermanager-api/
       <timestamp>_init/
         migration.sql
   src/
+    generated/
+      prisma/
+        client/
     prisma.ts
     server.ts
   docs/
@@ -1097,16 +1575,16 @@ docs/dia-25-consultas-basicas-prisma.md
 Y deberá incluir:
 
 - Resumen de lo realizado.
+- Rutas creadas.
 - Archivo `src/prisma.ts`.
-- Rutas temporales creadas.
-- Operaciones Prisma usadas.
-- Explicación de `findMany`.
-- Explicación de `findUnique`.
-- Explicación de `create`.
-- Uso de `select` para no devolver `passwordHash`.
-- Comprobación con Prisma Studio.
-- Comparación entre el array en memoria y Prisma.
-- Explicación de por qué las rutas de debug son temporales.
+- Configuración con `PrismaPg`.
+- Import del cliente generado.
+- Selector seguro.
+- Consultas trabajadas.
+- Comparación con el CRUD en memoria.
+- Diagrama del flujo Express → Prisma → PostgreSQL.
+- Problemas frecuentes.
+- Preparación para separar rutas.
 
 En el foro, se compartirá el enlace actualizado al repositorio.
 
@@ -1117,35 +1595,40 @@ Hola, comparto el avance del día 25 del reto UserManager API:
 
 https://github.com/usuario/usermanager-api
 
-He usado Prisma Client desde Express para hacer consultas básicas con findMany, findUnique y create. La documentación está en:
+He conectado Express con PostgreSQL usando Prisma Client y he creado rutas temporales de debug para consultar y crear usuarios. La documentación está en:
 
 docs/dia-25-consultas-basicas-prisma.md
 ```
 
 ## Cierre del día
 
-Hoy hemos usado Prisma Client desde nuestra API por primera vez.
+Hoy hemos conectado por primera vez nuestra API Express con PostgreSQL usando Prisma Client.
 
-Ya no solo tenemos modelo, migraciones, Studio y seed. Ahora Express puede comunicarse con PostgreSQL usando Prisma.
+Ya no dependemos únicamente de arrays en memoria.
+
+Ahora podemos consultar usuarios reales, creados mediante el seed, y también crear nuevos usuarios desde una ruta HTTP.
 
 Hoy hemos trabajado:
 
 - Prisma Client.
+- Cliente generado en `src/generated/prisma`.
+- `PrismaPg` adapter.
 - `src/prisma.ts`.
 - `findMany`.
 - `findUnique`.
 - `create`.
-- `select`.
 - `where`.
+- `select`.
 - `orderBy`.
 - Rutas temporales de debug.
-- Protección de `passwordHash`.
-- Comprobación con Prisma Studio.
+- No devolver `passwordHash`.
+- Prisma Studio.
 
-Este día es un puente entre la fase de persistencia y la fase de arquitectura.
+Este paso es clave porque conecta todas las piezas trabajadas hasta ahora:
 
-A partir del siguiente día empezaremos a ordenar el proyecto para que estas consultas no estén mezcladas directamente en `server.ts`.
+`Express + Prisma + PostgreSQL + Seed`
+
+A partir del próximo día empezaremos a organizar mejor el código separando rutas.
 
 !!! success "Idea clave"
-    Prisma Client permite que nuestra API consulte y modifique PostgreSQL desde
-    TypeScript, pero debemos controlar siempre qué datos salen hacia el cliente.
+    Prisma Client permite que nuestra API trabaje con datos reales de PostgreSQL usando código TypeScript, manteniendo el acceso a datos más claro y seguro que escribir consultas SQL manualmente.
