@@ -78,6 +78,7 @@ nav = [
   { "Día 30" = "dia30.md" },
   { "Día 31" = "dia31.md" },
   { "Día 32" = "dia32.md" },
+  { "Día 33" = "dia33.md" },
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
