@@ -13,6 +13,10 @@
       
       
       
+        <link rel="prev" href="../dia38/">
+      
+      
+        <link rel="next" href="../dia40/">
       
       
         
@@ -1202,7 +1206,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+      <a href="../dia38/" class="md-nav__link">
         
   
   
@@ -1225,10 +1229,36 @@
       
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
         
   
   
@@ -1243,6 +1273,756 @@
   
 
       </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-probar-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué significa probar integración
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-que-estamos-probando" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo que estamos probando
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-partes-del-sistema-vamos-a-comprobar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué partes del sistema vamos a comprobar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-http-que-debemos-distinguir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos HTTP que debemos distinguir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferencia-entre-401-y-403" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Diferencia entre 401 y 403
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matriz-general-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz general de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usuarios-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuarios de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion-del-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Preparación del entorno
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación del entorno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-instalar-dependencias-del-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Instalar dependencias del backend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-generar-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Generar Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-ejecutar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Ejecutar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-arrancar-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Arrancar backend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-arrancar-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Arrancar frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-abrir-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Abrir Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada-checklist-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada: checklist completa
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada: checklist completa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-registro-desde-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Registro desde frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-login-desde-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Login desde frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-login-como-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Login como USER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-login-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Login como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-login-con-usuario-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Login con usuario inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-ver-mi-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Ver mi perfil
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-observar-la-peticion-en-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Observar la petición en Network
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-editar-mi-nombre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Editar mi nombre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-panel-admin-con-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Panel admin con USER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-panel-admin-con-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Panel admin con ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-listar-usuarios-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Listar usuarios como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-crear-usuario-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Crear usuario como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-desactivar-usuario-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Desactivar usuario como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-cerrar-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 22: Cerrar sesión
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-ruta-protegida-sin-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 23: Ruta protegida sin token
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabla-de-evidencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabla de evidencias
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-recoger-evidencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo recoger evidencias
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#no-compartir-tokens-reales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        No compartir tokens reales
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pruebas-centradas-en-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pruebas centradas en seguridad
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pruebas centradas en seguridad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-intenta-acceder-al-panel-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>USER</code> intenta acceder al panel admin
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ruta-protegida-sin-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ruta protegida sin token
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist-de-pruebas-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Checklist de pruebas del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-documentacion-del-dia-39" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear documentación del día 39
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear documentación del día 39">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 24: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-anadir-matriz-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 25: Añadir matriz de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#login-correcto-pero-dashboard-falla" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Login correcto pero dashboard falla
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-caducado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Token caducado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-intentando-entrar-en-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>USER</code> intentando entrar en admin
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seed-no-ejecutado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Seed no ejecutado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contrasena-incorrecta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contraseña incorrecta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-inactivo_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#los-datos-no-aparecen-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Los datos no aparecen en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-frontend-muestra-error-generico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El frontend muestra error genérico
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-disenar-dos-pruebas-negativas-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Diseñar dos pruebas negativas adicionales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-probar-modificacion-de-isactive-con-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Probar modificación de <code>isActive</code> con USER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-probar-token-inventado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Probar token inventado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-documentar-una-incidencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Documentar una incidencia
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-40" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 40
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-39" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 39
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1254,7 +2034,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+      <a href="../dia40/" class="md-nav__link">
         
   
   
@@ -2431,11 +3211,15 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>http://localhost:3000/api/health
 </span></code></pre></div>
 <h3 id="paso-6-arrancar-frontend">Paso 6: Arrancar frontend<a class="headerlink" href="#paso-6-arrancar-frontend" title="Permanent link">&para;</a></h3>
-<p>En otra terminal:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span>frontend
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>npm<span class="w"> </span>install
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+<p>El frontend está en un repositorio separado:</p>
+<p><a href="https://github.com/jordicido/frontend-reto35diasapi">jordicido/frontend-reto35diasapi</a></p>
+<p>En otra terminal, entra en ese proyecto. Si aún no lo tienes descargado:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/jordicido/frontend-reto35diasapi.git
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nb">cd</span><span class="w"> </span>frontend-reto35diasapi
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>npm<span class="w"> </span>install
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
 </span></code></pre></div>
+<p>Si ya lo tienes clonado, entra directamente en <code>frontend-reto35diasapi</code> y ejecuta <code>npm run dev</code>.</p>
 <p>El frontend debería quedar disponible en:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>http://localhost:3001
 </span></code></pre></div>
@@ -3181,7 +3965,12 @@
 </ul>
 <h2 id="entrega-recomendada-del-dia-39">Entrega recomendada del día 39<a class="headerlink" href="#entrega-recomendada-del-dia-39" title="Permanent link">&para;</a></h2>
 <p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
-<p>Al finalizar el día 39, el repositorio debería mantener una estructura parecida a:</p>
+<p>Al finalizar el día 39, deberías tener dos repositorios preparados:</p>
+<ul>
+<li>Backend: <code>https://github.com/usuario/usermanager-api</code></li>
+<li>Frontend: <code>https://github.com/jordicido/frontend-reto35diasapi</code></li>
+</ul>
+<p>El backend debería mantener una estructura parecida a:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-91-1"><a id="__codelineno-91-1" name="__codelineno-91-1" href="#__codelineno-91-1"></a>usermanager-api/
 </span><span id="__span-91-2"><a id="__codelineno-91-2" name="__codelineno-91-2" href="#__codelineno-91-2"></a>  .env.example
 </span><span id="__span-91-3"><a id="__codelineno-91-3" name="__codelineno-91-3" href="#__codelineno-91-3"></a>  .gitignore
@@ -3210,55 +3999,57 @@
 </span><span id="__span-91-26"><a id="__codelineno-91-26" name="__codelineno-91-26" href="#__codelineno-91-26"></a>    utils/
 </span><span id="__span-91-27"><a id="__codelineno-91-27" name="__codelineno-91-27" href="#__codelineno-91-27"></a>    prisma.ts
 </span><span id="__span-91-28"><a id="__codelineno-91-28" name="__codelineno-91-28" href="#__codelineno-91-28"></a>    server.ts
-</span><span id="__span-91-29"><a id="__codelineno-91-29" name="__codelineno-91-29" href="#__codelineno-91-29"></a>  frontend/
-</span><span id="__span-91-30"><a id="__codelineno-91-30" name="__codelineno-91-30" href="#__codelineno-91-30"></a>    README.md
-</span><span id="__span-91-31"><a id="__codelineno-91-31" name="__codelineno-91-31" href="#__codelineno-91-31"></a>    .env.example
-</span><span id="__span-91-32"><a id="__codelineno-91-32" name="__codelineno-91-32" href="#__codelineno-91-32"></a>    .env.local
-</span><span id="__span-91-33"><a id="__codelineno-91-33" name="__codelineno-91-33" href="#__codelineno-91-33"></a>    package.json
-</span><span id="__span-91-34"><a id="__codelineno-91-34" name="__codelineno-91-34" href="#__codelineno-91-34"></a>    src/
-</span><span id="__span-91-35"><a id="__codelineno-91-35" name="__codelineno-91-35" href="#__codelineno-91-35"></a>  docs/
-</span><span id="__span-91-36"><a id="__codelineno-91-36" name="__codelineno-91-36" href="#__codelineno-91-36"></a>    dia-01-diseno-inicial.md
-</span><span id="__span-91-37"><a id="__codelineno-91-37" name="__codelineno-91-37" href="#__codelineno-91-37"></a>    dia-02-preparacion-proyecto.md
-</span><span id="__span-91-38"><a id="__codelineno-91-38" name="__codelineno-91-38" href="#__codelineno-91-38"></a>    dia-03-primer-endpoint.md
-</span><span id="__span-91-39"><a id="__codelineno-91-39" name="__codelineno-91-39" href="#__codelineno-91-39"></a>    dia-04-metodos-http.md
-</span><span id="__span-91-40"><a id="__codelineno-91-40" name="__codelineno-91-40" href="#__codelineno-91-40"></a>    dia-05-json-body-params-headers.md
-</span><span id="__span-91-41"><a id="__codelineno-91-41" name="__codelineno-91-41" href="#__codelineno-91-41"></a>    dia-06-cliente-http-depuracion.md
-</span><span id="__span-91-42"><a id="__codelineno-91-42" name="__codelineno-91-42" href="#__codelineno-91-42"></a>    dia-07-listado-usuarios.md
-</span><span id="__span-91-43"><a id="__codelineno-91-43" name="__codelineno-91-43" href="#__codelineno-91-43"></a>    dia-08-consultar-usuario-id.md
-</span><span id="__span-91-44"><a id="__codelineno-91-44" name="__codelineno-91-44" href="#__codelineno-91-44"></a>    dia-09-crear-usuarios.md
-</span><span id="__span-91-45"><a id="__codelineno-91-45" name="__codelineno-91-45" href="#__codelineno-91-45"></a>    dia-10-actualizar-usuarios.md
-</span><span id="__span-91-46"><a id="__codelineno-91-46" name="__codelineno-91-46" href="#__codelineno-91-46"></a>    dia-11-eliminar-desactivar-usuarios.md
-</span><span id="__span-91-47"><a id="__codelineno-91-47" name="__codelineno-91-47" href="#__codelineno-91-47"></a>    dia-12-validacion-manual-basica.md
-</span><span id="__span-91-48"><a id="__codelineno-91-48" name="__codelineno-91-48" href="#__codelineno-91-48"></a>    dia-13-validacion-email-duplicados.md
-</span><span id="__span-91-49"><a id="__codelineno-91-49" name="__codelineno-91-49" href="#__codelineno-91-49"></a>    dia-14-codigos-estado-http.md
-</span><span id="__span-91-50"><a id="__codelineno-91-50" name="__codelineno-91-50" href="#__codelineno-91-50"></a>    dia-15-middleware-errores.md
-</span><span id="__span-91-51"><a id="__codelineno-91-51" name="__codelineno-91-51" href="#__codelineno-91-51"></a>    dia-16-base-datos-persistencia.md
-</span><span id="__span-91-52"><a id="__codelineno-91-52" name="__codelineno-91-52" href="#__codelineno-91-52"></a>    dia-17-postgresql-docker-compose.md
-</span><span id="__span-91-53"><a id="__codelineno-91-53" name="__codelineno-91-53" href="#__codelineno-91-53"></a>    dia-18-diseno-modelo-persistente-user.md
-</span><span id="__span-91-54"><a id="__codelineno-91-54" name="__codelineno-91-54" href="#__codelineno-91-54"></a>    dia-19-orm-acceso-datos.md
-</span><span id="__span-91-55"><a id="__codelineno-91-55" name="__codelineno-91-55" href="#__codelineno-91-55"></a>    dia-20-instalacion-prisma.md
-</span><span id="__span-91-56"><a id="__codelineno-91-56" name="__codelineno-91-56" href="#__codelineno-91-56"></a>    dia-21-modelo-prisma-user.md
-</span><span id="__span-91-57"><a id="__codelineno-91-57" name="__codelineno-91-57" href="#__codelineno-91-57"></a>    dia-22-primera-migracion-prisma.md
-</span><span id="__span-91-58"><a id="__codelineno-91-58" name="__codelineno-91-58" href="#__codelineno-91-58"></a>    dia-23-prisma-studio.md
-</span><span id="__span-91-59"><a id="__codelineno-91-59" name="__codelineno-91-59" href="#__codelineno-91-59"></a>    dia-24-seed-datos-iniciales.md
-</span><span id="__span-91-60"><a id="__codelineno-91-60" name="__codelineno-91-60" href="#__codelineno-91-60"></a>    dia-25-consultas-basicas-prisma.md
-</span><span id="__span-91-61"><a id="__codelineno-91-61" name="__codelineno-91-61" href="#__codelineno-91-61"></a>    dia-26-separar-rutas.md
-</span><span id="__span-91-62"><a id="__codelineno-91-62" name="__codelineno-91-62" href="#__codelineno-91-62"></a>    dia-27-controladores.md
-</span><span id="__span-91-63"><a id="__codelineno-91-63" name="__codelineno-91-63" href="#__codelineno-91-63"></a>    dia-28-servicios.md
-</span><span id="__span-91-64"><a id="__codelineno-91-64" name="__codelineno-91-64" href="#__codelineno-91-64"></a>    dia-29-repositorio-prisma.md
-</span><span id="__span-91-65"><a id="__codelineno-91-65" name="__codelineno-91-65" href="#__codelineno-91-65"></a>    dia-30-crud-persistente-ordenado.md
-</span><span id="__span-91-66"><a id="__codelineno-91-66" name="__codelineno-91-66" href="#__codelineno-91-66"></a>    dia-31-limpieza-refactor.md
-</span><span id="__span-91-67"><a id="__codelineno-91-67" name="__codelineno-91-67" href="#__codelineno-91-67"></a>    dia-32-bcrypt-passwords.md
-</span><span id="__span-91-68"><a id="__codelineno-91-68" name="__codelineno-91-68" href="#__codelineno-91-68"></a>    dia-33-auth-register.md
-</span><span id="__span-91-69"><a id="__codelineno-91-69" name="__codelineno-91-69" href="#__codelineno-91-69"></a>    dia-34-auth-login.md
-</span><span id="__span-91-70"><a id="__codelineno-91-70" name="__codelineno-91-70" href="#__codelineno-91-70"></a>    dia-35-jwt.md
-</span><span id="__span-91-71"><a id="__codelineno-91-71" name="__codelineno-91-71" href="#__codelineno-91-71"></a>    dia-36-auth-middleware.md
-</span><span id="__span-91-72"><a id="__codelineno-91-72" name="__codelineno-91-72" href="#__codelineno-91-72"></a>    dia-37-roles-permisos.md
-</span><span id="__span-91-73"><a id="__codelineno-91-73" name="__codelineno-91-73" href="#__codelineno-91-73"></a>    dia-38-frontend-conexion-api.md
-</span><span id="__span-91-74"><a id="__codelineno-91-74" name="__codelineno-91-74" href="#__codelineno-91-74"></a>    dia-39-pruebas-integracion-frontend.md
+</span><span id="__span-91-29"><a id="__codelineno-91-29" name="__codelineno-91-29" href="#__codelineno-91-29"></a>  docs/
+</span><span id="__span-91-30"><a id="__codelineno-91-30" name="__codelineno-91-30" href="#__codelineno-91-30"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-91-31"><a id="__codelineno-91-31" name="__codelineno-91-31" href="#__codelineno-91-31"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-91-32"><a id="__codelineno-91-32" name="__codelineno-91-32" href="#__codelineno-91-32"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-91-33"><a id="__codelineno-91-33" name="__codelineno-91-33" href="#__codelineno-91-33"></a>    dia-04-metodos-http.md
+</span><span id="__span-91-34"><a id="__codelineno-91-34" name="__codelineno-91-34" href="#__codelineno-91-34"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-91-35"><a id="__codelineno-91-35" name="__codelineno-91-35" href="#__codelineno-91-35"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-91-36"><a id="__codelineno-91-36" name="__codelineno-91-36" href="#__codelineno-91-36"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-91-37"><a id="__codelineno-91-37" name="__codelineno-91-37" href="#__codelineno-91-37"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-91-38"><a id="__codelineno-91-38" name="__codelineno-91-38" href="#__codelineno-91-38"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-91-39"><a id="__codelineno-91-39" name="__codelineno-91-39" href="#__codelineno-91-39"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-91-40"><a id="__codelineno-91-40" name="__codelineno-91-40" href="#__codelineno-91-40"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-91-41"><a id="__codelineno-91-41" name="__codelineno-91-41" href="#__codelineno-91-41"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-91-42"><a id="__codelineno-91-42" name="__codelineno-91-42" href="#__codelineno-91-42"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-91-43"><a id="__codelineno-91-43" name="__codelineno-91-43" href="#__codelineno-91-43"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-91-44"><a id="__codelineno-91-44" name="__codelineno-91-44" href="#__codelineno-91-44"></a>    dia-15-middleware-errores.md
+</span><span id="__span-91-45"><a id="__codelineno-91-45" name="__codelineno-91-45" href="#__codelineno-91-45"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-91-46"><a id="__codelineno-91-46" name="__codelineno-91-46" href="#__codelineno-91-46"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-91-47"><a id="__codelineno-91-47" name="__codelineno-91-47" href="#__codelineno-91-47"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-91-48"><a id="__codelineno-91-48" name="__codelineno-91-48" href="#__codelineno-91-48"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-91-49"><a id="__codelineno-91-49" name="__codelineno-91-49" href="#__codelineno-91-49"></a>    dia-20-instalacion-prisma.md
+</span><span id="__span-91-50"><a id="__codelineno-91-50" name="__codelineno-91-50" href="#__codelineno-91-50"></a>    dia-21-modelo-prisma-user.md
+</span><span id="__span-91-51"><a id="__codelineno-91-51" name="__codelineno-91-51" href="#__codelineno-91-51"></a>    dia-22-primera-migracion-prisma.md
+</span><span id="__span-91-52"><a id="__codelineno-91-52" name="__codelineno-91-52" href="#__codelineno-91-52"></a>    dia-23-prisma-studio.md
+</span><span id="__span-91-53"><a id="__codelineno-91-53" name="__codelineno-91-53" href="#__codelineno-91-53"></a>    dia-24-seed-datos-iniciales.md
+</span><span id="__span-91-54"><a id="__codelineno-91-54" name="__codelineno-91-54" href="#__codelineno-91-54"></a>    dia-25-consultas-basicas-prisma.md
+</span><span id="__span-91-55"><a id="__codelineno-91-55" name="__codelineno-91-55" href="#__codelineno-91-55"></a>    dia-26-separar-rutas.md
+</span><span id="__span-91-56"><a id="__codelineno-91-56" name="__codelineno-91-56" href="#__codelineno-91-56"></a>    dia-27-controladores.md
+</span><span id="__span-91-57"><a id="__codelineno-91-57" name="__codelineno-91-57" href="#__codelineno-91-57"></a>    dia-28-servicios.md
+</span><span id="__span-91-58"><a id="__codelineno-91-58" name="__codelineno-91-58" href="#__codelineno-91-58"></a>    dia-29-repositorio-prisma.md
+</span><span id="__span-91-59"><a id="__codelineno-91-59" name="__codelineno-91-59" href="#__codelineno-91-59"></a>    dia-30-crud-persistente-ordenado.md
+</span><span id="__span-91-60"><a id="__codelineno-91-60" name="__codelineno-91-60" href="#__codelineno-91-60"></a>    dia-31-limpieza-refactor.md
+</span><span id="__span-91-61"><a id="__codelineno-91-61" name="__codelineno-91-61" href="#__codelineno-91-61"></a>    dia-32-bcrypt-passwords.md
+</span><span id="__span-91-62"><a id="__codelineno-91-62" name="__codelineno-91-62" href="#__codelineno-91-62"></a>    dia-33-auth-register.md
+</span><span id="__span-91-63"><a id="__codelineno-91-63" name="__codelineno-91-63" href="#__codelineno-91-63"></a>    dia-34-auth-login.md
+</span><span id="__span-91-64"><a id="__codelineno-91-64" name="__codelineno-91-64" href="#__codelineno-91-64"></a>    dia-35-jwt.md
+</span><span id="__span-91-65"><a id="__codelineno-91-65" name="__codelineno-91-65" href="#__codelineno-91-65"></a>    dia-36-auth-middleware.md
+</span><span id="__span-91-66"><a id="__codelineno-91-66" name="__codelineno-91-66" href="#__codelineno-91-66"></a>    dia-37-roles-permisos.md
+</span><span id="__span-91-67"><a id="__codelineno-91-67" name="__codelineno-91-67" href="#__codelineno-91-67"></a>    dia-38-frontend-conexion-api.md
+</span><span id="__span-91-68"><a id="__codelineno-91-68" name="__codelineno-91-68" href="#__codelineno-91-68"></a>    dia-39-pruebas-integracion-frontend.md
+</span></code></pre></div>
+<p>El frontend se trabaja en el repositorio separado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-92-1"><a id="__codelineno-92-1" name="__codelineno-92-1" href="#__codelineno-92-1"></a>frontend-reto35diasapi/
+</span><span id="__span-92-2"><a id="__codelineno-92-2" name="__codelineno-92-2" href="#__codelineno-92-2"></a>  README.md
+</span><span id="__span-92-3"><a id="__codelineno-92-3" name="__codelineno-92-3" href="#__codelineno-92-3"></a>  .env.example
+</span><span id="__span-92-4"><a id="__codelineno-92-4" name="__codelineno-92-4" href="#__codelineno-92-4"></a>  .env.local
+</span><span id="__span-92-5"><a id="__codelineno-92-5" name="__codelineno-92-5" href="#__codelineno-92-5"></a>  package.json
+</span><span id="__span-92-6"><a id="__codelineno-92-6" name="__codelineno-92-6" href="#__codelineno-92-6"></a>  src/
 </span></code></pre></div>
 <p>El documento del día 39 deberá estar en:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-92-1"><a id="__codelineno-92-1" name="__codelineno-92-1" href="#__codelineno-92-1"></a>docs/dia-39-pruebas-integracion-frontend.md
+<div class="language-text highlight"><pre><span></span><code><span id="__span-93-1"><a id="__codelineno-93-1" name="__codelineno-93-1" href="#__codelineno-93-1"></a>docs/dia-39-pruebas-integracion-frontend.md
 </span></code></pre></div>
 <p>Y deberá incluir:</p>
 <ul>
@@ -3277,13 +4068,17 @@
 </ul>
 <p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
 <p>Ejemplo de mensaje:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-93-1"><a id="__codelineno-93-1" name="__codelineno-93-1" href="#__codelineno-93-1"></a>Hola, comparto el avance del día 39 del reto UserManager API:
-</span><span id="__span-93-2"><a id="__codelineno-93-2" name="__codelineno-93-2" href="#__codelineno-93-2"></a>
-</span><span id="__span-93-3"><a id="__codelineno-93-3" name="__codelineno-93-3" href="#__codelineno-93-3"></a>https://github.com/usuario/usermanager-api
-</span><span id="__span-93-4"><a id="__codelineno-93-4" name="__codelineno-93-4" href="#__codelineno-93-4"></a>
-</span><span id="__span-93-5"><a id="__codelineno-93-5" name="__codelineno-93-5" href="#__codelineno-93-5"></a>He probado la integración completa desde el frontend: registro, login, token, perfil, permisos USER/ADMIN y cambios persistidos en base de datos. La documentación está en:
-</span><span id="__span-93-6"><a id="__codelineno-93-6" name="__codelineno-93-6" href="#__codelineno-93-6"></a>
-</span><span id="__span-93-7"><a id="__codelineno-93-7" name="__codelineno-93-7" href="#__codelineno-93-7"></a>docs/dia-39-pruebas-integracion-frontend.md
+<div class="language-text highlight"><pre><span></span><code><span id="__span-94-1"><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a>Hola, comparto el avance del día 39 del reto UserManager API:
+</span><span id="__span-94-2"><a id="__codelineno-94-2" name="__codelineno-94-2" href="#__codelineno-94-2"></a>
+</span><span id="__span-94-3"><a id="__codelineno-94-3" name="__codelineno-94-3" href="#__codelineno-94-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-94-4"><a id="__codelineno-94-4" name="__codelineno-94-4" href="#__codelineno-94-4"></a>
+</span><span id="__span-94-5"><a id="__codelineno-94-5" name="__codelineno-94-5" href="#__codelineno-94-5"></a>Frontend usado:
+</span><span id="__span-94-6"><a id="__codelineno-94-6" name="__codelineno-94-6" href="#__codelineno-94-6"></a>
+</span><span id="__span-94-7"><a id="__codelineno-94-7" name="__codelineno-94-7" href="#__codelineno-94-7"></a>https://github.com/jordicido/frontend-reto35diasapi
+</span><span id="__span-94-8"><a id="__codelineno-94-8" name="__codelineno-94-8" href="#__codelineno-94-8"></a>
+</span><span id="__span-94-9"><a id="__codelineno-94-9" name="__codelineno-94-9" href="#__codelineno-94-9"></a>He probado la integración completa desde el frontend: registro, login, token, perfil, permisos USER/ADMIN y cambios persistidos en base de datos. La documentación está en:
+</span><span id="__span-94-10"><a id="__codelineno-94-10" name="__codelineno-94-10" href="#__codelineno-94-10"></a>
+</span><span id="__span-94-11"><a id="__codelineno-94-11" name="__codelineno-94-11" href="#__codelineno-94-11"></a>docs/dia-39-pruebas-integracion-frontend.md
 </span></code></pre></div>
 <p>Además, se recomienda adjuntar o incluir:</p>
 <ul>
@@ -3296,20 +4091,20 @@
 </ul>
 <h2 id="guardar-cambios-en-git">Guardar cambios en Git<a class="headerlink" href="#guardar-cambios-en-git" title="Permanent link">&para;</a></h2>
 <p>Comprueba los cambios:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-94-1"><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a>git<span class="w"> </span>status
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-95-1"><a id="__codelineno-95-1" name="__codelineno-95-1" href="#__codelineno-95-1"></a>git<span class="w"> </span>status
 </span></code></pre></div>
 <p>Deberías ver cambios en:</p>
 <p><code>docs/dia-39-pruebas-integracion-frontend.md</code>.</p>
 <p>Si has ajustado algo del frontend para mostrar mejor errores o evidencias, también aparecerán cambios en:</p>
-<p><code>frontend/</code>.</p>
+<p>el repositorio <code>frontend-reto35diasapi</code>.</p>
 <p>Añade los archivos:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-95-1"><a id="__codelineno-95-1" name="__codelineno-95-1" href="#__codelineno-95-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-96-1"><a id="__codelineno-96-1" name="__codelineno-96-1" href="#__codelineno-96-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
 </span></code></pre></div>
 <p>Crea un commit:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-96-1"><a id="__codelineno-96-1" name="__codelineno-96-1" href="#__codelineno-96-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 39 - Probar integracion desde frontend&quot;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-97-1"><a id="__codelineno-97-1" name="__codelineno-97-1" href="#__codelineno-97-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 39 - Probar integracion desde frontend&quot;</span>
 </span></code></pre></div>
 <p>Sube los cambios:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-97-1"><a id="__codelineno-97-1" name="__codelineno-97-1" href="#__codelineno-97-1"></a>git<span class="w"> </span>push
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-98-1"><a id="__codelineno-98-1" name="__codelineno-98-1" href="#__codelineno-98-1"></a>git<span class="w"> </span>push
 </span></code></pre></div>
 <h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
 <p>Hoy hemos usado el frontend como punto de entrada, pero realmente hemos comprobado todas las capas del proyecto.</p>
@@ -3381,6 +4176,44 @@
       
         <footer class="md-footer">
   
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia38/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 38">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 38
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia40/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 40">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 40
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
     
   
   <div class="md-footer-meta md-typeset">

@@ -314,7 +314,7 @@ El frontend tendrá una función centralizada para hacer peticiones a la API.
 
 Estará en un archivo parecido a:
 
-`frontend/src/lib/api.ts`.
+`frontend-reto35diasapi/src/lib/api.ts`.
 
 Su función será:
 
@@ -555,15 +555,27 @@ http://localhost:3002
 
 ## Configurar el frontend
 
-### Paso 9: Entrar en la carpeta frontend
+El frontend de este día se entrega en un repositorio separado:
+
+[jordicido/frontend-reto35diasapi](https://github.com/jordicido/frontend-reto35diasapi)
+
+La idea es tener dos proyectos abiertos:
+
+- Backend: `reto35diasapi`.
+- Frontend: `frontend-reto35diasapi`.
+
+### Paso 9: Descargar o abrir el frontend
 
 Abre otra terminal.
 
-Desde la raíz del proyecto:
+Si todavía no tienes el frontend en tu equipo, clónalo:
 
 ```bash
-cd frontend
+git clone https://github.com/jordicido/frontend-reto35diasapi.git
+cd frontend-reto35diasapi
 ```
+
+Si ya lo tienes descargado, entra directamente en la carpeta `frontend-reto35diasapi`.
 
 ### Paso 10: Instalar dependencias del frontend
 
@@ -584,7 +596,7 @@ cp .env.example .env.local
 Después abre:
 
 ```text
-frontend/.env.local
+frontend-reto35diasapi/.env.local
 ```
 
 Debe contener:
@@ -996,9 +1008,7 @@ Si está en otro puerto, el origen debe coincidir exactamente.
 
 Revisa:
 
-```text
-frontend/.env.local
-```
+`frontend-reto35diasapi/.env.local`.
 
 Debe contener:
 
@@ -1016,11 +1026,13 @@ Después de modificar `.env.local`, reinicia el servidor de Next.js.
 
 ### Backend apagado
 
-El backend se arranca desde la raíz del proyecto, no desde `frontend/`:
+El backend se arranca desde la raíz del repositorio `reto35diasapi`, no desde el repositorio del frontend:
 
 ```bash
 npm run dev
 ```
+
+El frontend se arranca aparte desde `frontend-reto35diasapi`.
 
 ### El token no se guarda
 
@@ -1165,7 +1177,12 @@ Responde:
 
 Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.
 
-Al finalizar el día 38, el repositorio debería tener esta estructura aproximada:
+Al finalizar el día 38, deberías tener dos repositorios preparados:
+
+- Backend: `https://github.com/usuario/usermanager-api`
+- Frontend: `https://github.com/jordicido/frontend-reto35diasapi`
+
+El backend debería mantener una estructura aproximada como esta:
 
 ```text
 usermanager-api/
@@ -1196,12 +1213,6 @@ usermanager-api/
     utils/
     prisma.ts
     server.ts
-  frontend/
-    README.md
-    .env.example
-    .env.local
-    package.json
-    src/
   docs/
     dia-01-diseno-inicial.md
     dia-02-preparacion-proyecto.md
@@ -1249,6 +1260,17 @@ El documento del día 38 deberá estar en:
 docs/dia-38-frontend-conexion-api.md
 ```
 
+El frontend se trabaja en el repositorio separado:
+
+```text
+frontend-reto35diasapi/
+  README.md
+  .env.example
+  .env.local
+  package.json
+  src/
+```
+
 Y deberá incluir:
 
 - Resumen de lo realizado.
@@ -1272,6 +1294,10 @@ Hola, comparto el avance del día 38 del reto UserManager API:
 
 https://github.com/usuario/usermanager-api
 
+Frontend usado:
+
+https://github.com/jordicido/frontend-reto35diasapi
+
 He conectado el frontend entregado con la API local y he probado login, token y rutas protegidas. La documentación está en:
 
 docs/dia-38-frontend-conexion-api.md
@@ -1294,9 +1320,14 @@ git status
 
 Deberías ver cambios en archivos como:
 
-- `frontend/`
 - `README.md`
 - `docs/dia-38-frontend-conexion-api.md`
+
+En el repositorio del frontend podrías ver cambios en:
+
+- `.env.local`
+- `README.md`
+- `src/`
 
 Si has añadido CORS al backend, también verás cambios en:
 

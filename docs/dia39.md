@@ -267,13 +267,20 @@ http://localhost:3000/api/health
 
 ### Paso 6: Arrancar frontend
 
-En otra terminal:
+El frontend está en un repositorio separado:
+
+[jordicido/frontend-reto35diasapi](https://github.com/jordicido/frontend-reto35diasapi)
+
+En otra terminal, entra en ese proyecto. Si aún no lo tienes descargado:
 
 ```bash
-cd frontend
+git clone https://github.com/jordicido/frontend-reto35diasapi.git
+cd frontend-reto35diasapi
 npm install
 npm run dev
 ```
+
+Si ya lo tienes clonado, entra directamente en `frontend-reto35diasapi` y ejecuta `npm run dev`.
 
 El frontend debería quedar disponible en:
 
@@ -1191,7 +1198,12 @@ Responde:
 
 Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.
 
-Al finalizar el día 39, el repositorio debería mantener una estructura parecida a:
+Al finalizar el día 39, deberías tener dos repositorios preparados:
+
+- Backend: `https://github.com/usuario/usermanager-api`
+- Frontend: `https://github.com/jordicido/frontend-reto35diasapi`
+
+El backend debería mantener una estructura parecida a:
 
 ```text
 usermanager-api/
@@ -1222,12 +1234,6 @@ usermanager-api/
     utils/
     prisma.ts
     server.ts
-  frontend/
-    README.md
-    .env.example
-    .env.local
-    package.json
-    src/
   docs/
     dia-01-diseno-inicial.md
     dia-02-preparacion-proyecto.md
@@ -1270,6 +1276,17 @@ usermanager-api/
     dia-39-pruebas-integracion-frontend.md
 ```
 
+El frontend se trabaja en el repositorio separado:
+
+```text
+frontend-reto35diasapi/
+  README.md
+  .env.example
+  .env.local
+  package.json
+  src/
+```
+
 El documento del día 39 deberá estar en:
 
 ```text
@@ -1300,6 +1317,10 @@ Hola, comparto el avance del día 39 del reto UserManager API:
 
 https://github.com/usuario/usermanager-api
 
+Frontend usado:
+
+https://github.com/jordicido/frontend-reto35diasapi
+
 He probado la integración completa desde el frontend: registro, login, token, perfil, permisos USER/ADMIN y cambios persistidos en base de datos. La documentación está en:
 
 docs/dia-39-pruebas-integracion-frontend.md
@@ -1328,7 +1349,7 @@ Deberías ver cambios en:
 
 Si has ajustado algo del frontend para mostrar mejor errores o evidencias, también aparecerán cambios en:
 
-`frontend/`.
+el repositorio `frontend-reto35diasapi`.
 
 Añade los archivos:
 
