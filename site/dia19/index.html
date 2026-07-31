@@ -1,0 +1,3407 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia18/">
+      
+      
+        <link rel="next" href="../dia20/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 19: ORM o acceso a datos - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-19-orm-o-acceso-a-datos" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 19: ORM o acceso a datos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-acceso-a-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué significa acceso a datos?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opcion-1-sql-directo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Opción 1 — SQL directo
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Opción 1 — SQL directo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ventajas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inconvenientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opcion-2-usar-un-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Opción 2 — Usar un ORM
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-problema-resuelve-un-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué problema resuelve un ORM?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ventajas-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inconvenientes-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typeorm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        TypeORM
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TypeORM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ventajas_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inconvenientes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Sequelize
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sequelize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ventajas_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inconvenientes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparacion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Comparación general
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cual-elegiremos-en-este-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Cuál elegiremos en este reto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-directo-no-desaparece-del-todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SQL directo no desaparece del todo
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-sera-prisma-en-nuestra-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué será Prisma en nuestra arquitectura
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-se-relaciona-con-el-modelo-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo se relaciona con el modelo <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-haremos-en-los-proximos-dias" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué haremos en los próximos días
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-crear-el-documento-del-dia-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Crear el documento del día 19
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-anadir-el-resumen-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Añadir el resumen inicial
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-anadir-una-explicacion-de-acceso-a-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Añadir una explicación de acceso a datos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-anadir-la-comparacion-de-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Añadir la comparación de opciones
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-anadir-ejemplos-comparativos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Añadir ejemplos comparativos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-anadir-la-decision-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Añadir la decisión técnica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-anadir-relacion-con-la-arquitectura-futura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Añadir relación con la arquitectura futura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-anadir-relacion-con-el-modelo-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Añadir relación con el modelo <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-que-es-un-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar qué es un ORM
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-defender-la-eleccion-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Defender la elección de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-comparar-sql-directo-y-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Comparar SQL directo y Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-investigar-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Investigar Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-relacionar-prisma-con-arquitectura-por-capas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Relacionar Prisma con arquitectura por capas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 19
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-acceso-a-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué significa acceso a datos?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opcion-1-sql-directo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Opción 1 — SQL directo
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Opción 1 — SQL directo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ventajas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inconvenientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opcion-2-usar-un-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Opción 2 — Usar un ORM
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-problema-resuelve-un-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué problema resuelve un ORM?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ventajas-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inconvenientes-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#typeorm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        TypeORM
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TypeORM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ventajas_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inconvenientes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequelize" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Sequelize
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sequelize">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ventajas_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ventajas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inconvenientes_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Inconvenientes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparacion-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Comparación general
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cual-elegiremos-en-este-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Cuál elegiremos en este reto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sql-directo-no-desaparece-del-todo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        SQL directo no desaparece del todo
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-sera-prisma-en-nuestra-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué será Prisma en nuestra arquitectura
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-se-relaciona-con-el-modelo-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo se relaciona con el modelo <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-haremos-en-los-proximos-dias" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué haremos en los próximos días
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-crear-el-documento-del-dia-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Crear el documento del día 19
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-anadir-el-resumen-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Añadir el resumen inicial
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-anadir-una-explicacion-de-acceso-a-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Añadir una explicación de acceso a datos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-anadir-la-comparacion-de-opciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Añadir la comparación de opciones
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-anadir-ejemplos-comparativos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Añadir ejemplos comparativos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-anadir-la-decision-tecnica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Añadir la decisión técnica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-anadir-relacion-con-la-arquitectura-futura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Añadir relación con la arquitectura futura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-anadir-relacion-con-el-modelo-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Añadir relación con el modelo <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-que-es-un-orm" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar qué es un ORM
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-defender-la-eleccion-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Defender la elección de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-comparar-sql-directo-y-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Comparar SQL directo y Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-investigar-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Investigar Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-relacionar-prisma-con-arquitectura-por-capas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Relacionar Prisma con arquitectura por capas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-19" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 19
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-19-orm-o-acceso-a-datos">Día 19: ORM o acceso a datos<a class="headerlink" href="#dia-19-orm-o-acceso-a-datos" title="Permanent link">&para;</a></h1>
+<p>En el día 18 diseñamos el modelo persistente <code>User</code>. Analizamos qué campos necesita un usuario, qué datos deben ser obligatorios, qué información debe ser única y qué datos nunca deben devolverse al cliente.</p>
+<p>Nuestro modelo conceptual quedó formado por campos como:</p>
+<ul>
+<li><code>id</code></li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>passwordHash</code></li>
+<li><code>role</code></li>
+<li><code>isActive</code></li>
+<li><code>createdAt</code></li>
+<li><code>updatedAt</code></li>
+</ul>
+<p>Ahora que ya sabemos qué información queremos guardar, aparece una nueva pregunta importante:</p>
+<blockquote>
+<p>¿Cómo va a acceder nuestra API a la base de datos?</p>
+</blockquote>
+<p>Hasta ahora, durante el CRUD en memoria, el backend trabajaba con un array:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="p">{</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="p">];</span>
+</span></code></pre></div>
+<p>Y para buscar, crear o modificar usuarios usábamos operaciones propias de JavaScript:</p>
+<ul>
+<li><code>users.find(...)</code></li>
+<li><code>users.push(...)</code></li>
+<li><code>users.map(...)</code></li>
+<li><code>users.filter(...)</code></li>
+</ul>
+<p>Pero una base de datos real no funciona así.</p>
+<p>Cuando los datos estén en PostgreSQL, necesitaremos una herramienta que permita al backend comunicarse con la base de datos.</p>
+<p>Existen varias opciones:</p>
+<ul>
+<li>SQL directo</li>
+<li>Prisma</li>
+<li>TypeORM</li>
+<li>Sequelize</li>
+</ul>
+<p>Hoy vamos a comparar esas opciones y vamos a tomar una decisión técnica para el resto del reto.</p>
+<p>El objetivo del día será entender qué es un ORM, qué problema resuelve y por qué vamos a utilizar <strong>Prisma</strong> como herramienta principal de acceso a datos.</p>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Acceso a datos</td>
+<td>Cómo lee y escribe la API en una base de datos</td>
+</tr>
+<tr>
+<td>SQL directo</td>
+<td>Qué implica escribir consultas manualmente</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>Qué problema resuelve una capa de mapeo objeto-relacional</td>
+</tr>
+<tr>
+<td>Prisma</td>
+<td>Por qué será la herramienta principal del reto</td>
+</tr>
+<tr>
+<td>TypeORM</td>
+<td>Qué alternativa existe en el ecosistema TypeScript</td>
+</tr>
+<tr>
+<td>Sequelize</td>
+<td>Qué opción clásica existe en Node.js</td>
+</tr>
+<tr>
+<td>Modelo de datos</td>
+<td>Cómo conectar el diseño <code>User</code> con la persistencia</td>
+</tr>
+<tr>
+<td>Migraciones</td>
+<td>Cómo evolucionar la base de datos de forma controlada</td>
+</tr>
+<tr>
+<td>Cliente tipado</td>
+<td>Cómo ganar seguridad de tipos al consultar datos</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td>Dónde vivirá el acceso a datos en la arquitectura</td>
+</tr>
+<tr>
+<td>Abstracción</td>
+<td>Qué se gana y qué se pierde al usar herramientas de más alto nivel</td>
+</tr>
+<tr>
+<td>Decisión técnica</td>
+<td>Cómo elegir una opción razonada para el proyecto</td>
+</tr>
+</tbody>
+</table>
+<p>El producto del día será una decisión razonada:</p>
+<div class="admonition success">
+<p class="admonition-title">Decisión del reto</p>
+<p>Usaremos Prisma como ORM principal del proyecto UserManager API.</p>
+</div>
+<p>Todavía no instalaremos Prisma. Eso lo haremos en el día 20.</p>
+<p>Hoy nos centraremos en comprender el problema y justificar la decisión.</p>
+<h2 id="que-significa-acceso-a-datos">¿Qué significa acceso a datos?<a class="headerlink" href="#que-significa-acceso-a-datos" title="Permanent link">&para;</a></h2>
+<p>El acceso a datos es la parte del backend encargada de leer y escribir información en la base de datos.</p>
+<p>Por ejemplo, cuando el cliente hace esta petición:</p>
+<div class="language-http highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="err">GET /api/users</span>
+</span></code></pre></div>
+<p>La API necesita obtener los usuarios guardados.</p>
+<p>Cuando usamos un array en memoria, el acceso a datos era algo así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">activeUsers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">users</span><span class="p">.</span><span class="nx">filter</span><span class="p">((</span><span class="nx">user</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">user</span><span class="p">.</span><span class="nx">isActive</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Pero cuando usamos PostgreSQL, el backend necesita consultar la base de datos.</p>
+<p>Conceptualmente, la consulta sería algo parecido a:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">email</span><span class="p">,</span><span class="w"> </span><span class="k">role</span><span class="p">,</span><span class="w"> </span><span class="n">is_active</span><span class="p">,</span><span class="w"> </span><span class="n">created_at</span><span class="p">,</span><span class="w"> </span><span class="n">updated_at</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">FROM</span><span class="w"> </span><span class="n">users</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">WHERE</span><span class="w"> </span><span class="n">is_active</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Por tanto, la API necesita una forma de comunicarse con PostgreSQL.</p>
+<p>El flujo general será:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Cliente HTTP] --&gt; B[API Express]
+    B --&gt; C[Capa de acceso a datos]
+    C --&gt; D[PostgreSQL]
+    D --&gt; C
+    C --&gt; B
+    B --&gt; A</code></pre>
+<p>La capa de acceso a datos puede implementarse de varias maneras.</p>
+<h2 id="opcion-1-sql-directo">Opción 1 — SQL directo<a class="headerlink" href="#opcion-1-sql-directo" title="Permanent link">&para;</a></h2>
+<p>Una primera opción es escribir directamente consultas SQL desde el backend.</p>
+<p>Ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="sb">`</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="sb">  SELECT id, name, email, role, is_active, created_at, updated_at</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="sb">  FROM users</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="sb">  WHERE id = $1</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="sb">  `</span><span class="p">,</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">  </span><span class="p">[</span><span class="nx">id</span><span class="p">]</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>En este enfoque usamos una librería de conexión, como <code>pg</code>, y escribimos nosotros las consultas SQL.</p>
+<h3 id="ventajas">Ventajas<a class="headerlink" href="#ventajas" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Se entiende exactamente qué consulta se ejecuta.</li>
+<li>Es muy transparente.</li>
+<li>Ayuda a aprender SQL.</li>
+<li>No oculta lo que ocurre en la base de datos.</li>
+<li>Puede ser muy eficiente si se usa bien.</li>
+</ul>
+<h3 id="inconvenientes">Inconvenientes<a class="headerlink" href="#inconvenientes" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Hay que escribir más código manual.</li>
+<li>Hay que repetir muchas consultas.</li>
+<li>Hay que transformar datos a mano.</li>
+<li>Hay que tener mucho cuidado con SQL injection.</li>
+<li>Hay que gestionar errores de base de datos de forma más directa.</li>
+</ul>
+<p>Por ejemplo, con SQL directo tenemos que pensar en detalles como:</p>
+<ul>
+<li>Parámetros <code>$1</code>, <code>$2</code>, <code>$3</code>.</li>
+<li><code>RETURNING</code>.</li>
+<li>Mapeo entre <code>snake_case</code> y <code>camelCase</code>.</li>
+<li>Restricciones <code>UNIQUE</code>.</li>
+<li>Errores concretos de PostgreSQL.</li>
+</ul>
+<p>SQL directo es muy interesante para aprender cómo funciona una base de datos, pero puede añadir demasiado ruido si el objetivo principal es construir una API REST completa.</p>
+<h2 id="opcion-2-usar-un-orm">Opción 2 — Usar un ORM<a class="headerlink" href="#opcion-2-usar-un-orm" title="Permanent link">&para;</a></h2>
+<p>Un ORM es una herramienta que permite trabajar con la base de datos usando modelos y objetos del lenguaje de programación.</p>
+<p>ORM significa <strong>Object-Relational Mapping</strong>.</p>
+<p>En lugar de escribir siempre SQL manualmente, definimos modelos y usamos métodos del ORM.</p>
+<p>Por ejemplo, en lugar de escribir algo como:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">users</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Podríamos escribir algo parecido a:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>La idea no es que desaparezca la base de datos. La base de datos sigue existiendo.</p>
+<p>La diferencia es que el ORM nos da una capa más cómoda para trabajar con ella.</p>
+<pre class="mermaid"><code>flowchart LR
+    A[API Express] --&gt; B[ORM]
+    B --&gt; C[PostgreSQL]
+    C --&gt; B
+    B --&gt; A</code></pre>
+<h2 id="que-problema-resuelve-un-orm">¿Qué problema resuelve un ORM?<a class="headerlink" href="#que-problema-resuelve-un-orm" title="Permanent link">&para;</a></h2>
+<p>Un ORM ayuda a resolver varios problemas habituales:</p>
+<ul>
+<li>Evita repetir SQL básico.</li>
+<li>Permite definir modelos de datos.</li>
+<li>Ayuda a trabajar con tipos.</li>
+<li>Facilita las migraciones.</li>
+<li>Reduce errores en consultas comunes.</li>
+<li>Hace más legible el acceso a datos.</li>
+</ul>
+<p>Por ejemplo, si queremos obtener todos los usuarios, con SQL directo podríamos hacer:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span><span class="sb">`</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="sb">  SELECT id, name, email, role, is_active, created_at, updated_at</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="sb">  FROM users</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="sb">`</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Con Prisma, más adelante podremos hacer algo parecido a:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findMany</span><span class="p">({</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nx">createdAt</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="p">,</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nx">updatedAt</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>El ORM no elimina la necesidad de entender qué estamos haciendo, pero nos da una forma más organizada de expresarlo.</p>
+<h2 id="prisma">Prisma<a class="headerlink" href="#prisma" title="Permanent link">&para;</a></h2>
+<p>Prisma es un ORM moderno muy utilizado con TypeScript.</p>
+<p>Con Prisma definimos los modelos en un archivo llamado <code>schema.prisma</code>.</p>
+<p>Ese archivo describe qué entidades tiene nuestra aplicación.</p>
+<p>Por ejemplo, nuestro usuario podría definirse de forma parecida a esta:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>model User {
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  id           Int      @id @default(autoincrement())
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  name         String
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  email        String   @unique
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  passwordHash String
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  role         Role     @default(USER)
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  isActive     Boolean  @default(true)
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  createdAt    DateTime @default(now())
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  updatedAt    DateTime @updatedAt
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>}
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>enum Role {
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>  USER
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>  ADMIN
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>}
+</span></code></pre></div>
+<p>Después Prisma genera un cliente que podemos usar desde TypeScript.</p>
+<p>Ejemplo conceptual:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findMany</span><span class="p">();</span>
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="p">});</span>
+</span></code></pre></div>
+<h2 id="ventajas-de-prisma">Ventajas de Prisma<a class="headerlink" href="#ventajas-de-prisma" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Encaja muy bien con TypeScript.</li>
+<li>Permite definir modelos de forma clara.</li>
+<li>Genera un cliente tipado.</li>
+<li>Incluye sistema de migraciones.</li>
+<li>Tiene Prisma Studio para ver los datos visualmente.</li>
+<li>Reduce mucho SQL repetitivo.</li>
+<li>Ayuda a que el proyecto sea más mantenible.</li>
+</ul>
+<h2 id="inconvenientes-de-prisma">Inconvenientes de Prisma<a class="headerlink" href="#inconvenientes-de-prisma" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Hay que aprender su sintaxis.</li>
+<li>Oculta parte del SQL.</li>
+<li>Añade una capa más al proyecto.</li>
+<li>Requiere entender migraciones y generación de cliente.</li>
+</ul>
+<p>Aun así, para este reto, Prisma nos interesa porque nos permite trabajar con una herramienta profesional sin perder claridad.</p>
+<h2 id="typeorm">TypeORM<a class="headerlink" href="#typeorm" title="Permanent link">&para;</a></h2>
+<p>TypeORM es otro ORM bastante conocido en el ecosistema TypeScript.</p>
+<p>Suele trabajar con clases, decoradores y entidades.</p>
+<p>Ejemplo conceptual:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kd">@Entity</span><span class="p">()</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="kd">class</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="kd">@PrimaryGeneratedColumn</span><span class="p">()</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">number</span><span class="p">;</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="kd">@Column</span><span class="p">()</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="kd">@Column</span><span class="p">({</span><span class="w"> </span><span class="nx">unique</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span><span class="w"> </span><span class="p">})</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">;</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="ventajas_1">Ventajas<a class="headerlink" href="#ventajas_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Encaja con programación orientada a objetos.</li>
+<li>Permite trabajar con entidades.</li>
+<li>Se usa bastante en algunos frameworks como NestJS.</li>
+<li>Tiene repositorios y relaciones.</li>
+</ul>
+<h3 id="inconvenientes_1">Inconvenientes<a class="headerlink" href="#inconvenientes_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Requiere entender decoradores.</li>
+<li>Puede resultar más complejo al principio.</li>
+<li>Añade bastante configuración.</li>
+<li>Puede mezclar muchos conceptos de golpe.</li>
+</ul>
+<p>TypeORM es una opción válida, pero para este reto puede ser más difícil de introducir que Prisma.</p>
+<h2 id="sequelize">Sequelize<a class="headerlink" href="#sequelize" title="Permanent link">&para;</a></h2>
+<p>Sequelize es un ORM clásico del ecosistema Node.js.</p>
+<p>Permite definir modelos y trabajar con varias bases de datos SQL.</p>
+<p>Ejemplo conceptual:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">User</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">sequelize</span><span class="p">.</span><span class="nx">define</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">DataTypes.STRING</span><span class="p">,</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">DataTypes.STRING</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="ventajas_2">Ventajas<a class="headerlink" href="#ventajas_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Tiene mucha trayectoria.</li>
+<li>Funciona con muchas bases de datos.</li>
+<li>Permite trabajar sin escribir todo el SQL a mano.</li>
+</ul>
+<h3 id="inconvenientes_2">Inconvenientes<a class="headerlink" href="#inconvenientes_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Puede sentirse menos natural con TypeScript.</li>
+<li>Su estilo puede parecer menos moderno.</li>
+<li>Requiere aprender su propia forma de definir modelos.</li>
+</ul>
+<p>Sequelize sigue siendo una herramienta importante, pero para un proyecto nuevo con TypeScript, Prisma resulta más directo para este reto.</p>
+<h2 id="comparacion-general">Comparación general<a class="headerlink" href="#comparacion-general" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Opción</th>
+<th>Cómo se trabaja</th>
+<th>Ventaja principal</th>
+<th>Inconveniente principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQL directo</td>
+<td>Escribiendo consultas SQL</td>
+<td>Muy transparente</td>
+<td>Más código manual</td>
+</tr>
+<tr>
+<td>Prisma</td>
+<td>Modelos en <code>schema.prisma</code> y cliente tipado</td>
+<td>Muy claro con TypeScript</td>
+<td>Hay que aprender su ecosistema</td>
+</tr>
+<tr>
+<td>TypeORM</td>
+<td>Clases, entidades y decoradores</td>
+<td>Orientado a objetos</td>
+<td>Más configuración inicial</td>
+</tr>
+<tr>
+<td>Sequelize</td>
+<td>Modelos ORM clásicos</td>
+<td>Muy conocido en Node.js</td>
+<td>Menos natural con TypeScript moderno</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cual-elegiremos-en-este-reto">¿Cuál elegiremos en este reto?<a class="headerlink" href="#cual-elegiremos-en-este-reto" title="Permanent link">&para;</a></h2>
+<p>En este reto vamos a elegir <strong>Prisma</strong>.</p>
+<p>La razón principal es que queremos construir una API REST completa y cercana a un proyecto real.</p>
+<p>Prisma nos ayuda a trabajar con:</p>
+<ul>
+<li>Modelos.</li>
+<li>Migraciones.</li>
+<li>Cliente tipado.</li>
+<li>Consultas legibles.</li>
+<li>Integración con TypeScript.</li>
+<li>Prisma Studio.</li>
+</ul>
+<p>Además, nos permitirá conectar mejor las siguientes fases del reto:</p>
+<ul>
+<li>Base de datos.</li>
+<li>Arquitectura por capas.</li>
+<li>Repositorios.</li>
+<li>Servicios.</li>
+<li>Autenticación.</li>
+<li>Roles.</li>
+<li>Frontend de prueba.</li>
+</ul>
+<p>Prisma será la herramienta que usará nuestra API para comunicarse con PostgreSQL.</p>
+<h2 id="sql-directo-no-desaparece-del-todo">SQL directo no desaparece del todo<a class="headerlink" href="#sql-directo-no-desaparece-del-todo" title="Permanent link">&para;</a></h2>
+<p>Aunque elegimos Prisma, es importante entender que por debajo sigue existiendo una base de datos SQL.</p>
+<p>Prisma no elimina PostgreSQL.</p>
+<p>Prisma traduce nuestras operaciones a consultas contra la base de datos.</p>
+<p>Por ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findMany</span><span class="p">();</span>
+</span></code></pre></div>
+<p>Conceptualmente equivale a consultar usuarios en la base de datos.</p>
+<p>La idea clave es esta:</p>
+<div class="admonition note">
+<p class="admonition-title">Idea clave</p>
+<p>No usamos Prisma para evitar pensar, sino para trabajar de forma más
+organizada.</p>
+</div>
+<p>En algunos proyectos reales se puede usar ORM y, en casos concretos, SQL directo para consultas muy específicas.</p>
+<h2 id="que-sera-prisma-en-nuestra-arquitectura">Qué será Prisma en nuestra arquitectura<a class="headerlink" href="#que-sera-prisma-en-nuestra-arquitectura" title="Permanent link">&para;</a></h2>
+<p>Más adelante, cuando organicemos el proyecto por capas, Prisma estará principalmente en la capa de repositorio.</p>
+<p>Una estructura futura será:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>routes → controllers → services → repositories → Prisma → PostgreSQL
+</span></code></pre></div>
+<p>Visualmente:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Route] --&gt; B[Controller]
+    B --&gt; C[Service]
+    C --&gt; D[Repository]
+    D --&gt; E[Prisma]
+    E --&gt; F[PostgreSQL]</code></pre>
+<p>Cada capa tendrá una responsabilidad:</p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Responsabilidad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Route</td>
+<td>Define la URL</td>
+</tr>
+<tr>
+<td>Controller</td>
+<td>Recibe <code>req</code> y <code>res</code></td>
+</tr>
+<tr>
+<td>Service</td>
+<td>Aplica reglas de negocio</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td>Accede a los datos</td>
+</tr>
+<tr>
+<td>Prisma</td>
+<td>Comunica con PostgreSQL</td>
+</tr>
+</tbody>
+</table>
+<p>Hoy todavía no construiremos toda esa arquitectura. Pero es importante saber hacia dónde vamos.</p>
+<h2 id="como-se-relaciona-con-el-modelo-user">Cómo se relaciona con el modelo <code>User</code><a class="headerlink" href="#como-se-relaciona-con-el-modelo-user" title="Permanent link">&para;</a></h2>
+<p>En el día 18 diseñamos este modelo conceptual:</p>
+<ul>
+<li><code>id</code></li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>passwordHash</code></li>
+<li><code>role</code></li>
+<li><code>isActive</code></li>
+<li><code>createdAt</code></li>
+<li><code>updatedAt</code></li>
+</ul>
+<p>Prisma nos permitirá convertir ese diseño en un modelo real.</p>
+<p>El modelo conceptual <code>User</code> se transformará en <code>model User</code> dentro de <code>schema.prisma</code>.</p>
+<p>Y después Prisma podrá crear la tabla correspondiente en PostgreSQL mediante migraciones.</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Diseño conceptual User] --&gt; B[schema.prisma]
+    B --&gt; C[Migración]
+    C --&gt; D[Tabla en PostgreSQL]
+    D --&gt; E[Prisma Client]
+    E --&gt; F[API Express]</code></pre>
+<p>Este será el camino de los próximos días.</p>
+<h2 id="que-haremos-en-los-proximos-dias">Qué haremos en los próximos días<a class="headerlink" href="#que-haremos-en-los-proximos-dias" title="Permanent link">&para;</a></h2>
+<p>La secuencia será:</p>
+<ul>
+<li>Día 20: instalar y configurar Prisma.</li>
+<li>Día 21: definir el modelo <code>User</code> y <code>Role</code> en <code>schema.prisma</code>.</li>
+<li>Día 22: crear la primera migración.</li>
+<li>Día 23: usar Prisma Studio.</li>
+<li>Día 24: crear seed de datos iniciales.</li>
+</ul>
+<p>Después, cuando Prisma ya esté preparado, pasaremos a arquitectura por capas y al CRUD persistente.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre el repositorio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>No necesitas instalar nada nuevo hoy.</p>
+<p>El día de hoy es de análisis, comparación y decisión técnica.</p>
+<h3 id="paso-2-crear-el-documento-del-dia-19">Paso 2: Crear el documento del día 19<a class="headerlink" href="#paso-2-crear-el-documento-del-dia-19" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea un archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>docs/dia-19-orm-acceso-datos.md
+</span></code></pre></div>
+<p>Este documento recogerá la comparación de opciones y la decisión técnica.</p>
+<h3 id="paso-3-anadir-el-resumen-inicial">Paso 3: Añadir el resumen inicial<a class="headerlink" href="#paso-3-anadir-el-resumen-inicial" title="Permanent link">&para;</a></h3>
+<p>Añade al documento:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="gh"># Día 19 - ORM o acceso a datos</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">-</span><span class="w"> </span>He entendido qué significa acceso a datos.
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">-</span><span class="w"> </span>He comparado SQL directo, Prisma, TypeORM y Sequelize.
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">-</span><span class="w"> </span>He aprendido qué es un ORM.
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="k">-</span><span class="w"> </span>He analizado ventajas e inconvenientes de cada opción.
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">-</span><span class="w"> </span>He relacionado el acceso a datos con el modelo User.
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="k">-</span><span class="w"> </span>He decidido usar Prisma como ORM principal del proyecto.
+</span></code></pre></div>
+<h3 id="paso-4-anadir-una-explicacion-de-acceso-a-datos">Paso 4: Añadir una explicación de acceso a datos<a class="headerlink" href="#paso-4-anadir-una-explicacion-de-acceso-a-datos" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="gu">## Qué es el acceso a datos</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>El acceso a datos es la parte del backend encargada de leer y escribir información en la base de datos.
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>En este proyecto, la API necesitará acceder a PostgreSQL para crear, consultar, modificar y desactivar usuarios.
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>El flujo será:
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Cliente HTTP → API Express → Capa de acceso a datos → PostgreSQL
+</span></code></pre></div>
+<h3 id="paso-5-anadir-la-comparacion-de-opciones">Paso 5: Añadir la comparación de opciones<a class="headerlink" href="#paso-5-anadir-la-comparacion-de-opciones" title="Permanent link">&para;</a></h3>
+<p>Añade esta tabla:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="gu">## Comparación de opciones</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>| Opción | Cómo se trabaja | Ventaja principal | Inconveniente principal |
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>|---|---|---|---|
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>| SQL directo | Escribiendo consultas SQL | Muy transparente | Más código manual |
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>| Prisma | Modelos en schema.prisma y cliente tipado | Muy claro con TypeScript | Hay que aprender su ecosistema |
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>| TypeORM | Clases, entidades y decoradores | Orientado a objetos | Más configuración inicial |
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>| Sequelize | Modelos ORM clásicos | Muy conocido en Node.js | Menos natural con TypeScript moderno |
+</span></code></pre></div>
+<h3 id="paso-6-anadir-ejemplos-comparativos">Paso 6: Añadir ejemplos comparativos<a class="headerlink" href="#paso-6-anadir-ejemplos-comparativos" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="gu">## SQL directo frente a Prisma</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>Ejemplo conceptual con SQL directo:
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="sb">```ts</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="kd">const</span><span class="w"> </span><span class="nx">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">pool</span><span class="p">.</span><span class="nx">query</span><span class="p">(</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="s2">&quot;SELECT * FROM users WHERE id = $1&quot;</span><span class="p">,</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">  </span><span class="p">[</span><span class="nx">id</span><span class="p">]</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="p">);</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="sb">```</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a>Ejemplo conceptual con Prisma:
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a>
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a><span class="sb">```ts</span>
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">id</span><span class="w"> </span><span class="p">}</span>
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a><span class="p">});</span>
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="sb">```</span>
+</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a>
+</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>Ambos enfoques buscan un usuario por id, pero Prisma lo expresa desde el modelo User.
+</span></code></pre></div>
+<h3 id="paso-7-anadir-la-decision-tecnica">Paso 7: Añadir la decisión técnica<a class="headerlink" href="#paso-7-anadir-la-decision-tecnica" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="gu">## Decisión técnica</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>Para este reto usaremos Prisma.
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>Motivos:
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="k">-</span><span class="w"> </span>Encaja muy bien con TypeScript.
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="k">-</span><span class="w"> </span>Permite definir modelos de forma clara.
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="k">-</span><span class="w"> </span>Genera un cliente tipado.
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="k">-</span><span class="w"> </span>Incluye migraciones.
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="k">-</span><span class="w"> </span>Incluye Prisma Studio.
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="k">-</span><span class="w"> </span>Reduce SQL repetitivo.
+</span><span id="__span-22-13"><a id="__codelineno-22-13" name="__codelineno-22-13" href="#__codelineno-22-13"></a><span class="k">-</span><span class="w"> </span>Se integra bien con una arquitectura por capas.
+</span><span id="__span-22-14"><a id="__codelineno-22-14" name="__codelineno-22-14" href="#__codelineno-22-14"></a>
+</span><span id="__span-22-15"><a id="__codelineno-22-15" name="__codelineno-22-15" href="#__codelineno-22-15"></a>SQL directo sigue siendo importante para entender qué ocurre por debajo, pero no será el camino principal del proyecto.
+</span></code></pre></div>
+<h3 id="paso-8-anadir-relacion-con-la-arquitectura-futura">Paso 8: Añadir relación con la arquitectura futura<a class="headerlink" href="#paso-8-anadir-relacion-con-la-arquitectura-futura" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="gu">## Prisma dentro de la arquitectura</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>Más adelante, Prisma se usará desde la capa de repositorio.
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>Flujo previsto:
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>Route → Controller → Service → Repository → Prisma → PostgreSQL
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>
+</span><span id="__span-23-9"><a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a>Responsabilidades:
+</span><span id="__span-23-10"><a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a>
+</span><span id="__span-23-11"><a id="__codelineno-23-11" name="__codelineno-23-11" href="#__codelineno-23-11"></a><span class="k">-</span><span class="w"> </span>Route: define la ruta.
+</span><span id="__span-23-12"><a id="__codelineno-23-12" name="__codelineno-23-12" href="#__codelineno-23-12"></a><span class="k">-</span><span class="w"> </span>Controller: gestiona req y res.
+</span><span id="__span-23-13"><a id="__codelineno-23-13" name="__codelineno-23-13" href="#__codelineno-23-13"></a><span class="k">-</span><span class="w"> </span>Service: aplica reglas de negocio.
+</span><span id="__span-23-14"><a id="__codelineno-23-14" name="__codelineno-23-14" href="#__codelineno-23-14"></a><span class="k">-</span><span class="w"> </span>Repository: accede a los datos.
+</span><span id="__span-23-15"><a id="__codelineno-23-15" name="__codelineno-23-15" href="#__codelineno-23-15"></a><span class="k">-</span><span class="w"> </span>Prisma: comunica con PostgreSQL.
+</span></code></pre></div>
+<h3 id="paso-9-anadir-relacion-con-el-modelo-user">Paso 9: Añadir relación con el modelo <code>User</code><a class="headerlink" href="#paso-9-anadir-relacion-con-el-modelo-user" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="gu">## Relación con el modelo User</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>En el día 18 diseñamos el modelo persistente User.
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a>Campos principales:
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="k">-</span><span class="w"> </span>id
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a><span class="k">-</span><span class="w"> </span>name
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="k">-</span><span class="w"> </span>email
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a><span class="k">-</span><span class="w"> </span>passwordHash
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="k">-</span><span class="w"> </span>role
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="k">-</span><span class="w"> </span>isActive
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="k">-</span><span class="w"> </span>createdAt
+</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="k">-</span><span class="w"> </span>updatedAt
+</span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a>
+</span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a>En los próximos días este diseño se convertirá en un modelo Prisma dentro del archivo schema.prisma.
+</span></code></pre></div>
+<h3 id="paso-10-anadir-diagrama-mermaid">Paso 10: Añadir diagrama Mermaid<a class="headerlink" href="#paso-10-anadir-diagrama-mermaid" title="Permanent link">&para;</a></h3>
+<p>Añade este diagrama:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Diseño conceptual User] --&gt; B[schema.prisma]
+    B --&gt; C[Migración Prisma]
+    C --&gt; D[Tabla PostgreSQL]
+    D --&gt; E[Prisma Client]
+    E --&gt; F[API Express]</code></pre>
+<p>Y explica brevemente:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>Este diagrama muestra cómo el diseño conceptual del usuario terminará convirtiéndose en una tabla real en PostgreSQL, accesible desde la API mediante Prisma Client.
+</span></code></pre></div>
+<h3 id="paso-11-actualizar-el-readme">Paso 11: Actualizar el README<a class="headerlink" href="#paso-11-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>En el README, añade una sección breve:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="gu">## ORM y acceso a datos</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>El proyecto usará Prisma como ORM principal para comunicarse con PostgreSQL.
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>Se ha elegido Prisma porque:
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>
+</span><span id="__span-26-7"><a id="__codelineno-26-7" name="__codelineno-26-7" href="#__codelineno-26-7"></a><span class="sb">```text</span>
+</span><span id="__span-26-8"><a id="__codelineno-26-8" name="__codelineno-26-8" href="#__codelineno-26-8"></a>Encaja bien con TypeScript.
+</span><span id="__span-26-9"><a id="__codelineno-26-9" name="__codelineno-26-9" href="#__codelineno-26-9"></a>Permite definir modelos claros.
+</span><span id="__span-26-10"><a id="__codelineno-26-10" name="__codelineno-26-10" href="#__codelineno-26-10"></a>Incluye migraciones.
+</span><span id="__span-26-11"><a id="__codelineno-26-11" name="__codelineno-26-11" href="#__codelineno-26-11"></a>Genera un cliente tipado.
+</span><span id="__span-26-12"><a id="__codelineno-26-12" name="__codelineno-26-12" href="#__codelineno-26-12"></a>Permite explorar datos con Prisma Studio.
+</span><span id="__span-26-13"><a id="__codelineno-26-13" name="__codelineno-26-13" href="#__codelineno-26-13"></a><span class="sb">```</span>
+</span><span id="__span-26-14"><a id="__codelineno-26-14" name="__codelineno-26-14" href="#__codelineno-26-14"></a>
+</span><span id="__span-26-15"><a id="__codelineno-26-15" name="__codelineno-26-15" href="#__codelineno-26-15"></a>Flujo previsto:
+</span><span id="__span-26-16"><a id="__codelineno-26-16" name="__codelineno-26-16" href="#__codelineno-26-16"></a>
+</span><span id="__span-26-17"><a id="__codelineno-26-17" name="__codelineno-26-17" href="#__codelineno-26-17"></a><span class="sb">```text</span>
+</span><span id="__span-26-18"><a id="__codelineno-26-18" name="__codelineno-26-18" href="#__codelineno-26-18"></a>API Express → Repository → Prisma → PostgreSQL
+</span><span id="__span-26-19"><a id="__codelineno-26-19" name="__codelineno-26-19" href="#__codelineno-26-19"></a><span class="sb">```</span>
+</span><span id="__span-26-20"><a id="__codelineno-26-20" name="__codelineno-26-20" href="#__codelineno-26-20"></a>
+</span><span id="__span-26-21"><a id="__codelineno-26-21" name="__codelineno-26-21" href="#__codelineno-26-21"></a>SQL directo, TypeORM y Sequelize se han considerado como alternativas, pero no serán el camino principal del reto.
+</span></code></pre></div>
+<h3 id="paso-12-actualizar-el-indice-del-readme">Paso 12: Actualizar el índice del README<a class="headerlink" href="#paso-12-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 19 - ORM o acceso a datos</span>](<span class="na">docs/dia-19-orm-acceso-datos.md</span>)
+</span></code></pre></div>
+<p>El bloque debería quedar parecido a:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-28-15"><a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-28-16"><a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span><span id="__span-28-17"><a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 15 - Middleware centralizado de errores</span>](<span class="na">docs/dia-15-middleware-errores.md</span>)
+</span><span id="__span-28-18"><a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 16 - Base de datos y persistencia</span>](<span class="na">docs/dia-16-base-datos-persistencia.md</span>)
+</span><span id="__span-28-19"><a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 17 - PostgreSQL con Docker Compose</span>](<span class="na">docs/dia-17-postgresql-docker-compose.md</span>)
+</span><span id="__span-28-20"><a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 18 - Diseño del modelo persistente User</span>](<span class="na">docs/dia-18-diseno-modelo-persistente-user.md</span>)
+</span><span id="__span-28-21"><a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 19 - ORM o acceso a datos</span>](<span class="na">docs/dia-19-orm-acceso-datos.md</span>)
+</span></code></pre></div>
+<h3 id="paso-13-guardar-cambios-en-git">Paso 13: Guardar cambios en Git<a class="headerlink" href="#paso-13-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 19 - Elegir Prisma como ORM&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-explicar-que-es-un-orm">Tarea libre 1: Explicar qué es un ORM<a class="headerlink" href="#tarea-libre-1-explicar-que-es-un-orm" title="Permanent link">&para;</a></h3>
+<p>Añade al documento una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="gu">## Qué es un ORM</span>
+</span></code></pre></div>
+<p>Explica con tus palabras qué problema resuelve un ORM.</p>
+<p>Puedes apoyarte en esta idea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>Un ORM permite trabajar con la base de datos usando modelos y métodos del lenguaje de programación, reduciendo la necesidad de escribir SQL repetitivo.
+</span></code></pre></div>
+<h3 id="tarea-libre-2-defender-la-eleccion-de-prisma">Tarea libre 2: Defender la elección de Prisma<a class="headerlink" href="#tarea-libre-2-defender-la-eleccion-de-prisma" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="gu">## Por qué elegimos Prisma</span>
+</span></code></pre></div>
+<p>Explica por qué Prisma puede ser una buena elección para este reto.</p>
+<p>Incluye al menos tres argumentos.</p>
+<p>Ejemplos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>Se integra bien con TypeScript.
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>Permite definir modelos de forma clara.
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a>Incluye migraciones.
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a>Permite usar Prisma Studio.
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a>Reduce SQL manual.
+</span></code></pre></div>
+<h3 id="tarea-libre-3-comparar-sql-directo-y-prisma">Tarea libre 3: Comparar SQL directo y Prisma<a class="headerlink" href="#tarea-libre-3-comparar-sql-directo-y-prisma" title="Permanent link">&para;</a></h3>
+<p>Completa esta tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Aspecto</th>
+<th>SQL directo</th>
+<th>Prisma</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cómo se escriben consultas</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Relación con TypeScript</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Facilidad inicial</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Control sobre SQL</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Cantidad de código manual</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Migraciones</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Herramienta visual</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-4-investigar-prisma-studio">Tarea libre 4: Investigar Prisma Studio<a class="headerlink" href="#tarea-libre-4-investigar-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="gu">## Prisma Studio</span>
+</span></code></pre></div>
+<p>Explica qué crees que nos permitirá hacer Prisma Studio durante el reto.</p>
+<p>Pista:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Ver datos.
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>Crear registros.
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>Editar registros.
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>Comprobar si las migraciones han funcionado.
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>Comprobar usuarios iniciales.
+</span></code></pre></div>
+<h3 id="tarea-libre-5-relacionar-prisma-con-arquitectura-por-capas">Tarea libre 5: Relacionar Prisma con arquitectura por capas<a class="headerlink" href="#tarea-libre-5-relacionar-prisma-con-arquitectura-por-capas" title="Permanent link">&para;</a></h3>
+<p>Añade una tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Capa</th>
+<th>Responsabilidad</th>
+<th>¿Usa Prisma directamente?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Route</td>
+<td>Define rutas</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Controller</td>
+<td>Maneja petición y respuesta</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Service</td>
+<td>Aplica reglas de negocio</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td>Accede a datos</td>
+<td>sí</td>
+</tr>
+<tr>
+<td>Prisma</td>
+<td>Comunica con PostgreSQL</td>
+<td>sí</td>
+</tr>
+</tbody>
+</table>
+<h2 id="entrega-recomendada-del-dia-19">Entrega recomendada del día 19<a class="headerlink" href="#entrega-recomendada-del-dia-19" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 19, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>usermanager-api/
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>  docker-compose.yml
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>  README.md
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>  package.json
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a>  package-lock.json
+</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a>  tsconfig.json
+</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a>  src/
+</span><span id="__span-39-8"><a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a>    server.ts
+</span><span id="__span-39-9"><a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a>  docs/
+</span><span id="__span-39-10"><a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-39-11"><a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-39-12"><a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-39-13"><a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a>    dia-04-metodos-http.md
+</span><span id="__span-39-14"><a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-39-15"><a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-39-16"><a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-39-17"><a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-39-18"><a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-39-19"><a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-39-20"><a id="__codelineno-39-20" name="__codelineno-39-20" href="#__codelineno-39-20"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-39-21"><a id="__codelineno-39-21" name="__codelineno-39-21" href="#__codelineno-39-21"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-39-22"><a id="__codelineno-39-22" name="__codelineno-39-22" href="#__codelineno-39-22"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-39-23"><a id="__codelineno-39-23" name="__codelineno-39-23" href="#__codelineno-39-23"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-39-24"><a id="__codelineno-39-24" name="__codelineno-39-24" href="#__codelineno-39-24"></a>    dia-15-middleware-errores.md
+</span><span id="__span-39-25"><a id="__codelineno-39-25" name="__codelineno-39-25" href="#__codelineno-39-25"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-39-26"><a id="__codelineno-39-26" name="__codelineno-39-26" href="#__codelineno-39-26"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-39-27"><a id="__codelineno-39-27" name="__codelineno-39-27" href="#__codelineno-39-27"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-39-28"><a id="__codelineno-39-28" name="__codelineno-39-28" href="#__codelineno-39-28"></a>    dia-19-orm-acceso-datos.md
+</span></code></pre></div>
+<p>El documento del día 19 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>docs/dia-19-orm-acceso-datos.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>Resumen de lo realizado.
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>Explicación de acceso a datos.
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>Comparación entre SQL directo, Prisma, TypeORM y Sequelize.
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>Ejemplos comparativos.
+</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>Decisión técnica.
+</span><span id="__span-41-6"><a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>Relación con arquitectura por capas.
+</span><span id="__span-41-7"><a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>Relación con el modelo User.
+</span><span id="__span-41-8"><a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>Diagrama del flujo conceptual.
+</span><span id="__span-41-9"><a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>Defensa de la elección de Prisma.
+</span></code></pre></div>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>Hola, comparto el avance del día 19 del reto UserManager API:
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a>
+</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a>He comparado diferentes opciones de acceso a datos y he decidido usar Prisma como ORM principal del proyecto. La documentación está en:
+</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a>
+</span><span id="__span-42-7"><a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a>docs/dia-19-orm-acceso-datos.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos tomado una decisión técnica importante para el proyecto.</p>
+<p>Ya sabemos que nuestra API no accederá a PostgreSQL escribiendo todo el SQL manualmente, sino usando Prisma como ORM principal.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li>Acceso a datos.</li>
+<li>SQL directo.</li>
+<li>ORM.</li>
+<li>Prisma.</li>
+<li>TypeORM.</li>
+<li>Sequelize.</li>
+<li>Modelos.</li>
+<li>Migraciones.</li>
+<li>Cliente tipado.</li>
+<li>Prisma Studio.</li>
+<li>Arquitectura por capas.</li>
+</ul>
+<p>Esta decisión afectará a los próximos días del reto. A partir de ahora prepararemos Prisma, definiremos el modelo <code>User</code>, crearemos migraciones y empezaremos a utilizarlo dentro de la API.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Elegir una herramienta de acceso a datos no es solo una cuestión técnica:
+condiciona cómo modelamos la información, cómo organizamos el código y
+cómo evolucionará la API.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia18/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 18">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 18
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia20/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 20">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 20
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3579 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia23/">
+      
+      
+        <link rel="next" href="../dia25/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 24: Seed de datos iniciales - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-24-seed-de-datos-iniciales" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 24: Seed de datos iniciales
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es un seed?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-que-sirve-el-seed-en-este-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Para qué sirve el seed en este reto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migracion-frente-a-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Migración frente a seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-usuarios-vamos-a-crear" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué usuarios vamos a crear
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué usuarios vamos a crear">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usuario-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario administrador
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-normal-activo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario normal activo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-normal-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario normal inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-pasa-con-las-contrasenas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué pasa con las contraseñas?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-usar-upsert" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Por qué usar <code>upsert</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-del-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo del seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-comprobar-que-la-migracion-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Comprobar que la migración existe
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-instalar-el-adapter-de-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Instalar el adapter de PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-crear-prismaseedts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Crear <code>prisma/seed.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-entender-el-cliente-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Entender el cliente de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-entender-el-adapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Entender el adapter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-entender-upsert" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Entender <code>upsert</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-configurar-prisma-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Configurar Prisma Seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-configurar-packagejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Configurar <code>package.json</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-ajustar-tsconfigjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Ajustar <code>tsconfig.json</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-generar-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Generar Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-ejecutar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Ejecutar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-comprobar-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Comprobar en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-ejecutar-el-seed-otra-vez" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Ejecutar el seed otra vez
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-documentar-el-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Documentar el día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-el-documento-del-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Crear el documento del día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-anadir-comparacion-entre-datos-manuales-y-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Añadir comparación entre datos manuales y seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-tsx-no-encontrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: <code>tsx</code> no encontrado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-se-reconoce-el-comando-de-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: no se reconoce el comando de seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-de-conexion-con-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error de conexión con la base de datos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-por-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error por email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-veo-los-usuarios-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        No veo los usuarios en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passwordhash-parece-una-contrasena-falsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>passwordHash</code> parece una contraseña falsa
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-que-es-un-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar qué es un seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-explicar-por-que-usamos-upsert" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Explicar por qué usamos <code>upsert</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-anadir-un-cuarto-usuario-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Añadir un cuarto usuario de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-comparar-migracion-y-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Comparar migración y seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-los-datos-para-futuras-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar los datos para futuras pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es un seed?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-que-sirve-el-seed-en-este-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Para qué sirve el seed en este reto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#migracion-frente-a-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Migración frente a seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-usuarios-vamos-a-crear" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué usuarios vamos a crear
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué usuarios vamos a crear">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usuario-administrador" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario administrador
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-normal-activo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario normal activo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-normal-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario normal inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-pasa-con-las-contrasenas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué pasa con las contraseñas?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#por-que-usar-upsert" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Por qué usar <code>upsert</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-del-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo del seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-comprobar-que-la-migracion-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Comprobar que la migración existe
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-instalar-el-adapter-de-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Instalar el adapter de PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-crear-prismaseedts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Crear <code>prisma/seed.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-entender-el-cliente-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Entender el cliente de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-entender-el-adapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Entender el adapter
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-entender-upsert" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Entender <code>upsert</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-configurar-prisma-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Configurar Prisma Seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-configurar-packagejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Configurar <code>package.json</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-ajustar-tsconfigjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Ajustar <code>tsconfig.json</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-generar-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Generar Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-ejecutar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Ejecutar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-comprobar-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Comprobar en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-ejecutar-el-seed-otra-vez" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Ejecutar el seed otra vez
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-documentar-el-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Documentar el día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-el-documento-del-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Crear el documento del día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-anadir-comparacion-entre-datos-manuales-y-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Añadir comparación entre datos manuales y seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-tsx-no-encontrado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: <code>tsx</code> no encontrado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-se-reconoce-el-comando-de-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: no se reconoce el comando de seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-de-conexion-con-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error de conexión con la base de datos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-por-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error por email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-veo-los-usuarios-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        No veo los usuarios en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#passwordhash-parece-una-contrasena-falsa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>passwordHash</code> parece una contraseña falsa
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-que-es-un-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar qué es un seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-explicar-por-que-usamos-upsert" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Explicar por qué usamos <code>upsert</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-anadir-un-cuarto-usuario-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Añadir un cuarto usuario de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-comparar-migracion-y-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Comparar migración y seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-los-datos-para-futuras-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar los datos para futuras pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-24-seed-de-datos-iniciales">Día 24: Seed de datos iniciales<a class="headerlink" href="#dia-24-seed-de-datos-iniciales" title="Permanent link">&para;</a></h1>
+<p>En los últimos días hemos avanzado mucho en la parte de persistencia del proyecto.</p>
+<p>Primero diseñamos el modelo persistente <code>User</code>.</p>
+<p>Después instalamos Prisma.</p>
+<p>Luego definimos el modelo <code>User</code> dentro de <code>schema.prisma</code>.</p>
+<p>A continuación ejecutamos la primera migración y comprobamos con Prisma Studio que la tabla existía correctamente en PostgreSQL.</p>
+<p>Ahora tenemos una base de datos con estructura, pero todavía sin datos útiles.</p>
+<p>La tabla <code>User</code> existe, pero probablemente está vacía.</p>
+<p>Hoy vamos a crear datos iniciales de forma controlada mediante un <strong>seed</strong>.</p>
+<p>Un seed es un script que inserta datos iniciales en la base de datos.</p>
+<p>Por ejemplo:</p>
+<ul>
+<li>Un usuario <code>ADMIN</code>.</li>
+<li>Un usuario <code>USER</code> activo.</li>
+<li>Un usuario <code>USER</code> inactivo.</li>
+</ul>
+<p>Estos usuarios nos servirán para probar la API durante los próximos días.</p>
+<div class="admonition info">
+<p class="admonition-title">Idea importante</p>
+<p>No queremos crear datos manualmente cada vez desde Prisma Studio o Adminer.
+Queremos que el proyecto pueda generar sus datos iniciales con un comando.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<ul>
+<li>Seed.</li>
+<li>Datos iniciales.</li>
+<li>Prisma Client.</li>
+<li><code>prisma db seed</code>.</li>
+<li><code>upsert</code>.</li>
+<li>Datos repetibles.</li>
+<li>Usuario <code>ADMIN</code> inicial.</li>
+<li>Usuarios de prueba.</li>
+<li>Base de datos preparada.</li>
+<li>Prisma Studio para comprobar datos.</li>
+</ul>
+<p>El producto del día será el archivo <code>prisma/seed.ts</code> con usuarios iniciales.</p>
+<p>El resultado esperado será que la base de datos tenga usuarios iniciales creados mediante Prisma.</p>
+<h2 id="que-es-un-seed">¿Qué es un seed?<a class="headerlink" href="#que-es-un-seed" title="Permanent link">&para;</a></h2>
+<p>Un seed es un script que introduce datos iniciales en la base de datos.</p>
+<p>En nuestro caso, el seed creará usuarios básicos para poder probar el proyecto.</p>
+<p>Por ejemplo:</p>
+<ul>
+<li><code>Admin Principal</code>.</li>
+<li><code>Usuario Demo</code>.</li>
+<li><code>Usuario Inactivo</code>.</li>
+</ul>
+<p>Esto es útil porque, cuando alguien clone el proyecto o reinicie la base de datos, podrá dejarla preparada ejecutando un comando.</p>
+<p>Sin seed, cada persona tendría que entrar manualmente en Prisma Studio y crear los usuarios uno a uno.</p>
+<p>Con seed, el flujo será:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Base de datos vacía] --&gt; B[Ejecutar seed]
+    B --&gt; C[Crear usuarios iniciales]
+    C --&gt; D[Base de datos preparada]</code></pre>
+<h2 id="para-que-sirve-el-seed-en-este-reto">¿Para qué sirve el seed en este reto?<a class="headerlink" href="#para-que-sirve-el-seed-en-este-reto" title="Permanent link">&para;</a></h2>
+<p>En este reto, el seed nos servirá para tener usuarios con distintos roles y estados.</p>
+<p>Necesitaremos al menos:</p>
+<ul>
+<li>Un <code>ADMIN</code> para probar acciones de administración.</li>
+<li>Un <code>USER</code> activo para probar acciones normales.</li>
+<li>Un <code>USER</code> inactivo para probar restricciones futuras.</li>
+</ul>
+<p>Más adelante, cuando tengamos login, JWT y roles, estos usuarios nos permitirán probar casos como:</p>
+<ul>
+<li>Un <code>ADMIN</code> puede listar usuarios.</li>
+<li>Un <code>USER</code> no puede listar usuarios.</li>
+<li>Un usuario inactivo no puede iniciar sesión.</li>
+<li>Un <code>ADMIN</code> puede activar o desactivar usuarios.</li>
+</ul>
+<p>Aunque todavía no hemos implementado login ni roles en endpoints protegidos, podemos preparar los datos desde ahora.</p>
+<h2 id="migracion-frente-a-seed">Migración frente a seed<a class="headerlink" href="#migracion-frente-a-seed" title="Permanent link">&para;</a></h2>
+<p>Es importante no confundir estos dos conceptos.</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué hace</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Migración</td>
+<td>Crea o modifica la estructura de la base de datos</td>
+<td>Crear la tabla <code>User</code></td>
+</tr>
+<tr>
+<td>Seed</td>
+<td>Inserta datos iniciales</td>
+<td>Crear <code>admin@email.com</code></td>
+</tr>
+</tbody>
+</table>
+<p>La migración responde a esta pregunta: <strong>¿qué tablas y campos existen?</strong></p>
+<p>El seed responde a esta otra: <strong>¿qué datos iniciales queremos tener?</strong></p>
+<p>Visualmente:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[schema.prisma] --&gt; B[Migración]
+    B --&gt; C[Tabla User]
+    C --&gt; D[Seed]
+    D --&gt; E[Usuarios iniciales]</code></pre>
+<h2 id="que-usuarios-vamos-a-crear">Qué usuarios vamos a crear<a class="headerlink" href="#que-usuarios-vamos-a-crear" title="Permanent link">&para;</a></h2>
+<p>Crearemos tres usuarios iniciales.</p>
+<h3 id="usuario-administrador">Usuario administrador<a class="headerlink" href="#usuario-administrador" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>Admin Principal</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>admin@email.com</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>admin123</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Este usuario servirá para probar las funciones de administración.</p>
+<p>Más adelante debería poder:</p>
+<ul>
+<li>Listar usuarios.</li>
+<li>Cambiar roles.</li>
+<li>Activar y desactivar cuentas.</li>
+<li>Eliminar o desactivar usuarios.</li>
+</ul>
+<h3 id="usuario-normal-activo">Usuario normal activo<a class="headerlink" href="#usuario-normal-activo" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>Usuario Demo</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>user@email.com</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>user123</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>USER</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Este usuario servirá para probar acciones normales.</p>
+<p>Más adelante debería poder:</p>
+<ul>
+<li>Iniciar sesión.</li>
+<li>Consultar su perfil.</li>
+<li>Cambiar algunos de sus datos.</li>
+<li>Cambiar su contraseña.</li>
+</ul>
+<h3 id="usuario-normal-inactivo">Usuario normal inactivo<a class="headerlink" href="#usuario-normal-inactivo" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>Usuario Inactivo</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>inactive@email.com</code></td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>inactive123</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>USER</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<p>Este usuario nos permitirá probar una regla importante:</p>
+<div class="admonition warning">
+<p class="admonition-title">Regla futura</p>
+<p>Un usuario inactivo no puede iniciar sesión.</p>
+</div>
+<p>Todavía no implementaremos esa restricción, pero dejamos el dato preparado.</p>
+<h2 id="que-pasa-con-las-contrasenas">¿Qué pasa con las contraseñas?<a class="headerlink" href="#que-pasa-con-las-contrasenas" title="Permanent link">&para;</a></h2>
+<p>Nuestro modelo <code>User</code> tiene este campo: <code>passwordHash</code>.</p>
+<p>No tiene un campo llamado <code>password</code>.</p>
+<p>Esto es correcto.</p>
+<p>La contraseña real nunca debe guardarse en texto plano.</p>
+<p>Ahora bien, todavía no estamos en la fase de seguridad. El hash con <code>bcrypt</code> lo trabajaremos más adelante.</p>
+<p>Por eso, en el seed de hoy usaremos valores temporales como:</p>
+<ul>
+<li><code>hash_temporal_admin123</code></li>
+<li><code>hash_temporal_user123</code></li>
+<li><code>hash_temporal_inactive123</code></li>
+</ul>
+<p>Estos valores no son hashes reales.</p>
+<p>Son valores temporales para poder rellenar el campo obligatorio <code>passwordHash</code>.</p>
+<p>Más adelante, cuando trabajemos seguridad, sustituiremos esto por hashes reales generados con <code>bcrypt</code>.</p>
+<div class="admonition danger">
+<p class="admonition-title">Regla importante</p>
+<p>Aunque hoy usemos valores temporales, nunca guardamos un campo <code>password</code> en la base de datos.</p>
+</div>
+<h2 id="por-que-usar-upsert">¿Por qué usar <code>upsert</code>?<a class="headerlink" href="#por-que-usar-upsert" title="Permanent link">&para;</a></h2>
+<p>Podríamos crear usuarios con:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">create</span><span class="p">(...)</span>
+</span></code></pre></div>
+<p>Pero si ejecutamos el seed dos veces, aparecería un problema: <strong>el email ya existe</strong>.</p>
+<p>Como <code>email</code> es único, no podemos crear dos usuarios con el mismo email.</p>
+<p>Para evitar ese problema, usaremos <code>upsert</code>.</p>
+<p><code>upsert</code> significa:</p>
+<ul>
+<li>Si existe, actualiza.</li>
+<li>Si no existe, crea.</li>
+</ul>
+<p>Viene de combinar estas dos palabras: <code>update + insert = upsert</code>.</p>
+<p>Ejemplo conceptual:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span><span class="w"> </span><span class="p">},</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Admin Principal&quot;</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_admin123&quot;</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;ADMIN&quot;</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Esto hace que el seed sea repetible.</p>
+<p>Podremos ejecutarlo varias veces sin crear usuarios duplicados.</p>
+<h2 id="flujo-del-seed">Flujo del seed<a class="headerlink" href="#flujo-del-seed" title="Permanent link">&para;</a></h2>
+<p>El flujo del día será:</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Abrir proyecto] --&gt; B[Comprobar PostgreSQL]
+    B --&gt; C[Crear prisma/seed.ts]
+    C --&gt; D[Configurar comando de seed]
+    D --&gt; E[Ejecutar prisma db seed]
+    E --&gt; F[Comprobar usuarios en Prisma Studio]
+    F --&gt; G[Documentar resultado]</code></pre>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre una terminal y entra en el repositorio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Comprueba que estás en la raíz del proyecto.</p>
+<p>Deberías ver:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>package.json
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>docker-compose.yml
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>prisma/
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>src/
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>docs/
+</span></code></pre></div>
+<h3 id="paso-2-comprobar-que-la-migracion-existe">Paso 2: Comprobar que la migración existe<a class="headerlink" href="#paso-2-comprobar-que-la-migracion-existe" title="Permanent link">&para;</a></h3>
+<p>Revisa que tienes la carpeta:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>prisma/migrations/
+</span></code></pre></div>
+<p>Y dentro una migración inicial:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>prisma/migrations/&lt;timestamp&gt;_init/migration.sql
+</span></code></pre></div>
+<p>Si no existe, vuelve al día 22 y ejecuta la migración antes de continuar.</p>
+<h3 id="paso-3-instalar-el-adapter-de-postgresql">Paso 3: Instalar el adapter de PostgreSQL<a class="headerlink" href="#paso-3-instalar-el-adapter-de-postgresql" title="Permanent link">&para;</a></h3>
+<p>Como este proyecto usa Prisma 7, instalamos el adapter:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>npm<span class="w"> </span>install<span class="w"> </span>@prisma/adapter-pg
+</span></code></pre></div>
+<p>En <code>package.json</code> debe aparecer:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="w">  </span><span class="nt">&quot;@prisma/adapter-pg&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">&quot;@prisma/client&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="paso-4-crear-prismaseedts">Paso 4: Crear <code>prisma/seed.ts</code><a class="headerlink" href="#paso-4-crear-prismaseedts" title="Permanent link">&para;</a></h3>
+<p>Crea el archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>prisma/seed.ts
+</span></code></pre></div>
+<p>Con este contenido:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaPg</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@prisma/adapter-pg&quot;</span><span class="p">;</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">,</span><span class="w"> </span><span class="nx">Role</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../src/generated/prisma/client&quot;</span><span class="p">;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">adapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PrismaPg</span><span class="p">({</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">  </span><span class="nx">connectionString</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.DATABASE_URL</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="p">});</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="kd">const</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">({</span><span class="w"> </span><span class="nx">adapter</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">admin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">    </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Admin Principal&quot;</span><span class="p">,</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_admin123&quot;</span><span class="p">,</span>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">Role.ADMIN</span><span class="p">,</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">      </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user@email.com&quot;</span>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a><span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">    </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario Demo&quot;</span><span class="p">,</span>
+</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_user123&quot;</span><span class="p">,</span>
+</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">Role.USER</span><span class="p">,</span>
+</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a><span class="w">      </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>
+</span><span id="__span-9-39"><a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">inactiveUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-9-40"><a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-41"><a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;inactive@email.com&quot;</span>
+</span><span id="__span-9-42"><a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-9-43"><a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-9-44"><a id="__codelineno-9-44" name="__codelineno-9-44" href="#__codelineno-9-44"></a><span class="w">    </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-45"><a id="__codelineno-9-45" name="__codelineno-9-45" href="#__codelineno-9-45"></a><span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario Inactivo&quot;</span><span class="p">,</span>
+</span><span id="__span-9-46"><a id="__codelineno-9-46" name="__codelineno-9-46" href="#__codelineno-9-46"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;inactive@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-9-47"><a id="__codelineno-9-47" name="__codelineno-9-47" href="#__codelineno-9-47"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_inactive123&quot;</span><span class="p">,</span>
+</span><span id="__span-9-48"><a id="__codelineno-9-48" name="__codelineno-9-48" href="#__codelineno-9-48"></a><span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">Role.USER</span><span class="p">,</span>
+</span><span id="__span-9-49"><a id="__codelineno-9-49" name="__codelineno-9-49" href="#__codelineno-9-49"></a><span class="w">      </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span>
+</span><span id="__span-9-50"><a id="__codelineno-9-50" name="__codelineno-9-50" href="#__codelineno-9-50"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-9-51"><a id="__codelineno-9-51" name="__codelineno-9-51" href="#__codelineno-9-51"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-9-52"><a id="__codelineno-9-52" name="__codelineno-9-52" href="#__codelineno-9-52"></a>
+</span><span id="__span-9-53"><a id="__codelineno-9-53" name="__codelineno-9-53" href="#__codelineno-9-53"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Seed ejecutado correctamente:&quot;</span><span class="p">);</span>
+</span><span id="__span-9-54"><a id="__codelineno-9-54" name="__codelineno-9-54" href="#__codelineno-9-54"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">({</span><span class="w"> </span><span class="nx">admin</span><span class="p">,</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="nx">inactiveUser</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-9-55"><a id="__codelineno-9-55" name="__codelineno-9-55" href="#__codelineno-9-55"></a><span class="p">}</span>
+</span><span id="__span-9-56"><a id="__codelineno-9-56" name="__codelineno-9-56" href="#__codelineno-9-56"></a>
+</span><span id="__span-9-57"><a id="__codelineno-9-57" name="__codelineno-9-57" href="#__codelineno-9-57"></a><span class="nx">main</span><span class="p">()</span>
+</span><span id="__span-9-58"><a id="__codelineno-9-58" name="__codelineno-9-58" href="#__codelineno-9-58"></a><span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-59"><a id="__codelineno-9-59" name="__codelineno-9-59" href="#__codelineno-9-59"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$disconnect</span><span class="p">();</span>
+</span><span id="__span-9-60"><a id="__codelineno-9-60" name="__codelineno-9-60" href="#__codelineno-9-60"></a><span class="w">  </span><span class="p">})</span>
+</span><span id="__span-9-61"><a id="__codelineno-9-61" name="__codelineno-9-61" href="#__codelineno-9-61"></a><span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-62"><a id="__codelineno-9-62" name="__codelineno-9-62" href="#__codelineno-9-62"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error ejecutando el seed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+</span><span id="__span-9-63"><a id="__codelineno-9-63" name="__codelineno-9-63" href="#__codelineno-9-63"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$disconnect</span><span class="p">();</span>
+</span><span id="__span-9-64"><a id="__codelineno-9-64" name="__codelineno-9-64" href="#__codelineno-9-64"></a><span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+</span><span id="__span-9-65"><a id="__codelineno-9-65" name="__codelineno-9-65" href="#__codelineno-9-65"></a><span class="w">  </span><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="paso-5-entender-el-cliente-de-prisma">Paso 5: Entender el cliente de Prisma<a class="headerlink" href="#paso-5-entender-el-cliente-de-prisma" title="Permanent link">&para;</a></h3>
+<p>En este proyecto no usamos:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@prisma/client&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Usamos:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">,</span><span class="w"> </span><span class="nx">Role</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../src/generated/prisma/client&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Esto ocurre porque en <code>schema.prisma</code> hemos indicado un output personalizado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>output = &quot;../src/generated/prisma&quot;
+</span></code></pre></div>
+<h3 id="paso-6-entender-el-adapter">Paso 6: Entender el adapter<a class="headerlink" href="#paso-6-entender-el-adapter" title="Permanent link">&para;</a></h3>
+<p>Con Prisma 7 y PostgreSQL, el cliente necesita un adapter:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaPg</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@prisma/adapter-pg&quot;</span><span class="p">;</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">adapter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PrismaPg</span><span class="p">({</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="w">  </span><span class="nx">connectionString</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env.DATABASE_URL</span>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="p">});</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="kd">const</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">({</span><span class="w"> </span><span class="nx">adapter</span><span class="w"> </span><span class="p">});</span>
+</span></code></pre></div>
+<p>La variable <code>DATABASE_URL</code> debe estar definida en <code>.env</code>.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span></code></pre></div>
+<h3 id="paso-7-entender-upsert">Paso 7: Entender <code>upsert</code><a class="headerlink" href="#paso-7-entender-upsert" title="Permanent link">&para;</a></h3>
+<p>Usamos <code>upsert</code> para que el seed sea repetible.</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">  </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">  </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-15-7"><a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Admin Principal&quot;</span><span class="p">,</span>
+</span><span id="__span-15-8"><a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-15-9"><a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="w">    </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_admin123&quot;</span><span class="p">,</span>
+</span><span id="__span-15-10"><a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a><span class="w">    </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">Role.ADMIN</span><span class="p">,</span>
+</span><span id="__span-15-11"><a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a><span class="w">    </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-15-12"><a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-15-13"><a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Esto significa:</p>
+<ul>
+<li>Si existe un usuario con ese email, no se crea otro.</li>
+<li>Si no existe, se crea.</li>
+<li>Podemos ejecutar el seed varias veces sin duplicar usuarios.</li>
+</ul>
+<h3 id="paso-8-configurar-prisma-seed">Paso 8: Configurar Prisma Seed<a class="headerlink" href="#paso-8-configurar-prisma-seed" title="Permanent link">&para;</a></h3>
+<p>Como este proyecto tiene <code>prisma.config.ts</code>, configuramos el seed ahí.</p>
+<p>Archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>prisma.config.ts
+</span></code></pre></div>
+<p>Contenido esperado:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">import</span><span class="w"> </span><span class="s2">&quot;dotenv/config&quot;</span><span class="p">;</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">defineConfig</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;prisma/config&quot;</span><span class="p">;</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="k">export</span><span class="w"> </span><span class="k">default</span><span class="w"> </span><span class="nx">defineConfig</span><span class="p">({</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">  </span><span class="nx">schema</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;prisma/schema.prisma&quot;</span><span class="p">,</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a><span class="w">  </span><span class="nx">migrations</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a><span class="w">    </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;prisma/migrations&quot;</span><span class="p">,</span>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a><span class="w">    </span><span class="nx">seed</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tsx prisma/seed.ts&quot;</span><span class="p">,</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a><span class="w">  </span><span class="nx">datasource</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a><span class="w">    </span><span class="nx">url</span><span class="o">:</span><span class="w"> </span><span class="kt">process.env</span><span class="p">[</span><span class="s2">&quot;DATABASE_URL&quot;</span><span class="p">],</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="paso-9-configurar-packagejson">Paso 9: Configurar <code>package.json</code><a class="headerlink" href="#paso-9-configurar-packagejson" title="Permanent link">&para;</a></h3>
+<p>En <code>package.json</code>, añadimos un script cómodo:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="nt">&quot;prisma:seed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prisma db seed&quot;</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>También puede mantenerse esta configuración:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nt">&quot;prisma&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="nt">&quot;seed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tsx prisma/seed.ts&quot;</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Pero en este proyecto, como existe <code>prisma.config.ts</code>, lo importante es tener:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nx">seed</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tsx prisma/seed.ts&quot;</span>
+</span></code></pre></div>
+<p>dentro de <code>migrations</code>.</p>
+<h3 id="paso-10-ajustar-tsconfigjson">Paso 10: Ajustar <code>tsconfig.json</code><a class="headerlink" href="#paso-10-ajustar-tsconfigjson" title="Permanent link">&para;</a></h3>
+<p>Como <code>rootDir</code> apunta a <code>src</code>, el build no debe intentar compilar <code>prisma/seed.ts</code>.</p>
+<p>Configuración recomendada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ES2020&quot;</span><span class="p">,</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">    </span><span class="nt">&quot;module&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CommonJS&quot;</span><span class="p">,</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">    </span><span class="nt">&quot;rootDir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;src&quot;</span><span class="p">,</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="nt">&quot;outDir&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;dist&quot;</span><span class="p">,</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">    </span><span class="nt">&quot;strict&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="w">    </span><span class="nt">&quot;esModuleInterop&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="w">    </span><span class="nt">&quot;skipLibCheck&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="w">  </span><span class="nt">&quot;include&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;src&quot;</span><span class="p">]</span>
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>El seed se ejecuta con <code>tsx</code>, no forma parte del build de producción.</p>
+<h3 id="paso-11-generar-prisma-client">Paso 11: Generar Prisma Client<a class="headerlink" href="#paso-11-generar-prisma-client" title="Permanent link">&para;</a></h3>
+<p>Después de cambios en <code>schema.prisma</code>, ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:generate
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>generate
+</span></code></pre></div>
+<h3 id="paso-12-ejecutar-el-seed">Paso 12: Ejecutar el seed<a class="headerlink" href="#paso-12-ejecutar-el-seed" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span></code></pre></div>
+<p>O directamente:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>db<span class="w"> </span>seed
+</span></code></pre></div>
+<p>Si todo va bien, verás algo parecido a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>Seed ejecutado correctamente:
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>{
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>  admin: { ... },
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>  user: { ... },
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a>  inactiveUser: { ... }
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a>}
+</span></code></pre></div>
+<h3 id="paso-13-comprobar-en-prisma-studio">Paso 13: Comprobar en Prisma Studio<a class="headerlink" href="#paso-13-comprobar-en-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Abre Prisma Studio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:studio
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>studio
+</span></code></pre></div>
+<p>Comprueba la tabla <code>User</code>.</p>
+<p>Deben existir estos usuarios:</p>
+<table>
+<thead>
+<tr>
+<th>Email</th>
+<th>Role</th>
+<th>isActive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>admin@email.com</code></td>
+<td><code>ADMIN</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>user@email.com</code></td>
+<td><code>USER</code></td>
+<td><code>true</code></td>
+</tr>
+<tr>
+<td><code>inactive@email.com</code></td>
+<td><code>USER</code></td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-14-ejecutar-el-seed-otra-vez">Paso 14: Ejecutar el seed otra vez<a class="headerlink" href="#paso-14-ejecutar-el-seed-otra-vez" title="Permanent link">&para;</a></h3>
+<p>Vuelve a ejecutar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span></code></pre></div>
+<p>No deberían crearse usuarios duplicados.</p>
+<p>Esto ocurre porque usamos <code>upsert</code> y buscamos cada usuario por <code>email</code>.</p>
+<h3 id="paso-15-documentar-el-dia-24">Paso 15: Documentar el día 24<a class="headerlink" href="#paso-15-documentar-el-dia-24" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, el avance del día debe quedar documentado.</p>
+<p>El documento final debe explicar:</p>
+<ul>
+<li>Qué es un seed.</li>
+<li>Qué archivo se ha creado.</li>
+<li>Qué usuarios iniciales se han insertado.</li>
+<li>Por qué se usa <code>upsert</code>.</li>
+<li>Qué diferencia hay entre migración y seed.</li>
+<li>Cómo se comprueban los usuarios con Prisma Studio.</li>
+</ul>
+<h3 id="paso-16-crear-el-documento-del-dia-24">Paso 16: Crear el documento del día 24<a class="headerlink" href="#paso-16-crear-el-documento-del-dia-24" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>docs/dia-24-seed-datos-iniciales.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="gh"># Día 24 - Seed de datos iniciales</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="k">-</span><span class="w"> </span>He creado el archivo prisma/seed.ts.
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a><span class="k">-</span><span class="w"> </span>He usado Prisma Client dentro del seed.
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="k">-</span><span class="w"> </span>He creado un usuario ADMIN inicial.
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a><span class="k">-</span><span class="w"> </span>He creado un usuario USER activo.
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a><span class="k">-</span><span class="w"> </span>He creado un usuario USER inactivo.
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a><span class="k">-</span><span class="w"> </span>He usado upsert para evitar duplicados.
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="k">-</span><span class="w"> </span>He configurado el comando de seed.
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="k">-</span><span class="w"> </span>He ejecutado prisma db seed.
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="k">-</span><span class="w"> </span>He comprobado los datos con Prisma Studio.
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a><span class="k">-</span><span class="w"> </span>He ejecutado el seed más de una vez para comprobar que no duplica usuarios.
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a>
+</span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a><span class="gu">## Comando principal</span>
+</span><span id="__span-31-17"><a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a>
+</span><span id="__span-31-18"><a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a><span class="sb">```bash</span>
+</span><span id="__span-31-19"><a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>npx<span class="w"> </span>prisma<span class="w"> </span>db<span class="w"> </span>seed
+</span><span id="__span-31-20"><a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a><span class="sb">```</span>
+</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a>
+</span><span id="__span-31-22"><a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>O mediante script:
+</span><span id="__span-31-23"><a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a>
+</span><span id="__span-31-24"><a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a><span class="sb">```bash</span>
+</span><span id="__span-31-25"><a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span><span id="__span-31-26"><a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a><span class="sb">```</span>
+</span><span id="__span-31-27"><a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a>
+</span><span id="__span-31-28"><a id="__codelineno-31-28" name="__codelineno-31-28" href="#__codelineno-31-28"></a><span class="gu">## Usuarios creados</span>
+</span><span id="__span-31-29"><a id="__codelineno-31-29" name="__codelineno-31-29" href="#__codelineno-31-29"></a>
+</span><span id="__span-31-30"><a id="__codelineno-31-30" name="__codelineno-31-30" href="#__codelineno-31-30"></a>| Nombre | Email | Role | Activo |
+</span><span id="__span-31-31"><a id="__codelineno-31-31" name="__codelineno-31-31" href="#__codelineno-31-31"></a>| --- | --- | --- |---|
+</span><span id="__span-31-32"><a id="__codelineno-31-32" name="__codelineno-31-32" href="#__codelineno-31-32"></a>| Admin Principal | admin@email.com | ADMIN | sí |
+</span><span id="__span-31-33"><a id="__codelineno-31-33" name="__codelineno-31-33" href="#__codelineno-31-33"></a>| Usuario Demo | user@email.com | USER | sí |
+</span><span id="__span-31-34"><a id="__codelineno-31-34" name="__codelineno-31-34" href="#__codelineno-31-34"></a>| Usuario Inactivo | inactive@email.com | USER | no |
+</span><span id="__span-31-35"><a id="__codelineno-31-35" name="__codelineno-31-35" href="#__codelineno-31-35"></a>
+</span><span id="__span-31-36"><a id="__codelineno-31-36" name="__codelineno-31-36" href="#__codelineno-31-36"></a><span class="gu">## Archivo creado</span>
+</span><span id="__span-31-37"><a id="__codelineno-31-37" name="__codelineno-31-37" href="#__codelineno-31-37"></a>
+</span><span id="__span-31-38"><a id="__codelineno-31-38" name="__codelineno-31-38" href="#__codelineno-31-38"></a><span class="sb">```text</span>
+</span><span id="__span-31-39"><a id="__codelineno-31-39" name="__codelineno-31-39" href="#__codelineno-31-39"></a>prisma/seed.ts
+</span><span id="__span-31-40"><a id="__codelineno-31-40" name="__codelineno-31-40" href="#__codelineno-31-40"></a><span class="sb">```</span>
+</span><span id="__span-31-41"><a id="__codelineno-31-41" name="__codelineno-31-41" href="#__codelineno-31-41"></a>
+</span><span id="__span-31-42"><a id="__codelineno-31-42" name="__codelineno-31-42" href="#__codelineno-31-42"></a><span class="gu">## Explicación de upsert</span>
+</span><span id="__span-31-43"><a id="__codelineno-31-43" name="__codelineno-31-43" href="#__codelineno-31-43"></a>
+</span><span id="__span-31-44"><a id="__codelineno-31-44" name="__codelineno-31-44" href="#__codelineno-31-44"></a><span class="sb">`upsert`</span> permite crear un registro si no existe o actualizarlo si ya existe.
+</span><span id="__span-31-45"><a id="__codelineno-31-45" name="__codelineno-31-45" href="#__codelineno-31-45"></a>
+</span><span id="__span-31-46"><a id="__codelineno-31-46" name="__codelineno-31-46" href="#__codelineno-31-46"></a>En este seed se usa para que los usuarios iniciales no se dupliquen aunque ejecutemos el comando varias veces.
+</span><span id="__span-31-47"><a id="__codelineno-31-47" name="__codelineno-31-47" href="#__codelineno-31-47"></a>
+</span><span id="__span-31-48"><a id="__codelineno-31-48" name="__codelineno-31-48" href="#__codelineno-31-48"></a><span class="gu">## Nota sobre passwordHash</span>
+</span><span id="__span-31-49"><a id="__codelineno-31-49" name="__codelineno-31-49" href="#__codelineno-31-49"></a>
+</span><span id="__span-31-50"><a id="__codelineno-31-50" name="__codelineno-31-50" href="#__codelineno-31-50"></a>De momento se usan valores temporales como:
+</span><span id="__span-31-51"><a id="__codelineno-31-51" name="__codelineno-31-51" href="#__codelineno-31-51"></a>
+</span><span id="__span-31-52"><a id="__codelineno-31-52" name="__codelineno-31-52" href="#__codelineno-31-52"></a><span class="sb">```text</span>
+</span><span id="__span-31-53"><a id="__codelineno-31-53" name="__codelineno-31-53" href="#__codelineno-31-53"></a>hash_temporal_admin123
+</span><span id="__span-31-54"><a id="__codelineno-31-54" name="__codelineno-31-54" href="#__codelineno-31-54"></a><span class="sb">```</span>
+</span><span id="__span-31-55"><a id="__codelineno-31-55" name="__codelineno-31-55" href="#__codelineno-31-55"></a>
+</span><span id="__span-31-56"><a id="__codelineno-31-56" name="__codelineno-31-56" href="#__codelineno-31-56"></a>Más adelante, en la fase de seguridad, estos valores se sustituirán por hashes reales generados con bcrypt.
+</span></code></pre></div>
+<h3 id="paso-17-anadir-comparacion-entre-datos-manuales-y-seed">Paso 17: Añadir comparación entre datos manuales y seed<a class="headerlink" href="#paso-17-anadir-comparacion-entre-datos-manuales-y-seed" title="Permanent link">&para;</a></h3>
+<p>Añade al documento:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="gu">## Datos manuales frente a seed</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>| Forma de crear datos | Ventaja | Problema |
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>| --- | --- | --- |
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>| Prisma Studio | Rápido para pruebas puntuales | No queda documentado en el código |
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>| Adminer | Permite trabajar directamente con la base de datos | Puede ser fácil cometer errores |
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>| Seed | Repetible y versionado | Requiere escribir un script |
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>El seed es la opción más adecuada para datos iniciales del proyecto.
+</span></code></pre></div>
+<h3 id="paso-18-anadir-diagrama-mermaid">Paso 18: Añadir diagrama Mermaid<a class="headerlink" href="#paso-18-anadir-diagrama-mermaid" title="Permanent link">&para;</a></h3>
+<p>Añade este diagrama:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[prisma/seed.ts] --&gt; B[Prisma Client]
+    B --&gt; C[PostgreSQL]
+    C --&gt; D[Usuarios iniciales]</code></pre>
+<p>Explicación sugerida:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>El archivo seed.ts usa Prisma Client para insertar usuarios iniciales en PostgreSQL. Después podemos comprobarlos con Prisma Studio.
+</span></code></pre></div>
+<h3 id="paso-19-actualizar-el-readme">Paso 19: Actualizar el README<a class="headerlink" href="#paso-19-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Añade una sección al README:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="gu">## Seed de datos iniciales</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>El proyecto incluye un seed para crear usuarios iniciales.
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>Archivo:
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a><span class="sb">```text</span>
+</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>prisma/seed.ts
+</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="sb">```</span>
+</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a>
+</span><span id="__span-34-11"><a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a>Ejecutar seed:
+</span><span id="__span-34-12"><a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>
+</span><span id="__span-34-13"><a id="__codelineno-34-13" name="__codelineno-34-13" href="#__codelineno-34-13"></a><span class="sb">```bash</span>
+</span><span id="__span-34-14"><a id="__codelineno-34-14" name="__codelineno-34-14" href="#__codelineno-34-14"></a>npx<span class="w"> </span>prisma<span class="w"> </span>db<span class="w"> </span>seed
+</span><span id="__span-34-15"><a id="__codelineno-34-15" name="__codelineno-34-15" href="#__codelineno-34-15"></a><span class="sb">```</span>
+</span><span id="__span-34-16"><a id="__codelineno-34-16" name="__codelineno-34-16" href="#__codelineno-34-16"></a>
+</span><span id="__span-34-17"><a id="__codelineno-34-17" name="__codelineno-34-17" href="#__codelineno-34-17"></a>O mediante script:
+</span><span id="__span-34-18"><a id="__codelineno-34-18" name="__codelineno-34-18" href="#__codelineno-34-18"></a>
+</span><span id="__span-34-19"><a id="__codelineno-34-19" name="__codelineno-34-19" href="#__codelineno-34-19"></a><span class="sb">```bash</span>
+</span><span id="__span-34-20"><a id="__codelineno-34-20" name="__codelineno-34-20" href="#__codelineno-34-20"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span><span id="__span-34-21"><a id="__codelineno-34-21" name="__codelineno-34-21" href="#__codelineno-34-21"></a><span class="sb">```</span>
+</span><span id="__span-34-22"><a id="__codelineno-34-22" name="__codelineno-34-22" href="#__codelineno-34-22"></a>
+</span><span id="__span-34-23"><a id="__codelineno-34-23" name="__codelineno-34-23" href="#__codelineno-34-23"></a>Usuarios iniciales:
+</span><span id="__span-34-24"><a id="__codelineno-34-24" name="__codelineno-34-24" href="#__codelineno-34-24"></a>
+</span><span id="__span-34-25"><a id="__codelineno-34-25" name="__codelineno-34-25" href="#__codelineno-34-25"></a>| Email | Role | Estado |
+</span><span id="__span-34-26"><a id="__codelineno-34-26" name="__codelineno-34-26" href="#__codelineno-34-26"></a>| --- | --- | --- |
+</span><span id="__span-34-27"><a id="__codelineno-34-27" name="__codelineno-34-27" href="#__codelineno-34-27"></a>| <span class="sb">`admin@email.com`</span> | <span class="sb">`ADMIN`</span> | activo |
+</span><span id="__span-34-28"><a id="__codelineno-34-28" name="__codelineno-34-28" href="#__codelineno-34-28"></a>| <span class="sb">`user@email.com`</span> | <span class="sb">`USER`</span> | activo |
+</span><span id="__span-34-29"><a id="__codelineno-34-29" name="__codelineno-34-29" href="#__codelineno-34-29"></a>| <span class="sb">`inactive@email.com`</span> | <span class="sb">`USER`</span> | inactivo |
+</span><span id="__span-34-30"><a id="__codelineno-34-30" name="__codelineno-34-30" href="#__codelineno-34-30"></a>
+</span><span id="__span-34-31"><a id="__codelineno-34-31" name="__codelineno-34-31" href="#__codelineno-34-31"></a>Nota:
+</span><span id="__span-34-32"><a id="__codelineno-34-32" name="__codelineno-34-32" href="#__codelineno-34-32"></a>
+</span><span id="__span-34-33"><a id="__codelineno-34-33" name="__codelineno-34-33" href="#__codelineno-34-33"></a><span class="sb">```text</span>
+</span><span id="__span-34-34"><a id="__codelineno-34-34" name="__codelineno-34-34" href="#__codelineno-34-34"></a>Los passwordHash son temporales hasta implementar bcrypt en la fase de seguridad.
+</span><span id="__span-34-35"><a id="__codelineno-34-35" name="__codelineno-34-35" href="#__codelineno-34-35"></a><span class="sb">```</span>
+</span></code></pre></div>
+<h3 id="paso-20-actualizar-el-indice-del-readme">Paso 20: Actualizar el índice del README<a class="headerlink" href="#paso-20-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 24 - Seed de datos iniciales</span>](<span class="na">docs/dia-24-seed-datos-iniciales.md</span>)
+</span></code></pre></div>
+<p>El bloque debería quedar parecido a:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-36-6"><a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-36-7"><a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-36-8"><a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-depuracion.md</span>)
+</span><span id="__span-36-9"><a id="__codelineno-36-9" name="__codelineno-36-9" href="#__codelineno-36-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-36-10"><a id="__codelineno-36-10" name="__codelineno-36-10" href="#__codelineno-36-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-36-11"><a id="__codelineno-36-11" name="__codelineno-36-11" href="#__codelineno-36-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-36-12"><a id="__codelineno-36-12" name="__codelineno-36-12" href="#__codelineno-36-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-36-13"><a id="__codelineno-36-13" name="__codelineno-36-13" href="#__codelineno-36-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-36-14"><a id="__codelineno-36-14" name="__codelineno-36-14" href="#__codelineno-36-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-36-15"><a id="__codelineno-36-15" name="__codelineno-36-15" href="#__codelineno-36-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-36-16"><a id="__codelineno-36-16" name="__codelineno-36-16" href="#__codelineno-36-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span><span id="__span-36-17"><a id="__codelineno-36-17" name="__codelineno-36-17" href="#__codelineno-36-17"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 15 - Middleware centralizado de errores</span>](<span class="na">docs/dia-15-middleware-errores.md</span>)
+</span><span id="__span-36-18"><a id="__codelineno-36-18" name="__codelineno-36-18" href="#__codelineno-36-18"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 16 - Base de datos y persistencia</span>](<span class="na">docs/dia-16-base-datos-persistencia.md</span>)
+</span><span id="__span-36-19"><a id="__codelineno-36-19" name="__codelineno-36-19" href="#__codelineno-36-19"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 17 - PostgreSQL con Docker Compose</span>](<span class="na">docs/dia-17-postgresql-docker-compose.md</span>)
+</span><span id="__span-36-20"><a id="__codelineno-36-20" name="__codelineno-36-20" href="#__codelineno-36-20"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 18 - Diseño del modelo persistente User</span>](<span class="na">docs/dia-18-diseno-modelo-persistente-user.md</span>)
+</span><span id="__span-36-21"><a id="__codelineno-36-21" name="__codelineno-36-21" href="#__codelineno-36-21"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 19 - ORM o acceso a datos</span>](<span class="na">docs/dia-19-orm-acceso-datos.md</span>)
+</span><span id="__span-36-22"><a id="__codelineno-36-22" name="__codelineno-36-22" href="#__codelineno-36-22"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 20 - Instalación y configuración inicial de Prisma</span>](<span class="na">docs/dia-20-instalacion-prisma.md</span>)
+</span><span id="__span-36-23"><a id="__codelineno-36-23" name="__codelineno-36-23" href="#__codelineno-36-23"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 21 - Modelo Prisma User</span>](<span class="na">docs/dia-21-modelo-prisma-user.md</span>)
+</span><span id="__span-36-24"><a id="__codelineno-36-24" name="__codelineno-36-24" href="#__codelineno-36-24"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 22 - Primera migración con Prisma</span>](<span class="na">docs/dia-22-primera-migracion-prisma.md</span>)
+</span><span id="__span-36-25"><a id="__codelineno-36-25" name="__codelineno-36-25" href="#__codelineno-36-25"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 23 - Prisma Studio</span>](<span class="na">docs/dia-23-prisma-studio.md</span>)
+</span><span id="__span-36-26"><a id="__codelineno-36-26" name="__codelineno-36-26" href="#__codelineno-36-26"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 24 - Seed de datos iniciales</span>](<span class="na">docs/dia-24-seed-datos-iniciales.md</span>)
+</span></code></pre></div>
+<h3 id="paso-21-guardar-cambios-en-git">Paso 21: Guardar cambios en Git<a class="headerlink" href="#paso-21-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Deberías ver cambios en archivos como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>prisma/seed.ts
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>package.json
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>README.md
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>docs/dia-24-seed-datos-iniciales.md
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 24 - Crear seed de datos iniciales&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="problemas-frecuentes">Problemas frecuentes<a class="headerlink" href="#problemas-frecuentes" title="Permanent link">&para;</a></h2>
+<h3 id="error-tsx-no-encontrado">Error: <code>tsx</code> no encontrado<a class="headerlink" href="#error-tsx-no-encontrado" title="Permanent link">&para;</a></h3>
+<p>Solución:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>tsx
+</span></code></pre></div>
+<p>Después vuelve a ejecutar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>db<span class="w"> </span>seed
+</span></code></pre></div>
+<h3 id="error-no-se-reconoce-el-comando-de-seed">Error: no se reconoce el comando de seed<a class="headerlink" href="#error-no-se-reconoce-el-comando-de-seed" title="Permanent link">&para;</a></h3>
+<p>Revisa que hayas configurado el seed en <code>package.json</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="nt">&quot;prisma&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-44-2"><a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="w">  </span><span class="nt">&quot;seed&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tsx prisma/seed.ts&quot;</span>
+</span><span id="__span-44-3"><a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>O, si tu proyecto usa <code>prisma.config.ts</code>, revisa:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="nx">migrations</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="w">  </span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;prisma/migrations&quot;</span><span class="p">,</span>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="w">  </span><span class="nx">seed</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;tsx prisma/seed.ts&quot;</span>
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="error-de-conexion-con-la-base-de-datos">Error de conexión con la base de datos<a class="headerlink" href="#error-de-conexion-con-la-base-de-datos" title="Permanent link">&para;</a></h3>
+<p>Comprueba que PostgreSQL está arrancado:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span><span id="__span-46-2"><a id="__codelineno-46-2" name="__codelineno-46-2" href="#__codelineno-46-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span></code></pre></div>
+<p>Y revisa <code>DATABASE_URL</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span></code></pre></div>
+<h3 id="error-por-email-duplicado">Error por email duplicado<a class="headerlink" href="#error-por-email-duplicado" title="Permanent link">&para;</a></h3>
+<p>Si estás usando <code>upsert</code>, no debería duplicar usuarios.</p>
+<p>Revisa que no estés usando <code>create</code> directamente.</p>
+<p>Debe aparecer algo así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span>
+</span><span id="__span-48-4"><a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-48-5"><a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a><span class="w">  </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{},</span>
+</span><span id="__span-48-6"><a id="__codelineno-48-6" name="__codelineno-48-6" href="#__codelineno-48-6"></a><span class="w">  </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-48-7"><a id="__codelineno-48-7" name="__codelineno-48-7" href="#__codelineno-48-7"></a><span class="w">    </span><span class="p">...</span>
+</span><span id="__span-48-8"><a id="__codelineno-48-8" name="__codelineno-48-8" href="#__codelineno-48-8"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-48-9"><a id="__codelineno-48-9" name="__codelineno-48-9" href="#__codelineno-48-9"></a><span class="p">});</span>
+</span></code></pre></div>
+<h3 id="no-veo-los-usuarios-en-prisma-studio">No veo los usuarios en Prisma Studio<a class="headerlink" href="#no-veo-los-usuarios-en-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Comprueba:</p>
+<ul>
+<li>Que el seed se ha ejecutado sin errores.</li>
+<li>Que Prisma Studio apunta a la misma <code>DATABASE_URL</code>.</li>
+<li>Que estás mirando la tabla <code>User</code>.</li>
+<li>Que PostgreSQL está arrancado.</li>
+</ul>
+<h3 id="passwordhash-parece-una-contrasena-falsa"><code>passwordHash</code> parece una contraseña falsa<a class="headerlink" href="#passwordhash-parece-una-contrasena-falsa" title="Permanent link">&para;</a></h3>
+<p>Es normal.</p>
+<p>Hoy usamos valores temporales.</p>
+<p>Más adelante implementaremos hashes reales con <code>bcrypt</code>.</p>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-explicar-que-es-un-seed">Tarea libre 1: Explicar qué es un seed<a class="headerlink" href="#tarea-libre-1-explicar-que-es-un-seed" title="Permanent link">&para;</a></h3>
+<p>Añade al documento una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="gu">## Qué es un seed</span>
+</span></code></pre></div>
+<p>Explícalo con tus palabras.</p>
+<p>Idea orientativa:</p>
+<blockquote>
+<p>Un seed es un script que crea datos iniciales en una base de datos para que el proyecto pueda probarse o arrancar con información mínima.</p>
+</blockquote>
+<h3 id="tarea-libre-2-explicar-por-que-usamos-upsert">Tarea libre 2: Explicar por qué usamos <code>upsert</code><a class="headerlink" href="#tarea-libre-2-explicar-por-que-usamos-upsert" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="gu">## Por qué usamos upsert</span>
+</span></code></pre></div>
+<p>Explica qué problema tendríamos si usáramos <code>create</code> y ejecutáramos el seed dos veces.</p>
+<h3 id="tarea-libre-3-anadir-un-cuarto-usuario-de-prueba">Tarea libre 3: Añadir un cuarto usuario de prueba<a class="headerlink" href="#tarea-libre-3-anadir-un-cuarto-usuario-de-prueba" title="Permanent link">&para;</a></h3>
+<p>Añade un cuarto usuario al seed.</p>
+<p>Propuesta:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>Editor Demo</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>editor@email.com</code></td>
+</tr>
+<tr>
+<td><code>passwordHash</code></td>
+<td><code>hash_temporal_editor123</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>USER</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Como solo tenemos roles <code>USER</code> y <code>ADMIN</code>, este usuario seguirá siendo <code>USER</code>.</p>
+<p>Después comprueba que aparece en Prisma Studio.</p>
+<h3 id="tarea-libre-4-comparar-migracion-y-seed">Tarea libre 4: Comparar migración y seed<a class="headerlink" href="#tarea-libre-4-comparar-migracion-y-seed" title="Permanent link">&para;</a></h3>
+<p>Completa esta tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Cambia estructura</th>
+<th>Inserta datos</th>
+<th>Se guarda en el repositorio</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Migración</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Seed</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-5-preparar-los-datos-para-futuras-pruebas">Tarea libre 5: Preparar los datos para futuras pruebas<a class="headerlink" href="#tarea-libre-5-preparar-los-datos-para-futuras-pruebas" title="Permanent link">&para;</a></h3>
+<p>Añade una tabla al documento con casos de prueba futuros:</p>
+<table>
+<thead>
+<tr>
+<th>Caso futuro</th>
+<th>Usuario que servirá para probarlo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Login como ADMIN</td>
+<td></td>
+</tr>
+<tr>
+<td>Login como USER</td>
+<td></td>
+</tr>
+<tr>
+<td>Usuario inactivo no puede entrar</td>
+<td></td>
+</tr>
+<tr>
+<td>ADMIN lista usuarios</td>
+<td></td>
+</tr>
+<tr>
+<td>USER no puede listar usuarios</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="entrega-recomendada-del-dia-24">Entrega recomendada del día 24<a class="headerlink" href="#entrega-recomendada-del-dia-24" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 24, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>usermanager-api/
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>  .env.example
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a>  .gitignore
+</span><span id="__span-51-4"><a id="__codelineno-51-4" name="__codelineno-51-4" href="#__codelineno-51-4"></a>  docker-compose.yml
+</span><span id="__span-51-5"><a id="__codelineno-51-5" name="__codelineno-51-5" href="#__codelineno-51-5"></a>  README.md
+</span><span id="__span-51-6"><a id="__codelineno-51-6" name="__codelineno-51-6" href="#__codelineno-51-6"></a>  package.json
+</span><span id="__span-51-7"><a id="__codelineno-51-7" name="__codelineno-51-7" href="#__codelineno-51-7"></a>  package-lock.json
+</span><span id="__span-51-8"><a id="__codelineno-51-8" name="__codelineno-51-8" href="#__codelineno-51-8"></a>  tsconfig.json
+</span><span id="__span-51-9"><a id="__codelineno-51-9" name="__codelineno-51-9" href="#__codelineno-51-9"></a>  prisma/
+</span><span id="__span-51-10"><a id="__codelineno-51-10" name="__codelineno-51-10" href="#__codelineno-51-10"></a>    schema.prisma
+</span><span id="__span-51-11"><a id="__codelineno-51-11" name="__codelineno-51-11" href="#__codelineno-51-11"></a>    seed.ts
+</span><span id="__span-51-12"><a id="__codelineno-51-12" name="__codelineno-51-12" href="#__codelineno-51-12"></a>    migrations/
+</span><span id="__span-51-13"><a id="__codelineno-51-13" name="__codelineno-51-13" href="#__codelineno-51-13"></a>      &lt;timestamp&gt;_init/
+</span><span id="__span-51-14"><a id="__codelineno-51-14" name="__codelineno-51-14" href="#__codelineno-51-14"></a>        migration.sql
+</span><span id="__span-51-15"><a id="__codelineno-51-15" name="__codelineno-51-15" href="#__codelineno-51-15"></a>  src/
+</span><span id="__span-51-16"><a id="__codelineno-51-16" name="__codelineno-51-16" href="#__codelineno-51-16"></a>    server.ts
+</span><span id="__span-51-17"><a id="__codelineno-51-17" name="__codelineno-51-17" href="#__codelineno-51-17"></a>  docs/
+</span><span id="__span-51-18"><a id="__codelineno-51-18" name="__codelineno-51-18" href="#__codelineno-51-18"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-51-19"><a id="__codelineno-51-19" name="__codelineno-51-19" href="#__codelineno-51-19"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-51-20"><a id="__codelineno-51-20" name="__codelineno-51-20" href="#__codelineno-51-20"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-51-21"><a id="__codelineno-51-21" name="__codelineno-51-21" href="#__codelineno-51-21"></a>    dia-04-metodos-http.md
+</span><span id="__span-51-22"><a id="__codelineno-51-22" name="__codelineno-51-22" href="#__codelineno-51-22"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-51-23"><a id="__codelineno-51-23" name="__codelineno-51-23" href="#__codelineno-51-23"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-51-24"><a id="__codelineno-51-24" name="__codelineno-51-24" href="#__codelineno-51-24"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-51-25"><a id="__codelineno-51-25" name="__codelineno-51-25" href="#__codelineno-51-25"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-51-26"><a id="__codelineno-51-26" name="__codelineno-51-26" href="#__codelineno-51-26"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-51-27"><a id="__codelineno-51-27" name="__codelineno-51-27" href="#__codelineno-51-27"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-51-28"><a id="__codelineno-51-28" name="__codelineno-51-28" href="#__codelineno-51-28"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-51-29"><a id="__codelineno-51-29" name="__codelineno-51-29" href="#__codelineno-51-29"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-51-30"><a id="__codelineno-51-30" name="__codelineno-51-30" href="#__codelineno-51-30"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-51-31"><a id="__codelineno-51-31" name="__codelineno-51-31" href="#__codelineno-51-31"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-51-32"><a id="__codelineno-51-32" name="__codelineno-51-32" href="#__codelineno-51-32"></a>    dia-15-middleware-errores.md
+</span><span id="__span-51-33"><a id="__codelineno-51-33" name="__codelineno-51-33" href="#__codelineno-51-33"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-51-34"><a id="__codelineno-51-34" name="__codelineno-51-34" href="#__codelineno-51-34"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-51-35"><a id="__codelineno-51-35" name="__codelineno-51-35" href="#__codelineno-51-35"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-51-36"><a id="__codelineno-51-36" name="__codelineno-51-36" href="#__codelineno-51-36"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-51-37"><a id="__codelineno-51-37" name="__codelineno-51-37" href="#__codelineno-51-37"></a>    dia-20-instalacion-prisma.md
+</span><span id="__span-51-38"><a id="__codelineno-51-38" name="__codelineno-51-38" href="#__codelineno-51-38"></a>    dia-21-modelo-prisma-user.md
+</span><span id="__span-51-39"><a id="__codelineno-51-39" name="__codelineno-51-39" href="#__codelineno-51-39"></a>    dia-22-primera-migracion-prisma.md
+</span><span id="__span-51-40"><a id="__codelineno-51-40" name="__codelineno-51-40" href="#__codelineno-51-40"></a>    dia-23-prisma-studio.md
+</span><span id="__span-51-41"><a id="__codelineno-51-41" name="__codelineno-51-41" href="#__codelineno-51-41"></a>    dia-24-seed-datos-iniciales.md
+</span></code></pre></div>
+<p>El documento del día 24 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>docs/dia-24-seed-datos-iniciales.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Comando principal usado.</li>
+<li>Usuarios creados.</li>
+<li>Archivo <code>prisma/seed.ts</code>.</li>
+<li>Explicación de <code>upsert</code>.</li>
+<li>Nota sobre <code>passwordHash</code> temporal.</li>
+<li>Comparación entre datos manuales y seed.</li>
+<li>Diagrama del flujo del seed.</li>
+<li>Comprobación con Prisma Studio.</li>
+<li>Casos de prueba futuros.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>Hola, comparto el avance del día 24 del reto UserManager API:
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>
+</span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-53-4"><a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a>
+</span><span id="__span-53-5"><a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a>He creado un seed con usuarios iniciales usando Prisma. La documentación está en:
+</span><span id="__span-53-6"><a id="__codelineno-53-6" name="__codelineno-53-6" href="#__codelineno-53-6"></a>
+</span><span id="__span-53-7"><a id="__codelineno-53-7" name="__codelineno-53-7" href="#__codelineno-53-7"></a>docs/dia-24-seed-datos-iniciales.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos dejado la base de datos preparada con datos iniciales.</p>
+<p>Ya no dependemos de crear usuarios manualmente desde Prisma Studio o Adminer. Ahora tenemos un script que puede generar los usuarios básicos del proyecto.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li>Seed.</li>
+<li><code>prisma/seed.ts</code>.</li>
+<li>Prisma Client.</li>
+<li><code>prisma db seed</code>.</li>
+<li><code>upsert</code>.</li>
+<li>Usuario <code>ADMIN</code>.</li>
+<li>Usuario <code>USER</code> activo.</li>
+<li>Usuario <code>USER</code> inactivo.</li>
+<li>Datos repetibles.</li>
+<li>Comprobación con Prisma Studio.</li>
+</ul>
+<p>Este paso será muy útil a partir de ahora, porque podremos probar consultas, roles, login y permisos con usuarios ya preparados.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Un seed permite que la base de datos tenga datos iniciales de forma repetible, documentada y fácil de reconstruir.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia23/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 23">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 23
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia25/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 25">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 25
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

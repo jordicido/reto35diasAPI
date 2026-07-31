@@ -1,0 +1,3246 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 38: Frontend entregado y conexión con la API - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-38-frontend-entregado-y-conexion-con-la-api" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 38: Frontend entregado y conexión con la API
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-hemos-construido-hasta-ahora" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué hemos construido hasta ahora
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-encajan-las-piezas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo encajan las piezas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#frontend-y-backend-son-aplicaciones-distintas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Frontend y backend son aplicaciones distintas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#url-base-de-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        URL base de la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-next_public_api_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué significa <code>NEXT_PUBLIC_API_URL</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es CORS
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cors-no-sustituye-a-jwt" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        CORS no sustituye a JWT
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pantallas-entregadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pantallas entregadas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#endpoints-consumidos-por-el-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Endpoints consumidos por el frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-se-enviara-el-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo se enviará el token
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nota-sobre-localstorage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Nota sobre <code>localStorage</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#utilidad-apifetch" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Utilidad <code>apiFetch</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-hacer-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué vamos a hacer hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-instalar-dependencias-del-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Instalar dependencias del backend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-generar-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Generar Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-ejecutar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Ejecutar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-arrancar-el-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Arrancar el backend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-cors-si-hace-falta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configurar CORS si hace falta
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar CORS si hace falta">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-instalar-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Instalar CORS
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-configurar-cors-en-serverts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Configurar CORS en <code>server.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-entender-la-configuracion-de-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Entender la configuración de CORS
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configurar-el-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Configurar el frontend
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configurar el frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-entrar-en-la-carpeta-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Entrar en la carpeta frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-instalar-dependencias-del-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Instalar dependencias del frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-crear-envlocal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Crear <code>.env.local</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-arrancar-el-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Arrancar el frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-login-desde-el-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar login desde el frontend
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar login desde el frontend">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-abrir-la-pantalla-de-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Abrir la pantalla de login
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-comprobar-respuesta-de-login" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Comprobar respuesta de login
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-ver-token-en-devtools" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Ver token en DevTools
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-una-ruta-protegida" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar una ruta protegida
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar una ruta protegida">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-ir-al-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Ir al dashboard
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-observar-la-cabecera-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Observar la cabecera Authorization
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-comprobar-respuesta-del-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Comprobar respuesta del dashboard
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-panel-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar panel admin
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar panel admin">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-entrar-como-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Entrar como USER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-entrar-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Entrar como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pruebas-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pruebas del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-documentacion-del-dia-38" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear documentación del día 38
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear documentación del día 38">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-anadir-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 22: Añadir checklist
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#el-frontend-no-conecta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El frontend no conecta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-de-cors" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error de CORS
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#next_public_api_url-incorrecta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>NEXT_PUBLIC_API_URL</code> incorrecta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-apagado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Backend apagado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-token-no-se-guarda" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El token no se guarda
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-dashboard-devuelve-401" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El dashboard devuelve <code>401</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-panel-admin-devuelve-403" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El panel admin devuelve <code>403</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#puerto-3000-ocupado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Puerto <code>3000</code> ocupado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#puerto-3001-ocupado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Puerto <code>3001</code> ocupado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-personalizar-la-pantalla-de-inicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Personalizar la pantalla de inicio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-indicar-rutas-publicas-y-protegidas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Indicar rutas públicas y protegidas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-observar-una-peticion-en-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Observar una petición en Network
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-explicar-por-que-la-seguridad-no-debe-depender-del-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Explicar por qué la seguridad no debe depender del frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-39" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 39
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-38" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 38
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-38-frontend-entregado-y-conexion-con-la-api">Día 38: Frontend entregado y conexión con la API<a class="headerlink" href="#dia-38-frontend-entregado-y-conexion-con-la-api" title="Permanent link">&para;</a></h1>
+<p>Durante los días anteriores hemos construido una API REST bastante completa.</p>
+<p>Empezamos con rutas muy sencillas, después trabajamos con usuarios en memoria, más adelante conectamos PostgreSQL con Prisma, reorganizamos el código por capas y finalmente añadimos seguridad.</p>
+<p>Ahora nuestra API ya es capaz de:</p>
+<ul>
+<li>Registrar usuarios.</li>
+<li>Iniciar sesión.</li>
+<li>Generar un token JWT.</li>
+<li>Proteger rutas.</li>
+<li>Distinguir entre <code>USER</code> y <code>ADMIN</code>.</li>
+<li>Aplicar permisos.</li>
+<li>Consultar datos reales desde PostgreSQL.</li>
+</ul>
+<p>Hasta ahora hemos probado casi todo usando herramientas como Thunder Client, Postman o peticiones manuales.</p>
+<p>Hoy vamos a dar un paso más: vamos a conectar nuestra API con un frontend sencillo ya preparado.</p>
+<p>No vamos a estudiar Next.js en profundidad.</p>
+<p>No vamos a convertir este reto en un proyecto de frontend.</p>
+<p>El objetivo es más concreto:</p>
+<p><strong>Usar una interfaz web real para comprobar cómo se comunica con nuestra API.</strong></p>
+<div class="admonition info">
+<p class="admonition-title">Idea principal</p>
+<p>Frontend y backend son aplicaciones independientes que se comunican mediante peticiones HTTP y respuestas JSON.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<ul>
+<li>Frontend cliente.</li>
+<li>Backend API.</li>
+<li>URL base de la API.</li>
+<li><code>NEXT_PUBLIC_API_URL</code>.</li>
+<li>Fetch.</li>
+<li>JSON.</li>
+<li>CORS.</li>
+<li>Login desde frontend.</li>
+<li><code>localStorage</code>.</li>
+<li>Token JWT.</li>
+<li><code>Authorization: Bearer &lt;token&gt;</code>.</li>
+<li>Rutas públicas.</li>
+<li>Rutas protegidas.</li>
+<li>Arranque conjunto de PostgreSQL, backend y frontend.</li>
+</ul>
+<p>El producto del día será:</p>
+<p><strong>Frontend de UserManager conectado a nuestra API local.</strong></p>
+<p>El resultado esperado será que podamos abrir una interfaz en el navegador, iniciar sesión y consultar datos reales de nuestra API.</p>
+<h2 id="que-hemos-construido-hasta-ahora">Qué hemos construido hasta ahora<a class="headerlink" href="#que-hemos-construido-hasta-ahora" title="Permanent link">&para;</a></h2>
+<p>Antes de conectar el frontend, conviene recordar qué tenemos en el backend.</p>
+<p>Actualmente disponemos de endpoints como:</p>
+<ul>
+<li><code>GET /api/health</code></li>
+<li><code>POST /api/auth/register</code></li>
+<li><code>POST /api/auth/login</code></li>
+<li><code>GET /api/auth/me</code></li>
+<li><code>GET /api/users/me</code></li>
+<li><code>GET /api/users</code></li>
+<li><code>GET /api/users/:id</code></li>
+<li><code>POST /api/users</code></li>
+<li><code>PATCH /api/users/:id</code></li>
+<li><code>DELETE /api/users/:id</code></li>
+</ul>
+<p>También tenemos estas reglas:</p>
+<ul>
+<li><code>POST /api/auth/register</code> es público.</li>
+<li><code>POST /api/auth/login</code> es público.</li>
+<li><code>GET /api/users/me</code> requiere token.</li>
+<li><code>GET /api/users</code> requiere <code>ADMIN</code>.</li>
+<li><code>POST /api/users</code> requiere <code>ADMIN</code>.</li>
+<li><code>GET /api/users/:id</code> requiere <code>ADMIN</code> o ser el propio usuario.</li>
+<li><code>PATCH /api/users/:id</code> requiere <code>ADMIN</code> o ser el propio usuario.</li>
+<li><code>DELETE /api/users/:id</code> requiere <code>ADMIN</code>.</li>
+</ul>
+<p>Y usuarios iniciales creados mediante seed:</p>
+<ul>
+<li><code>admin@email.com</code> / <code>admin123</code> / <code>ADMIN</code></li>
+<li><code>user@email.com</code> / <code>user123</code> / <code>USER</code></li>
+<li><code>inactive@email.com</code> / <code>inactive123</code> / <code>USER</code> inactivo</li>
+</ul>
+<p>Hoy usaremos esos usuarios desde el frontend.</p>
+<h2 id="como-encajan-las-piezas">Cómo encajan las piezas<a class="headerlink" href="#como-encajan-las-piezas" title="Permanent link">&para;</a></h2>
+<p>A partir de hoy trabajaremos con tres elementos en marcha:</p>
+<ul>
+<li>PostgreSQL.</li>
+<li>Backend Express.</li>
+<li>Frontend Next.js.</li>
+</ul>
+<p>El flujo general será:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Frontend Next.js] --&gt; B[Fetch]
+    B --&gt; C[API Express]
+    C --&gt; D[Prisma 7 + PrismaPg]
+    D --&gt; E[PostgreSQL]</code></pre>
+<p>El navegador no consulta PostgreSQL directamente.</p>
+<p>El navegador envía una petición HTTP a la API.</p>
+<p>La API valida la petición, aplica autenticación y permisos, y consulta la base de datos mediante Prisma.</p>
+<p>Después devuelve una respuesta JSON al frontend.</p>
+<h2 id="frontend-y-backend-son-aplicaciones-distintas">Frontend y backend son aplicaciones distintas<a class="headerlink" href="#frontend-y-backend-son-aplicaciones-distintas" title="Permanent link">&para;</a></h2>
+<p>Es importante entender que el frontend y el backend no son lo mismo.</p>
+<table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Qué hace</th>
+<th>Puerto recomendado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Backend</td>
+<td>Expone la API REST</td>
+<td><code>3000</code></td>
+</tr>
+<tr>
+<td>Frontend</td>
+<td>Muestra la interfaz web</td>
+<td><code>3001</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Guarda los datos</td>
+<td><code>5432</code></td>
+</tr>
+</tbody>
+</table>
+<p>Por eso tendremos algo así:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Backend:  http://localhost:3000
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Frontend: http://localhost:3001
+</span></code></pre></div>
+<p>Aunque estén en el mismo ordenador, para el navegador son orígenes distintos.</p>
+<p>Esto será importante cuando hablemos de CORS.</p>
+<h2 id="url-base-de-la-api">URL base de la API<a class="headerlink" href="#url-base-de-la-api" title="Permanent link">&para;</a></h2>
+<p>El frontend necesita saber dónde está escuchando el backend.</p>
+<p>Podríamos escribir esto directamente en cada componente:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nx">fetch</span><span class="p">(</span><span class="s2">&quot;http://localhost:3000/api/auth/login&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Pero no es buena idea repetir la URL muchas veces.</p>
+<p>En su lugar, usaremos una variable de entorno:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>NEXT_PUBLIC_API_URL=http://localhost:3000
+</span></code></pre></div>
+<p>Así, si algún día cambia la URL del backend, solo tendremos que cambiarla en un sitio.</p>
+<p>En el frontend tendremos una utilidad que une la URL base con la ruta concreta:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_URL</span><span class="si">}${</span><span class="nx">path</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="p">...</span><span class="nx">options</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nx">headers</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Por ejemplo, si llamamos a:</p>
+<p><code>/api/users/me</code>,</p>
+<p>la URL final será:</p>
+<p><code>http://localhost:3000/api/users/me</code>.</p>
+<h2 id="que-significa-next_public_api_url">Qué significa <code>NEXT_PUBLIC_API_URL</code><a class="headerlink" href="#que-significa-next_public_api_url" title="Permanent link">&para;</a></h2>
+<p>En Next.js, las variables que necesita leer el navegador deben empezar por:</p>
+<p><code>NEXT_PUBLIC_</code>.</p>
+<p>Por eso usamos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>NEXT_PUBLIC_API_URL=http://localhost:3000
+</span></code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Regla importante</p>
+<p>No debemos guardar secretos en variables que empiecen por <code>NEXT_PUBLIC_</code>.</p>
+</div>
+<p>Esta variable no contiene una contraseña ni una clave privada.</p>
+<p>Solo contiene la dirección pública de nuestra API local.</p>
+<p>Eso sí es correcto.</p>
+<h2 id="que-es-cors">Qué es CORS<a class="headerlink" href="#que-es-cors" title="Permanent link">&para;</a></h2>
+<p>CORS es una política de seguridad del navegador.</p>
+<p>Sirve para controlar qué orígenes pueden hacer peticiones a un servidor y leer sus respuestas.</p>
+<p>En nuestro caso, el frontend y el backend estarán en orígenes distintos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>http://localhost:3000  → backend
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>http://localhost:3001  → frontend
+</span></code></pre></div>
+<p>Aunque ambos estén en nuestro ordenador, el navegador los considera orígenes diferentes porque usan puertos distintos.</p>
+<p>Por eso el backend debe permitir peticiones desde el frontend.</p>
+<p>Si todavía no tenemos CORS configurado en Express, tendremos que añadirlo.</p>
+<h2 id="cors-no-sustituye-a-jwt">CORS no sustituye a JWT<a class="headerlink" href="#cors-no-sustituye-a-jwt" title="Permanent link">&para;</a></h2>
+<p>Es importante no confundir conceptos.</p>
+<p>CORS responde a esta pregunta:</p>
+<p><strong>¿Puede este origen del navegador leer respuestas de mi API?</strong></p>
+<p>JWT responde a esta otra:</p>
+<p><strong>¿Quién es el usuario que hace esta petición?</strong></p>
+<p>Y los roles responden a esta:</p>
+<p><strong>¿Tiene permiso este usuario para hacer esta acción?</strong></p>
+<p>Por tanto:</p>
+<ul>
+<li>CORS no sustituye a JWT.</li>
+<li>CORS no sustituye a los permisos.</li>
+<li>CORS no convierte una ruta en segura.</li>
+</ul>
+<p>La seguridad real sigue estando en la API.</p>
+<h2 id="pantallas-entregadas">Pantallas entregadas<a class="headerlink" href="#pantallas-entregadas" title="Permanent link">&para;</a></h2>
+<p>El frontend entregado tendrá varias pantallas sencillas.</p>
+<table>
+<thead>
+<tr>
+<th>Pantalla</th>
+<th>Ruta</th>
+<th>Objetivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inicio</td>
+<td><code>/</code></td>
+<td>Presentar el cliente y navegar</td>
+</tr>
+<tr>
+<td>Registro</td>
+<td><code>/register</code></td>
+<td>Crear una cuenta <code>USER</code></td>
+</tr>
+<tr>
+<td>Login</td>
+<td><code>/login</code></td>
+<td>Obtener y guardar el JWT</td>
+</tr>
+<tr>
+<td>Dashboard</td>
+<td><code>/dashboard</code></td>
+<td>Consultar y editar el perfil</td>
+</tr>
+<tr>
+<td>Panel admin</td>
+<td><code>/admin/users</code></td>
+<td>Listar, crear y desactivar usuarios</td>
+</tr>
+</tbody>
+</table>
+<p>No buscamos un diseño avanzado.</p>
+<p>Buscamos una interfaz clara para probar la API.</p>
+<h2 id="endpoints-consumidos-por-el-frontend">Endpoints consumidos por el frontend<a class="headerlink" href="#endpoints-consumidos-por-el-frontend" title="Permanent link">&para;</a></h2>
+<p>El frontend consumirá estos endpoints:</p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Endpoint</th>
+<th>Pantalla</th>
+<th>Acceso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/register</code></td>
+<td>Registro</td>
+<td>Público</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/auth/login</code></td>
+<td>Login</td>
+<td>Público</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users/me</code></td>
+<td>Dashboard</td>
+<td>Autenticado</td>
+</tr>
+<tr>
+<td><code>PATCH</code></td>
+<td><code>/api/users/:id</code></td>
+<td>Dashboard</td>
+<td>Propio usuario o <code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/api/users</code></td>
+<td>Panel admin</td>
+<td><code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/api/users</code></td>
+<td>Panel admin</td>
+<td><code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/api/users/:id</code></td>
+<td>Panel admin</td>
+<td><code>ADMIN</code></td>
+</tr>
+</tbody>
+</table>
+<p>Esto nos permitirá comprobar todo lo trabajado en los días anteriores.</p>
+<h2 id="como-se-enviara-el-token">Cómo se enviará el token<a class="headerlink" href="#como-se-enviara-el-token" title="Permanent link">&para;</a></h2>
+<p>Cuando el usuario haga login, la API devolverá un token JWT.</p>
+<p>El frontend lo guardará de forma sencilla en:</p>
+<p><code>localStorage</code>.</p>
+<p>Después, cuando llame a rutas protegidas, enviará la cabecera:</p>
+<p><code>Authorization: Bearer &lt;token&gt;</code>.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+</span></code></pre></div>
+<p>Esto es exactamente lo que espera el middleware de autenticación que creamos en el día 36.</p>
+<h2 id="nota-sobre-localstorage">Nota sobre <code>localStorage</code><a class="headerlink" href="#nota-sobre-localstorage" title="Permanent link">&para;</a></h2>
+<p>Para este reto usaremos <code>localStorage</code> por simplicidad didáctica.</p>
+<p>Nos permite ver claramente:</p>
+<ul>
+<li>Dónde se guarda el token.</li>
+<li>Cómo se recupera.</li>
+<li>Cómo se añade a las peticiones protegidas.</li>
+<li>Cómo se elimina al cerrar sesión.</li>
+</ul>
+<p>Ahora bien, debemos tener clara esta idea:</p>
+<div class="admonition warning">
+<p class="admonition-title">Nota de seguridad</p>
+<p>Usar <code>localStorage</code> es útil para aprender, pero en producción habría que estudiar opciones más robustas según el contexto de seguridad.</p>
+</div>
+<p>En este reto nos interesa que el proceso sea visible y comprensible.</p>
+<h2 id="utilidad-apifetch">Utilidad <code>apiFetch</code><a class="headerlink" href="#utilidad-apifetch" title="Permanent link">&para;</a></h2>
+<p>El frontend tendrá una función centralizada para hacer peticiones a la API.</p>
+<p>Estará en un archivo parecido a:</p>
+<p><code>frontend/src/lib/api.ts</code>.</p>
+<p>Su función será:</p>
+<ul>
+<li>Leer la URL base.</li>
+<li>Leer el token si existe.</li>
+<li>Añadir <code>Content-Type</code>.</li>
+<li>Añadir <code>Authorization</code> si hay token.</li>
+<li>Hacer <code>fetch</code>.</li>
+<li>Devolver JSON.</li>
+<li>Mostrar errores legibles.</li>
+</ul>
+<p>Una versión orientativa sería:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">API_URL</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">NEXT_PUBLIC_API_URL</span><span class="p">;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">apiFetch</span><span class="p">(</span><span class="nx">path</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">options</span><span class="o">:</span><span class="w"> </span><span class="kt">RequestInit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{})</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">token</span><span class="w"> </span><span class="o">=</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">    </span><span class="ow">typeof</span><span class="w"> </span><span class="nb">window</span><span class="w"> </span><span class="o">!==</span><span class="w"> </span><span class="s2">&quot;undefined&quot;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="nx">localStorage</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">headers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">Headers</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">headers</span><span class="p">);</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">headers</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">    </span><span class="nx">headers</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;Content-Type&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="p">);</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">    </span><span class="nx">headers</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s2">&quot;Authorization&quot;</span><span class="p">,</span><span class="w"> </span><span class="sb">`Bearer </span><span class="si">${</span><span class="nx">token</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="sb">`</span><span class="si">${</span><span class="nx">API_URL</span><span class="si">}${</span><span class="nx">path</span><span class="si">}</span><span class="sb">`</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">    </span><span class="p">...</span><span class="nx">options</span><span class="p">,</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">    </span><span class="nx">headers</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">().</span><span class="k">catch</span><span class="p">(()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="kc">null</span><span class="p">);</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="ne">Error</span><span class="p">(</span><span class="nx">data</span><span class="o">?</span><span class="p">.</span><span class="nx">error</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="s2">&quot;Error en la petición&quot;</span><span class="p">);</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">;</span>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>De esta manera, las pantallas no tienen que repetir toda la lógica de conexión.</p>
+<h2 id="que-vamos-a-hacer-hoy">Qué vamos a hacer hoy<a class="headerlink" href="#que-vamos-a-hacer-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy no vamos a programar desde cero todo el frontend.</p>
+<p>Hoy vamos a:</p>
+<ul>
+<li>Arrancar PostgreSQL.</li>
+<li>Preparar datos con seed.</li>
+<li>Arrancar el backend.</li>
+<li>Configurar CORS si hace falta.</li>
+<li>Configurar el frontend.</li>
+<li>Arrancar el frontend.</li>
+<li>Probar login.</li>
+<li>Comprobar que se guarda el token.</li>
+<li>Comprobar una ruta protegida.</li>
+<li>Observar peticiones en DevTools.</li>
+</ul>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-arrancar-postgresql">Paso 1: Arrancar PostgreSQL<a class="headerlink" href="#paso-1-arrancar-postgresql" title="Permanent link">&para;</a></h3>
+<p>Desde la raíz del backend, ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<p>Comprueba el estado de los servicios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span></code></pre></div>
+<p>PostgreSQL debe aparecer como servicio activo.</p>
+<h3 id="paso-2-instalar-dependencias-del-backend">Paso 2: Instalar dependencias del backend<a class="headerlink" href="#paso-2-instalar-dependencias-del-backend" title="Permanent link">&para;</a></h3>
+<p>Si acabas de clonar el proyecto o cambiaste de equipo, instala dependencias:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>npm<span class="w"> </span>install
+</span></code></pre></div>
+<p>Si ya las tienes instaladas, no hace falta repetirlo.</p>
+<h3 id="paso-3-generar-prisma-client">Paso 3: Generar Prisma Client<a class="headerlink" href="#paso-3-generar-prisma-client" title="Permanent link">&para;</a></h3>
+<p>Como este proyecto usa Prisma 7 con cliente generado dentro de <code>src/generated/prisma</code>, ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:generate
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>generate
+</span></code></pre></div>
+<p>Recuerda:</p>
+<p>No cambiamos los imports al patrón antiguo de <code>@prisma/client</code>.</p>
+<p>El proyecto usa el cliente generado y el adapter PostgreSQL.</p>
+<h3 id="paso-4-ejecutar-el-seed">Paso 4: Ejecutar el seed<a class="headerlink" href="#paso-4-ejecutar-el-seed" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>db<span class="w"> </span>seed
+</span></code></pre></div>
+<p>Esto dejará preparados los usuarios de prueba:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>admin@email.com / admin123
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>user@email.com / user123
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>inactive@email.com / inactive123
+</span></code></pre></div>
+<h3 id="paso-5-arrancar-el-backend">Paso 5: Arrancar el backend<a class="headerlink" href="#paso-5-arrancar-el-backend" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>La API debería quedar escuchando en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>http://localhost:3000
+</span></code></pre></div>
+<p>Comprueba en el navegador o en un cliente HTTP:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>http://localhost:3000/api/health
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">{</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">  </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ok&quot;</span><span class="p">,</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;UserManager API funcionando&quot;</span><span class="p">,</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="w">  </span><span class="nt">&quot;timestamp&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<h2 id="configurar-cors-si-hace-falta">Configurar CORS si hace falta<a class="headerlink" href="#configurar-cors-si-hace-falta" title="Permanent link">&para;</a></h2>
+<h3 id="paso-6-instalar-cors">Paso 6: Instalar CORS<a class="headerlink" href="#paso-6-instalar-cors" title="Permanent link">&para;</a></h3>
+<p>Si el backend todavía no permite peticiones desde el frontend, instala:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>npm<span class="w"> </span>install<span class="w"> </span>cors
+</span></code></pre></div>
+<p>Y los tipos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>@types/cors
+</span></code></pre></div>
+<h3 id="paso-7-configurar-cors-en-serverts">Paso 7: Configurar CORS en <code>server.ts</code><a class="headerlink" href="#paso-7-configurar-cors-en-serverts" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>src/server.ts
+</span></code></pre></div>
+<p>Importa <code>cors</code>:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">cors</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;cors&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Después, antes de registrar las rutas, añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nx">cors</span><span class="p">({</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">    </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:3001&quot;</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="p">})</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>El orden recomendado es:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">json</span><span class="p">());</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">  </span><span class="nx">cors</span><span class="p">({</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">    </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:3001&quot;</span>
+</span><span id="__span-25-6"><a id="__codelineno-25-6" name="__codelineno-25-6" href="#__codelineno-25-6"></a><span class="w">  </span><span class="p">})</span>
+</span><span id="__span-25-7"><a id="__codelineno-25-7" name="__codelineno-25-7" href="#__codelineno-25-7"></a><span class="p">);</span>
+</span><span id="__span-25-8"><a id="__codelineno-25-8" name="__codelineno-25-8" href="#__codelineno-25-8"></a>
+</span><span id="__span-25-9"><a id="__codelineno-25-9" name="__codelineno-25-9" href="#__codelineno-25-9"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/health&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">healthRouter</span><span class="p">);</span>
+</span><span id="__span-25-10"><a id="__codelineno-25-10" name="__codelineno-25-10" href="#__codelineno-25-10"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/auth&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">authRouter</span><span class="p">);</span>
+</span><span id="__span-25-11"><a id="__codelineno-25-11" name="__codelineno-25-11" href="#__codelineno-25-11"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">userRouter</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Si tu proyecto ya tiene CORS configurado, revisa que permita el origen correcto.</p>
+<h3 id="paso-8-entender-la-configuracion-de-cors">Paso 8: Entender la configuración de CORS<a class="headerlink" href="#paso-8-entender-la-configuracion-de-cors" title="Permanent link">&para;</a></h3>
+<p>Esta configuración significa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>El backend acepta peticiones del frontend que corre en http://localhost:3001.
+</span></code></pre></div>
+<p>Si el frontend corre en otro puerto, tendrás que ajustar el origen.</p>
+<p>Por ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>http://localhost:3002
+</span></code></pre></div>
+<h2 id="configurar-el-frontend">Configurar el frontend<a class="headerlink" href="#configurar-el-frontend" title="Permanent link">&para;</a></h2>
+<h3 id="paso-9-entrar-en-la-carpeta-frontend">Paso 9: Entrar en la carpeta frontend<a class="headerlink" href="#paso-9-entrar-en-la-carpeta-frontend" title="Permanent link">&para;</a></h3>
+<p>Abre otra terminal.</p>
+<p>Desde la raíz del proyecto:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="nb">cd</span><span class="w"> </span>frontend
+</span></code></pre></div>
+<h3 id="paso-10-instalar-dependencias-del-frontend">Paso 10: Instalar dependencias del frontend<a class="headerlink" href="#paso-10-instalar-dependencias-del-frontend" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>npm<span class="w"> </span>install
+</span></code></pre></div>
+<h3 id="paso-11-crear-envlocal">Paso 11: Crear <code>.env.local</code><a class="headerlink" href="#paso-11-crear-envlocal" title="Permanent link">&para;</a></h3>
+<p>Si existe un archivo de ejemplo, puedes hacer:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env.local
+</span></code></pre></div>
+<p>Después abre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>frontend/.env.local
+</span></code></pre></div>
+<p>Debe contener:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>NEXT_PUBLIC_API_URL=http://localhost:3000
+</span></code></pre></div>
+<p>No añadas <code>/api</code> al final si las llamadas del frontend ya empiezan por <code>/api</code>.</p>
+<p>Correcto:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>NEXT_PUBLIC_API_URL=http://localhost:3000
+</span></code></pre></div>
+<p>Incorrecto si el código llama a <code>/api/auth/login</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>NEXT_PUBLIC_API_URL=http://localhost:3000/api
+</span></code></pre></div>
+<h3 id="paso-12-arrancar-el-frontend">Paso 12: Arrancar el frontend<a class="headerlink" href="#paso-12-arrancar-el-frontend" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>El frontend debería abrirse en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>http://localhost:3001
+</span></code></pre></div>
+<p>Si no se abre automáticamente, entra manualmente desde el navegador.</p>
+<h2 id="probar-login-desde-el-frontend">Probar login desde el frontend<a class="headerlink" href="#probar-login-desde-el-frontend" title="Permanent link">&para;</a></h2>
+<h3 id="paso-13-abrir-la-pantalla-de-login">Paso 13: Abrir la pantalla de login<a class="headerlink" href="#paso-13-abrir-la-pantalla-de-login" title="Permanent link">&para;</a></h3>
+<p>Entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>http://localhost:3001/login
+</span></code></pre></div>
+<p>Usa las credenciales:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>user@email.com / user123
+</span></code></pre></div>
+<p>También puedes probar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>admin@email.com / admin123
+</span></code></pre></div>
+<h3 id="paso-14-comprobar-respuesta-de-login">Paso 14: Comprobar respuesta de login<a class="headerlink" href="#paso-14-comprobar-respuesta-de-login" title="Permanent link">&para;</a></h3>
+<p>Cuando el login sea correcto, la API devolverá:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>Usuario.
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>Token JWT.
+</span></code></pre></div>
+<p>El frontend debe guardar el token en <code>localStorage</code>.</p>
+<p>Una forma habitual será:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s2">&quot;token&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">data</span><span class="p">.</span><span class="nx">token</span><span class="p">);</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a><span class="nx">localStorage</span><span class="p">.</span><span class="nx">setItem</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span><span class="w"> </span><span class="nb">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">user</span><span class="p">));</span>
+</span></code></pre></div>
+<p>Dependiendo de cómo esté estructurada la respuesta en tu frontend, puede que el acceso sea:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">token</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a><span class="nx">data</span><span class="p">.</span><span class="nx">data</span><span class="p">.</span><span class="nx">user</span>
+</span></code></pre></div>
+<p>Lo importante es que el token quede guardado.</p>
+<h3 id="paso-15-ver-token-en-devtools">Paso 15: Ver token en DevTools<a class="headerlink" href="#paso-15-ver-token-en-devtools" title="Permanent link">&para;</a></h3>
+<p>Abre las herramientas de desarrollo del navegador.</p>
+<p>Busca:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>Application
+</span><span id="__span-43-2"><a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>Local Storage
+</span><span id="__span-43-3"><a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a>http://localhost:3001
+</span></code></pre></div>
+<p>Deberías ver una clave llamada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>token
+</span></code></pre></div>
+<p>con un valor parecido a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>eyJhbGciOiJIUzI1NiIs...
+</span></code></pre></div>
+<p>Eso confirma que el frontend ha guardado el JWT.</p>
+<h2 id="probar-una-ruta-protegida">Probar una ruta protegida<a class="headerlink" href="#probar-una-ruta-protegida" title="Permanent link">&para;</a></h2>
+<h3 id="paso-16-ir-al-dashboard">Paso 16: Ir al dashboard<a class="headerlink" href="#paso-16-ir-al-dashboard" title="Permanent link">&para;</a></h3>
+<p>Entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>/dashboard
+</span></code></pre></div>
+<p>El frontend debería llamar a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>GET /api/users/me
+</span></code></pre></div>
+<p>usando el token guardado.</p>
+<h3 id="paso-17-observar-la-cabecera-authorization">Paso 17: Observar la cabecera Authorization<a class="headerlink" href="#paso-17-observar-la-cabecera-authorization" title="Permanent link">&para;</a></h3>
+<p>Abre DevTools y entra en la pestaña:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>Network
+</span></code></pre></div>
+<p>Busca la petición a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>/api/users/me
+</span></code></pre></div>
+<p>Dentro de los headers de la petición deberías ver:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>Authorization: Bearer eyJ...
+</span></code></pre></div>
+<p>Esto es muy importante.</p>
+<p>Significa que el frontend está enviando el token de la forma que espera la API.</p>
+<h3 id="paso-18-comprobar-respuesta-del-dashboard">Paso 18: Comprobar respuesta del dashboard<a class="headerlink" href="#paso-18-comprobar-respuesta-del-dashboard" title="Permanent link">&para;</a></h3>
+<p>La respuesta debería mostrar datos del usuario autenticado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>id
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>name
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a>email
+</span><span id="__span-51-4"><a id="__codelineno-51-4" name="__codelineno-51-4" href="#__codelineno-51-4"></a>role
+</span><span id="__span-51-5"><a id="__codelineno-51-5" name="__codelineno-51-5" href="#__codelineno-51-5"></a>isActive
+</span><span id="__span-51-6"><a id="__codelineno-51-6" name="__codelineno-51-6" href="#__codelineno-51-6"></a>createdAt
+</span><span id="__span-51-7"><a id="__codelineno-51-7" name="__codelineno-51-7" href="#__codelineno-51-7"></a>updatedAt
+</span></code></pre></div>
+<p>Si aparece un error <code>401</code>, probablemente el token no se está enviando.</p>
+<p>Si aparece un error <code>403</code>, probablemente estás accediendo a una ruta para la que tu usuario no tiene permisos.</p>
+<h2 id="probar-panel-admin">Probar panel admin<a class="headerlink" href="#probar-panel-admin" title="Permanent link">&para;</a></h2>
+<h3 id="paso-19-entrar-como-user">Paso 19: Entrar como USER<a class="headerlink" href="#paso-19-entrar-como-user" title="Permanent link">&para;</a></h3>
+<p>Haz login con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>user@email.com / user123
+</span></code></pre></div>
+<p>Después entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>/admin/users
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>La API debe devolver 403 Forbidden.
+</span></code></pre></div>
+<p>El frontend debe mostrar un mensaje claro:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>No tienes permiso para realizar esta acción.
+</span></code></pre></div>
+<p>Esto confirma que el frontend no es quien decide la seguridad.</p>
+<p>La API bloquea el acceso.</p>
+<h3 id="paso-20-entrar-como-admin">Paso 20: Entrar como ADMIN<a class="headerlink" href="#paso-20-entrar-como-admin" title="Permanent link">&para;</a></h3>
+<p>Cierra sesión.</p>
+<p>Haz login con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>admin@email.com / admin123
+</span></code></pre></div>
+<p>Después entra otra vez en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>/admin/users
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>Debe mostrarse el listado de usuarios.
+</span></code></pre></div>
+<p>Desde esta pantalla se podrá probar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>Listar usuarios.
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>Crear usuarios.
+</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a>Desactivar usuarios.
+</span></code></pre></div>
+<h2 id="pruebas-del-dia">Pruebas del día<a class="headerlink" href="#pruebas-del-dia" title="Permanent link">&para;</a></h2>
+<p>Completa esta tabla durante la sesión:</p>
+<table>
+<thead>
+<tr>
+<th>Prueba</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL aparece como servicio activo</td>
+<td></td>
+</tr>
+<tr>
+<td><code>/api/health</code> responde correctamente</td>
+<td></td>
+</tr>
+<tr>
+<td>El seed se ejecuta sin errores</td>
+<td></td>
+</tr>
+<tr>
+<td>El backend arranca en el puerto 3000</td>
+<td></td>
+</tr>
+<tr>
+<td>El frontend arranca en el puerto 3001</td>
+<td></td>
+</tr>
+<tr>
+<td><code>NEXT_PUBLIC_API_URL</code> apunta a <code>http://localhost:3000</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Registro muestra respuesta de la API</td>
+<td></td>
+</tr>
+<tr>
+<td>Login guarda <code>token</code> en <code>localStorage</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Dashboard envía <code>Authorization</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>/api/users/me</code> devuelve el usuario autenticado</td>
+<td></td>
+</tr>
+<tr>
+<td>USER recibe 403 en panel admin</td>
+<td></td>
+</tr>
+<tr>
+<td>ADMIN puede ver el panel admin</td>
+<td></td>
+</tr>
+<tr>
+<td>Logout elimina el token</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="crear-documentacion-del-dia-38">Crear documentación del día 38<a class="headerlink" href="#crear-documentacion-del-dia-38" title="Permanent link">&para;</a></h2>
+<p>Dentro de la carpeta <code>docs/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>docs/dia-38-frontend-conexion-api.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a><span class="gh"># Día 38 - Frontend entregado y conexión con la API</span>
+</span><span id="__span-61-2"><a id="__codelineno-61-2" name="__codelineno-61-2" href="#__codelineno-61-2"></a>
+</span><span id="__span-61-3"><a id="__codelineno-61-3" name="__codelineno-61-3" href="#__codelineno-61-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-61-4"><a id="__codelineno-61-4" name="__codelineno-61-4" href="#__codelineno-61-4"></a>
+</span><span id="__span-61-5"><a id="__codelineno-61-5" name="__codelineno-61-5" href="#__codelineno-61-5"></a><span class="k">-</span><span class="w"> </span>He arrancado PostgreSQL.
+</span><span id="__span-61-6"><a id="__codelineno-61-6" name="__codelineno-61-6" href="#__codelineno-61-6"></a><span class="k">-</span><span class="w"> </span>He ejecutado el seed de datos iniciales.
+</span><span id="__span-61-7"><a id="__codelineno-61-7" name="__codelineno-61-7" href="#__codelineno-61-7"></a><span class="k">-</span><span class="w"> </span>He generado Prisma Client.
+</span><span id="__span-61-8"><a id="__codelineno-61-8" name="__codelineno-61-8" href="#__codelineno-61-8"></a><span class="k">-</span><span class="w"> </span>He arrancado el backend.
+</span><span id="__span-61-9"><a id="__codelineno-61-9" name="__codelineno-61-9" href="#__codelineno-61-9"></a><span class="k">-</span><span class="w"> </span>He comprobado <span class="sb">`/api/health`</span>.
+</span><span id="__span-61-10"><a id="__codelineno-61-10" name="__codelineno-61-10" href="#__codelineno-61-10"></a><span class="k">-</span><span class="w"> </span>He configurado CORS si era necesario.
+</span><span id="__span-61-11"><a id="__codelineno-61-11" name="__codelineno-61-11" href="#__codelineno-61-11"></a><span class="k">-</span><span class="w"> </span>He entrado en la carpeta frontend.
+</span><span id="__span-61-12"><a id="__codelineno-61-12" name="__codelineno-61-12" href="#__codelineno-61-12"></a><span class="k">-</span><span class="w"> </span>He instalado las dependencias del frontend.
+</span><span id="__span-61-13"><a id="__codelineno-61-13" name="__codelineno-61-13" href="#__codelineno-61-13"></a><span class="k">-</span><span class="w"> </span>He creado o revisado <span class="sb">`.env.local`</span>.
+</span><span id="__span-61-14"><a id="__codelineno-61-14" name="__codelineno-61-14" href="#__codelineno-61-14"></a><span class="k">-</span><span class="w"> </span>He configurado <span class="sb">`NEXT_PUBLIC_API_URL`</span>.
+</span><span id="__span-61-15"><a id="__codelineno-61-15" name="__codelineno-61-15" href="#__codelineno-61-15"></a><span class="k">-</span><span class="w"> </span>He arrancado el frontend.
+</span><span id="__span-61-16"><a id="__codelineno-61-16" name="__codelineno-61-16" href="#__codelineno-61-16"></a><span class="k">-</span><span class="w"> </span>He probado login desde la interfaz.
+</span><span id="__span-61-17"><a id="__codelineno-61-17" name="__codelineno-61-17" href="#__codelineno-61-17"></a><span class="k">-</span><span class="w"> </span>He comprobado que el token se guarda en <span class="sb">`localStorage`</span>.
+</span><span id="__span-61-18"><a id="__codelineno-61-18" name="__codelineno-61-18" href="#__codelineno-61-18"></a><span class="k">-</span><span class="w"> </span>He comprobado que el dashboard envía <span class="sb">`Authorization`</span>.
+</span><span id="__span-61-19"><a id="__codelineno-61-19" name="__codelineno-61-19" href="#__codelineno-61-19"></a><span class="k">-</span><span class="w"> </span>He probado acceso al panel admin con USER.
+</span><span id="__span-61-20"><a id="__codelineno-61-20" name="__codelineno-61-20" href="#__codelineno-61-20"></a><span class="k">-</span><span class="w"> </span>He probado acceso al panel admin con ADMIN.
+</span><span id="__span-61-21"><a id="__codelineno-61-21" name="__codelineno-61-21" href="#__codelineno-61-21"></a>
+</span><span id="__span-61-22"><a id="__codelineno-61-22" name="__codelineno-61-22" href="#__codelineno-61-22"></a><span class="gu">## URLs usadas</span>
+</span><span id="__span-61-23"><a id="__codelineno-61-23" name="__codelineno-61-23" href="#__codelineno-61-23"></a>
+</span><span id="__span-61-24"><a id="__codelineno-61-24" name="__codelineno-61-24" href="#__codelineno-61-24"></a>| Aplicación | URL |
+</span><span id="__span-61-25"><a id="__codelineno-61-25" name="__codelineno-61-25" href="#__codelineno-61-25"></a>| --- | --- |
+</span><span id="__span-61-26"><a id="__codelineno-61-26" name="__codelineno-61-26" href="#__codelineno-61-26"></a>| Backend | <span class="sb">`http://localhost:3000`</span> |
+</span><span id="__span-61-27"><a id="__codelineno-61-27" name="__codelineno-61-27" href="#__codelineno-61-27"></a>| Frontend | <span class="sb">`http://localhost:3001`</span> |
+</span><span id="__span-61-28"><a id="__codelineno-61-28" name="__codelineno-61-28" href="#__codelineno-61-28"></a>| PostgreSQL | <span class="sb">`localhost:5432`</span> |
+</span><span id="__span-61-29"><a id="__codelineno-61-29" name="__codelineno-61-29" href="#__codelineno-61-29"></a>
+</span><span id="__span-61-30"><a id="__codelineno-61-30" name="__codelineno-61-30" href="#__codelineno-61-30"></a><span class="gu">## Variable del frontend</span>
+</span><span id="__span-61-31"><a id="__codelineno-61-31" name="__codelineno-61-31" href="#__codelineno-61-31"></a>
+</span><span id="__span-61-32"><a id="__codelineno-61-32" name="__codelineno-61-32" href="#__codelineno-61-32"></a><span class="sb">```env</span>
+</span><span id="__span-61-33"><a id="__codelineno-61-33" name="__codelineno-61-33" href="#__codelineno-61-33"></a><span class="s">NEXT_PUBLIC_API_URL=http://localhost:3000</span>
+</span><span id="__span-61-34"><a id="__codelineno-61-34" name="__codelineno-61-34" href="#__codelineno-61-34"></a><span class="sb">```</span>
+</span><span id="__span-61-35"><a id="__codelineno-61-35" name="__codelineno-61-35" href="#__codelineno-61-35"></a>
+</span><span id="__span-61-36"><a id="__codelineno-61-36" name="__codelineno-61-36" href="#__codelineno-61-36"></a><span class="gu">## Cabecera de autenticación</span>
+</span><span id="__span-61-37"><a id="__codelineno-61-37" name="__codelineno-61-37" href="#__codelineno-61-37"></a>
+</span><span id="__span-61-38"><a id="__codelineno-61-38" name="__codelineno-61-38" href="#__codelineno-61-38"></a><span class="sb">```text</span>
+</span><span id="__span-61-39"><a id="__codelineno-61-39" name="__codelineno-61-39" href="#__codelineno-61-39"></a>Authorization: Bearer &lt;token&gt;
+</span><span id="__span-61-40"><a id="__codelineno-61-40" name="__codelineno-61-40" href="#__codelineno-61-40"></a><span class="sb">```</span>
+</span><span id="__span-61-41"><a id="__codelineno-61-41" name="__codelineno-61-41" href="#__codelineno-61-41"></a>
+</span><span id="__span-61-42"><a id="__codelineno-61-42" name="__codelineno-61-42" href="#__codelineno-61-42"></a><span class="gu">## Pantallas del frontend</span>
+</span><span id="__span-61-43"><a id="__codelineno-61-43" name="__codelineno-61-43" href="#__codelineno-61-43"></a>
+</span><span id="__span-61-44"><a id="__codelineno-61-44" name="__codelineno-61-44" href="#__codelineno-61-44"></a>| Pantalla | Ruta | Objetivo |
+</span><span id="__span-61-45"><a id="__codelineno-61-45" name="__codelineno-61-45" href="#__codelineno-61-45"></a>| --- | --- |---|
+</span><span id="__span-61-46"><a id="__codelineno-61-46" name="__codelineno-61-46" href="#__codelineno-61-46"></a>| Inicio | <span class="sb">`/`</span> | Presentar el cliente |
+</span><span id="__span-61-47"><a id="__codelineno-61-47" name="__codelineno-61-47" href="#__codelineno-61-47"></a>| Registro | <span class="sb">`/register`</span> | Crear cuenta |
+</span><span id="__span-61-48"><a id="__codelineno-61-48" name="__codelineno-61-48" href="#__codelineno-61-48"></a>| Login | <span class="sb">`/login`</span> | Obtener token |
+</span><span id="__span-61-49"><a id="__codelineno-61-49" name="__codelineno-61-49" href="#__codelineno-61-49"></a>| Dashboard | <span class="sb">`/dashboard`</span> | Consultar perfil |
+</span><span id="__span-61-50"><a id="__codelineno-61-50" name="__codelineno-61-50" href="#__codelineno-61-50"></a>| Panel admin | <span class="sb">`/admin/users`</span> | Gestionar usuarios |
+</span><span id="__span-61-51"><a id="__codelineno-61-51" name="__codelineno-61-51" href="#__codelineno-61-51"></a>
+</span><span id="__span-61-52"><a id="__codelineno-61-52" name="__codelineno-61-52" href="#__codelineno-61-52"></a><span class="gu">## Endpoints consumidos</span>
+</span><span id="__span-61-53"><a id="__codelineno-61-53" name="__codelineno-61-53" href="#__codelineno-61-53"></a>
+</span><span id="__span-61-54"><a id="__codelineno-61-54" name="__codelineno-61-54" href="#__codelineno-61-54"></a>| Método | Endpoint | Acceso |
+</span><span id="__span-61-55"><a id="__codelineno-61-55" name="__codelineno-61-55" href="#__codelineno-61-55"></a>| --- | --- |---|
+</span><span id="__span-61-56"><a id="__codelineno-61-56" name="__codelineno-61-56" href="#__codelineno-61-56"></a>| <span class="sb">`POST`</span> | <span class="sb">`/api/auth/register`</span> | Público |
+</span><span id="__span-61-57"><a id="__codelineno-61-57" name="__codelineno-61-57" href="#__codelineno-61-57"></a>| <span class="sb">`POST`</span> | <span class="sb">`/api/auth/login`</span> | Público |
+</span><span id="__span-61-58"><a id="__codelineno-61-58" name="__codelineno-61-58" href="#__codelineno-61-58"></a>| <span class="sb">`GET`</span> | <span class="sb">`/api/users/me`</span> | Autenticado |
+</span><span id="__span-61-59"><a id="__codelineno-61-59" name="__codelineno-61-59" href="#__codelineno-61-59"></a>| <span class="sb">`PATCH`</span> | <span class="sb">`/api/users/:id`</span> | Propio usuario o ADMIN |
+</span><span id="__span-61-60"><a id="__codelineno-61-60" name="__codelineno-61-60" href="#__codelineno-61-60"></a>| <span class="sb">`GET`</span> | <span class="sb">`/api/users`</span> | ADMIN |
+</span><span id="__span-61-61"><a id="__codelineno-61-61" name="__codelineno-61-61" href="#__codelineno-61-61"></a>| <span class="sb">`POST`</span> | <span class="sb">`/api/users`</span> | ADMIN |
+</span><span id="__span-61-62"><a id="__codelineno-61-62" name="__codelineno-61-62" href="#__codelineno-61-62"></a>| <span class="sb">`DELETE`</span> | <span class="sb">`/api/users/:id`</span> | ADMIN |
+</span><span id="__span-61-63"><a id="__codelineno-61-63" name="__codelineno-61-63" href="#__codelineno-61-63"></a>
+</span><span id="__span-61-64"><a id="__codelineno-61-64" name="__codelineno-61-64" href="#__codelineno-61-64"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-61-65"><a id="__codelineno-61-65" name="__codelineno-61-65" href="#__codelineno-61-65"></a>
+</span><span id="__span-61-66"><a id="__codelineno-61-66" name="__codelineno-61-66" href="#__codelineno-61-66"></a>El frontend y el backend son aplicaciones distintas. El frontend realiza peticiones HTTP a la API y la API responde con JSON. Cuando una ruta está protegida, el frontend debe enviar el token JWT en la cabecera Authorization.
+</span></code></pre></div>
+<h3 id="paso-21-anadir-diagrama-mermaid">Paso 21: Añadir diagrama Mermaid<a class="headerlink" href="#paso-21-anadir-diagrama-mermaid" title="Permanent link">&para;</a></h3>
+<p>Añade al documento:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Frontend Next.js] --&gt; B[Fetch]
+    B --&gt; C[API Express]
+    C --&gt; D[Prisma 7 + PrismaPg]
+    D --&gt; E[PostgreSQL]</code></pre>
+<h3 id="paso-22-anadir-checklist">Paso 22: Añadir checklist<a class="headerlink" href="#paso-22-anadir-checklist" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a><span class="gu">## Checklist de pruebas</span>
+</span><span id="__span-62-2"><a id="__codelineno-62-2" name="__codelineno-62-2" href="#__codelineno-62-2"></a>
+</span><span id="__span-62-3"><a id="__codelineno-62-3" name="__codelineno-62-3" href="#__codelineno-62-3"></a>| Prueba | Resultado |
+</span><span id="__span-62-4"><a id="__codelineno-62-4" name="__codelineno-62-4" href="#__codelineno-62-4"></a>| --- | --- |
+</span><span id="__span-62-5"><a id="__codelineno-62-5" name="__codelineno-62-5" href="#__codelineno-62-5"></a>| PostgreSQL activo | |
+</span><span id="__span-62-6"><a id="__codelineno-62-6" name="__codelineno-62-6" href="#__codelineno-62-6"></a>| Backend activo en puerto 3000 | |
+</span><span id="__span-62-7"><a id="__codelineno-62-7" name="__codelineno-62-7" href="#__codelineno-62-7"></a>| Frontend activo en puerto 3001 | |
+</span><span id="__span-62-8"><a id="__codelineno-62-8" name="__codelineno-62-8" href="#__codelineno-62-8"></a>| <span class="sb">`/api/health`</span> responde | |
+</span><span id="__span-62-9"><a id="__codelineno-62-9" name="__codelineno-62-9" href="#__codelineno-62-9"></a>| <span class="sb">`.env.local`</span> configurado | |
+</span><span id="__span-62-10"><a id="__codelineno-62-10" name="__codelineno-62-10" href="#__codelineno-62-10"></a>| Login correcto desde frontend | |
+</span><span id="__span-62-11"><a id="__codelineno-62-11" name="__codelineno-62-11" href="#__codelineno-62-11"></a>| Token guardado en localStorage | |
+</span><span id="__span-62-12"><a id="__codelineno-62-12" name="__codelineno-62-12" href="#__codelineno-62-12"></a>| Dashboard carga perfil | |
+</span><span id="__span-62-13"><a id="__codelineno-62-13" name="__codelineno-62-13" href="#__codelineno-62-13"></a>| Se envía cabecera Authorization | |
+</span><span id="__span-62-14"><a id="__codelineno-62-14" name="__codelineno-62-14" href="#__codelineno-62-14"></a>| USER recibe 403 en panel admin | |
+</span><span id="__span-62-15"><a id="__codelineno-62-15" name="__codelineno-62-15" href="#__codelineno-62-15"></a>| ADMIN accede al panel admin | |
+</span><span id="__span-62-16"><a id="__codelineno-62-16" name="__codelineno-62-16" href="#__codelineno-62-16"></a>| Logout elimina token | |
+</span></code></pre></div>
+<h2 id="problemas-frecuentes">Problemas frecuentes<a class="headerlink" href="#problemas-frecuentes" title="Permanent link">&para;</a></h2>
+<h3 id="el-frontend-no-conecta">El frontend no conecta<a class="headerlink" href="#el-frontend-no-conecta" title="Permanent link">&para;</a></h3>
+<p>Comprueba que el backend está arrancado:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Y que responde:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>http://localhost:3000/api/health
+</span></code></pre></div>
+<p>Si no hay respuesta HTTP en la pestaña Network, probablemente la API no está encendida o la URL está mal configurada.</p>
+<h3 id="error-de-cors">Error de CORS<a class="headerlink" href="#error-de-cors" title="Permanent link">&para;</a></h3>
+<p>Si aparece un error de CORS en consola, revisa que Express tenga configurado:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span>
+</span><span id="__span-65-2"><a id="__codelineno-65-2" name="__codelineno-65-2" href="#__codelineno-65-2"></a><span class="w">  </span><span class="nx">cors</span><span class="p">({</span>
+</span><span id="__span-65-3"><a id="__codelineno-65-3" name="__codelineno-65-3" href="#__codelineno-65-3"></a><span class="w">    </span><span class="nx">origin</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;http://localhost:3001&quot;</span>
+</span><span id="__span-65-4"><a id="__codelineno-65-4" name="__codelineno-65-4" href="#__codelineno-65-4"></a><span class="w">  </span><span class="p">})</span>
+</span><span id="__span-65-5"><a id="__codelineno-65-5" name="__codelineno-65-5" href="#__codelineno-65-5"></a><span class="p">);</span>
+</span></code></pre></div>
+<p>También revisa que el frontend esté realmente en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>http://localhost:3001
+</span></code></pre></div>
+<p>Si está en otro puerto, el origen debe coincidir exactamente.</p>
+<h3 id="next_public_api_url-incorrecta"><code>NEXT_PUBLIC_API_URL</code> incorrecta<a class="headerlink" href="#next_public_api_url-incorrecta" title="Permanent link">&para;</a></h3>
+<p>Revisa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>frontend/.env.local
+</span></code></pre></div>
+<p>Debe contener:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>NEXT_PUBLIC_API_URL=http://localhost:3000
+</span></code></pre></div>
+<p>No añadas <code>/api</code> al final si el código ya llama a rutas como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>/api/auth/login
+</span></code></pre></div>
+<p>Después de modificar <code>.env.local</code>, reinicia el servidor de Next.js.</p>
+<h3 id="backend-apagado">Backend apagado<a class="headerlink" href="#backend-apagado" title="Permanent link">&para;</a></h3>
+<p>El backend se arranca desde la raíz del proyecto, no desde <code>frontend/</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<h3 id="el-token-no-se-guarda">El token no se guarda<a class="headerlink" href="#el-token-no-se-guarda" title="Permanent link">&para;</a></h3>
+<p>Comprueba:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>Que el login devuelve 200.
+</span><span id="__span-71-2"><a id="__codelineno-71-2" name="__codelineno-71-2" href="#__codelineno-71-2"></a>Que la respuesta incluye token.
+</span><span id="__span-71-3"><a id="__codelineno-71-3" name="__codelineno-71-3" href="#__codelineno-71-3"></a>Que el frontend lee correctamente data.token o data.data.token.
+</span><span id="__span-71-4"><a id="__codelineno-71-4" name="__codelineno-71-4" href="#__codelineno-71-4"></a>Que localStorage no está bloqueado.
+</span></code></pre></div>
+<p>Puedes comprobarlo en DevTools:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>Application → Local Storage
+</span></code></pre></div>
+<h3 id="el-dashboard-devuelve-401">El dashboard devuelve <code>401</code><a class="headerlink" href="#el-dashboard-devuelve-401" title="Permanent link">&para;</a></h3>
+<p>Un <code>401</code> significa que la API no ha recibido un token válido.</p>
+<p>Revisa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>Que existe token en localStorage.
+</span><span id="__span-73-2"><a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a>Que apiFetch añade Authorization.
+</span><span id="__span-73-3"><a id="__codelineno-73-3" name="__codelineno-73-3" href="#__codelineno-73-3"></a>Que el header tiene formato Bearer.
+</span><span id="__span-73-4"><a id="__codelineno-73-4" name="__codelineno-73-4" href="#__codelineno-73-4"></a>Que el token no está caducado.
+</span></code></pre></div>
+<h3 id="el-panel-admin-devuelve-403">El panel admin devuelve <code>403</code><a class="headerlink" href="#el-panel-admin-devuelve-403" title="Permanent link">&para;</a></h3>
+<p>Un <code>403</code> significa que el usuario está autenticado, pero no tiene permiso.</p>
+<p>Si has iniciado sesión como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>user@email.com
+</span></code></pre></div>
+<p>es correcto recibir <code>403</code> al entrar al panel admin.</p>
+<p>Para acceder, inicia sesión como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>admin@email.com
+</span></code></pre></div>
+<h3 id="puerto-3000-ocupado">Puerto <code>3000</code> ocupado<a class="headerlink" href="#puerto-3000-ocupado" title="Permanent link">&para;</a></h3>
+<p>Si el puerto 3000 está ocupado, localiza qué aplicación lo está usando o cambia el puerto del backend.</p>
+<p>Si cambias el puerto del backend, recuerda actualizar:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>NEXT_PUBLIC_API_URL
+</span></code></pre></div>
+<h3 id="puerto-3001-ocupado">Puerto <code>3001</code> ocupado<a class="headerlink" href="#puerto-3001-ocupado" title="Permanent link">&para;</a></h3>
+<p>Si el puerto 3001 está ocupado, detén el proceso anterior o arranca temporalmente con otro puerto:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>npx<span class="w"> </span>next<span class="w"> </span>dev<span class="w"> </span>-p<span class="w"> </span><span class="m">3002</span>
+</span></code></pre></div>
+<p>Si usas otro puerto, recuerda actualizar también el origen permitido por CORS en el backend.</p>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-personalizar-la-pantalla-de-inicio">Tarea libre 1: Personalizar la pantalla de inicio<a class="headerlink" href="#tarea-libre-1-personalizar-la-pantalla-de-inicio" title="Permanent link">&para;</a></h3>
+<p>Personaliza un pequeño texto, color o tarjeta de la pantalla de inicio.</p>
+<p>No es necesario hacer un rediseño completo.</p>
+<p>El objetivo es familiarizarse con la estructura del frontend.</p>
+<h3 id="tarea-libre-2-indicar-rutas-publicas-y-protegidas">Tarea libre 2: Indicar rutas públicas y protegidas<a class="headerlink" href="#tarea-libre-2-indicar-rutas-publicas-y-protegidas" title="Permanent link">&para;</a></h3>
+<p>Añade en la interfaz una pequeña explicación visual que distinga:</p>
+<ul>
+<li>Acciones públicas.</li>
+<li>Acciones que requieren login.</li>
+<li>Acciones que requieren <code>ADMIN</code>.</li>
+</ul>
+<p>Por ejemplo:</p>
+<table>
+<thead>
+<tr>
+<th>Acción</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registro</td>
+<td>Pública</td>
+</tr>
+<tr>
+<td>Login</td>
+<td>Pública</td>
+</tr>
+<tr>
+<td>Ver perfil</td>
+<td>Requiere token</td>
+</tr>
+<tr>
+<td>Panel admin</td>
+<td>Requiere ADMIN</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-3-observar-una-peticion-en-network">Tarea libre 3: Observar una petición en Network<a class="headerlink" href="#tarea-libre-3-observar-una-peticion-en-network" title="Permanent link">&para;</a></h3>
+<p>Abre DevTools y analiza una petición a:</p>
+<p><code>/api/users/me</code>.</p>
+<p>Documenta:</p>
+<ul>
+<li>Método HTTP.</li>
+<li>URL.</li>
+<li>Status code.</li>
+<li>Cabecera <code>Authorization</code>.</li>
+<li>Respuesta JSON.</li>
+</ul>
+<h3 id="tarea-libre-4-explicar-por-que-la-seguridad-no-debe-depender-del-frontend">Tarea libre 4: Explicar por qué la seguridad no debe depender del frontend<a class="headerlink" href="#tarea-libre-4-explicar-por-que-la-seguridad-no-debe-depender-del-frontend" title="Permanent link">&para;</a></h3>
+<p>Añade una sección en tu documento:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a><span class="gu">## Por qué la seguridad debe estar en la API</span>
+</span></code></pre></div>
+<p>Explica por qué no sería suficiente ocultar un botón de admin en el frontend.</p>
+<p>Pista:</p>
+<p>Aunque ocultemos un botón, alguien podría llamar directamente a la API.</p>
+<h3 id="tarea-libre-5-preparar-el-dia-39">Tarea libre 5: Preparar el día 39<a class="headerlink" href="#tarea-libre-5-preparar-el-dia-39" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a><span class="gu">## Preparación para pruebas de integración</span>
+</span></code></pre></div>
+<p>Responde:</p>
+<ul>
+<li>¿Qué flujos completos vamos a probar?</li>
+<li>¿Qué errores pueden aparecer?</li>
+<li>¿Qué diferencia hay entre <code>401</code> y <code>403</code>?</li>
+<li>¿Qué usuario sirve para probar permisos de <code>ADMIN</code>?</li>
+<li>¿Qué usuario sirve para probar restricciones de <code>USER</code>?</li>
+</ul>
+<h2 id="entrega-recomendada-del-dia-38">Entrega recomendada del día 38<a class="headerlink" href="#entrega-recomendada-del-dia-38" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 38, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>usermanager-api/
+</span><span id="__span-80-2"><a id="__codelineno-80-2" name="__codelineno-80-2" href="#__codelineno-80-2"></a>  .env.example
+</span><span id="__span-80-3"><a id="__codelineno-80-3" name="__codelineno-80-3" href="#__codelineno-80-3"></a>  .gitignore
+</span><span id="__span-80-4"><a id="__codelineno-80-4" name="__codelineno-80-4" href="#__codelineno-80-4"></a>  docker-compose.yml
+</span><span id="__span-80-5"><a id="__codelineno-80-5" name="__codelineno-80-5" href="#__codelineno-80-5"></a>  package.json
+</span><span id="__span-80-6"><a id="__codelineno-80-6" name="__codelineno-80-6" href="#__codelineno-80-6"></a>  package-lock.json
+</span><span id="__span-80-7"><a id="__codelineno-80-7" name="__codelineno-80-7" href="#__codelineno-80-7"></a>  prisma.config.ts
+</span><span id="__span-80-8"><a id="__codelineno-80-8" name="__codelineno-80-8" href="#__codelineno-80-8"></a>  tsconfig.json
+</span><span id="__span-80-9"><a id="__codelineno-80-9" name="__codelineno-80-9" href="#__codelineno-80-9"></a>  prisma/
+</span><span id="__span-80-10"><a id="__codelineno-80-10" name="__codelineno-80-10" href="#__codelineno-80-10"></a>    schema.prisma
+</span><span id="__span-80-11"><a id="__codelineno-80-11" name="__codelineno-80-11" href="#__codelineno-80-11"></a>    seed.ts
+</span><span id="__span-80-12"><a id="__codelineno-80-12" name="__codelineno-80-12" href="#__codelineno-80-12"></a>    migrations/
+</span><span id="__span-80-13"><a id="__codelineno-80-13" name="__codelineno-80-13" href="#__codelineno-80-13"></a>      &lt;timestamp&gt;_init/
+</span><span id="__span-80-14"><a id="__codelineno-80-14" name="__codelineno-80-14" href="#__codelineno-80-14"></a>        migration.sql
+</span><span id="__span-80-15"><a id="__codelineno-80-15" name="__codelineno-80-15" href="#__codelineno-80-15"></a>  src/
+</span><span id="__span-80-16"><a id="__codelineno-80-16" name="__codelineno-80-16" href="#__codelineno-80-16"></a>    generated/
+</span><span id="__span-80-17"><a id="__codelineno-80-17" name="__codelineno-80-17" href="#__codelineno-80-17"></a>      prisma/
+</span><span id="__span-80-18"><a id="__codelineno-80-18" name="__codelineno-80-18" href="#__codelineno-80-18"></a>        client/
+</span><span id="__span-80-19"><a id="__codelineno-80-19" name="__codelineno-80-19" href="#__codelineno-80-19"></a>    controllers/
+</span><span id="__span-80-20"><a id="__codelineno-80-20" name="__codelineno-80-20" href="#__codelineno-80-20"></a>    errors/
+</span><span id="__span-80-21"><a id="__codelineno-80-21" name="__codelineno-80-21" href="#__codelineno-80-21"></a>    middlewares/
+</span><span id="__span-80-22"><a id="__codelineno-80-22" name="__codelineno-80-22" href="#__codelineno-80-22"></a>    repositories/
+</span><span id="__span-80-23"><a id="__codelineno-80-23" name="__codelineno-80-23" href="#__codelineno-80-23"></a>    routes/
+</span><span id="__span-80-24"><a id="__codelineno-80-24" name="__codelineno-80-24" href="#__codelineno-80-24"></a>    services/
+</span><span id="__span-80-25"><a id="__codelineno-80-25" name="__codelineno-80-25" href="#__codelineno-80-25"></a>    types/
+</span><span id="__span-80-26"><a id="__codelineno-80-26" name="__codelineno-80-26" href="#__codelineno-80-26"></a>    utils/
+</span><span id="__span-80-27"><a id="__codelineno-80-27" name="__codelineno-80-27" href="#__codelineno-80-27"></a>    prisma.ts
+</span><span id="__span-80-28"><a id="__codelineno-80-28" name="__codelineno-80-28" href="#__codelineno-80-28"></a>    server.ts
+</span><span id="__span-80-29"><a id="__codelineno-80-29" name="__codelineno-80-29" href="#__codelineno-80-29"></a>  frontend/
+</span><span id="__span-80-30"><a id="__codelineno-80-30" name="__codelineno-80-30" href="#__codelineno-80-30"></a>    README.md
+</span><span id="__span-80-31"><a id="__codelineno-80-31" name="__codelineno-80-31" href="#__codelineno-80-31"></a>    .env.example
+</span><span id="__span-80-32"><a id="__codelineno-80-32" name="__codelineno-80-32" href="#__codelineno-80-32"></a>    .env.local
+</span><span id="__span-80-33"><a id="__codelineno-80-33" name="__codelineno-80-33" href="#__codelineno-80-33"></a>    package.json
+</span><span id="__span-80-34"><a id="__codelineno-80-34" name="__codelineno-80-34" href="#__codelineno-80-34"></a>    src/
+</span><span id="__span-80-35"><a id="__codelineno-80-35" name="__codelineno-80-35" href="#__codelineno-80-35"></a>  docs/
+</span><span id="__span-80-36"><a id="__codelineno-80-36" name="__codelineno-80-36" href="#__codelineno-80-36"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-80-37"><a id="__codelineno-80-37" name="__codelineno-80-37" href="#__codelineno-80-37"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-80-38"><a id="__codelineno-80-38" name="__codelineno-80-38" href="#__codelineno-80-38"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-80-39"><a id="__codelineno-80-39" name="__codelineno-80-39" href="#__codelineno-80-39"></a>    dia-04-metodos-http.md
+</span><span id="__span-80-40"><a id="__codelineno-80-40" name="__codelineno-80-40" href="#__codelineno-80-40"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-80-41"><a id="__codelineno-80-41" name="__codelineno-80-41" href="#__codelineno-80-41"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-80-42"><a id="__codelineno-80-42" name="__codelineno-80-42" href="#__codelineno-80-42"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-80-43"><a id="__codelineno-80-43" name="__codelineno-80-43" href="#__codelineno-80-43"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-80-44"><a id="__codelineno-80-44" name="__codelineno-80-44" href="#__codelineno-80-44"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-80-45"><a id="__codelineno-80-45" name="__codelineno-80-45" href="#__codelineno-80-45"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-80-46"><a id="__codelineno-80-46" name="__codelineno-80-46" href="#__codelineno-80-46"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-80-47"><a id="__codelineno-80-47" name="__codelineno-80-47" href="#__codelineno-80-47"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-80-48"><a id="__codelineno-80-48" name="__codelineno-80-48" href="#__codelineno-80-48"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-80-49"><a id="__codelineno-80-49" name="__codelineno-80-49" href="#__codelineno-80-49"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-80-50"><a id="__codelineno-80-50" name="__codelineno-80-50" href="#__codelineno-80-50"></a>    dia-15-middleware-errores.md
+</span><span id="__span-80-51"><a id="__codelineno-80-51" name="__codelineno-80-51" href="#__codelineno-80-51"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-80-52"><a id="__codelineno-80-52" name="__codelineno-80-52" href="#__codelineno-80-52"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-80-53"><a id="__codelineno-80-53" name="__codelineno-80-53" href="#__codelineno-80-53"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-80-54"><a id="__codelineno-80-54" name="__codelineno-80-54" href="#__codelineno-80-54"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-80-55"><a id="__codelineno-80-55" name="__codelineno-80-55" href="#__codelineno-80-55"></a>    dia-20-instalacion-prisma.md
+</span><span id="__span-80-56"><a id="__codelineno-80-56" name="__codelineno-80-56" href="#__codelineno-80-56"></a>    dia-21-modelo-prisma-user.md
+</span><span id="__span-80-57"><a id="__codelineno-80-57" name="__codelineno-80-57" href="#__codelineno-80-57"></a>    dia-22-primera-migracion-prisma.md
+</span><span id="__span-80-58"><a id="__codelineno-80-58" name="__codelineno-80-58" href="#__codelineno-80-58"></a>    dia-23-prisma-studio.md
+</span><span id="__span-80-59"><a id="__codelineno-80-59" name="__codelineno-80-59" href="#__codelineno-80-59"></a>    dia-24-seed-datos-iniciales.md
+</span><span id="__span-80-60"><a id="__codelineno-80-60" name="__codelineno-80-60" href="#__codelineno-80-60"></a>    dia-25-consultas-basicas-prisma.md
+</span><span id="__span-80-61"><a id="__codelineno-80-61" name="__codelineno-80-61" href="#__codelineno-80-61"></a>    dia-26-separar-rutas.md
+</span><span id="__span-80-62"><a id="__codelineno-80-62" name="__codelineno-80-62" href="#__codelineno-80-62"></a>    dia-27-controladores.md
+</span><span id="__span-80-63"><a id="__codelineno-80-63" name="__codelineno-80-63" href="#__codelineno-80-63"></a>    dia-28-servicios.md
+</span><span id="__span-80-64"><a id="__codelineno-80-64" name="__codelineno-80-64" href="#__codelineno-80-64"></a>    dia-29-repositorio-prisma.md
+</span><span id="__span-80-65"><a id="__codelineno-80-65" name="__codelineno-80-65" href="#__codelineno-80-65"></a>    dia-30-crud-persistente-ordenado.md
+</span><span id="__span-80-66"><a id="__codelineno-80-66" name="__codelineno-80-66" href="#__codelineno-80-66"></a>    dia-31-limpieza-refactor.md
+</span><span id="__span-80-67"><a id="__codelineno-80-67" name="__codelineno-80-67" href="#__codelineno-80-67"></a>    dia-32-bcrypt-passwords.md
+</span><span id="__span-80-68"><a id="__codelineno-80-68" name="__codelineno-80-68" href="#__codelineno-80-68"></a>    dia-33-auth-register.md
+</span><span id="__span-80-69"><a id="__codelineno-80-69" name="__codelineno-80-69" href="#__codelineno-80-69"></a>    dia-34-auth-login.md
+</span><span id="__span-80-70"><a id="__codelineno-80-70" name="__codelineno-80-70" href="#__codelineno-80-70"></a>    dia-35-jwt.md
+</span><span id="__span-80-71"><a id="__codelineno-80-71" name="__codelineno-80-71" href="#__codelineno-80-71"></a>    dia-36-auth-middleware.md
+</span><span id="__span-80-72"><a id="__codelineno-80-72" name="__codelineno-80-72" href="#__codelineno-80-72"></a>    dia-37-roles-permisos.md
+</span><span id="__span-80-73"><a id="__codelineno-80-73" name="__codelineno-80-73" href="#__codelineno-80-73"></a>    dia-38-frontend-conexion-api.md
+</span></code></pre></div>
+<p>El documento del día 38 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>docs/dia-38-frontend-conexion-api.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>URLs usadas.</li>
+<li>Variable <code>NEXT_PUBLIC_API_URL</code>.</li>
+<li>Cabecera <code>Authorization</code>.</li>
+<li>Pantallas del frontend.</li>
+<li>Endpoints consumidos.</li>
+<li>Diagrama Mermaid.</li>
+<li>Checklist de pruebas.</li>
+<li>Problemas frecuentes.</li>
+<li>Parte libre.</li>
+<li>Preparación para pruebas de integración.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a>Hola, comparto el avance del día 38 del reto UserManager API:
+</span><span id="__span-82-2"><a id="__codelineno-82-2" name="__codelineno-82-2" href="#__codelineno-82-2"></a>
+</span><span id="__span-82-3"><a id="__codelineno-82-3" name="__codelineno-82-3" href="#__codelineno-82-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-82-4"><a id="__codelineno-82-4" name="__codelineno-82-4" href="#__codelineno-82-4"></a>
+</span><span id="__span-82-5"><a id="__codelineno-82-5" name="__codelineno-82-5" href="#__codelineno-82-5"></a>He conectado el frontend entregado con la API local y he probado login, token y rutas protegidas. La documentación está en:
+</span><span id="__span-82-6"><a id="__codelineno-82-6" name="__codelineno-82-6" href="#__codelineno-82-6"></a>
+</span><span id="__span-82-7"><a id="__codelineno-82-7" name="__codelineno-82-7" href="#__codelineno-82-7"></a>docs/dia-38-frontend-conexion-api.md
+</span></code></pre></div>
+<p>Además, se recomienda adjuntar o incluir:</p>
+<ul>
+<li>Captura del frontend abierto.</li>
+<li>Captura de Network con la cabecera <code>Authorization</code>.</li>
+<li>Breve explicación del recorrido frontend → API → base de datos.</li>
+<li>Un problema encontrado y cómo se resolvió.</li>
+</ul>
+<h2 id="guardar-cambios-en-git">Guardar cambios en Git<a class="headerlink" href="#guardar-cambios-en-git" title="Permanent link">&para;</a></h2>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Deberías ver cambios en archivos como:</p>
+<ul>
+<li><code>frontend/</code></li>
+<li><code>README.md</code></li>
+<li><code>docs/dia-38-frontend-conexion-api.md</code></li>
+</ul>
+<p>Si has añadido CORS al backend, también verás cambios en:</p>
+<ul>
+<li><code>package.json</code></li>
+<li><code>package-lock.json</code></li>
+<li><code>src/server.ts</code></li>
+</ul>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 38 - Conectar frontend con la API&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos conectado dos aplicaciones independientes.</p>
+<p>Por un lado, tenemos nuestro backend Express, que conserva la responsabilidad de:</p>
+<ul>
+<li>Validar datos.</li>
+<li>Autenticar usuarios.</li>
+<li>Generar y verificar tokens.</li>
+<li>Aplicar permisos.</li>
+<li>Consultar PostgreSQL.</li>
+<li>Responder JSON.</li>
+</ul>
+<p>Por otro lado, tenemos un frontend sencillo, que se encarga de:</p>
+<ul>
+<li>Mostrar formularios.</li>
+<li>Enviar peticiones HTTP.</li>
+<li>Guardar el token.</li>
+<li>Enviar <code>Authorization</code>.</li>
+<li>Mostrar respuestas y errores.</li>
+</ul>
+<p>Lo importante es que el frontend no sustituye a la API.</p>
+<p>Aunque la interfaz oculte botones o muestre pantallas distintas, la seguridad real debe seguir estando en el backend.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li>Frontend cliente.</li>
+<li>Next.js.</li>
+<li>URL base.</li>
+<li><code>NEXT_PUBLIC_API_URL</code>.</li>
+<li>Fetch.</li>
+<li>CORS.</li>
+<li><code>localStorage</code>.</li>
+<li>JWT en el navegador.</li>
+<li><code>Authorization: Bearer</code>.</li>
+<li>DevTools.</li>
+<li>Network.</li>
+<li>Rutas protegidas.</li>
+</ul>
+<p>Mañana usaremos esta interfaz para probar toda la integración de extremo a extremo.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Un frontend no accede directamente a la base de datos; consume la API mediante HTTP, y la API mantiene el control sobre los datos, la identidad y los permisos.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

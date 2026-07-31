@@ -1,0 +1,3414 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia22/">
+      
+      
+        <link rel="next" href="../dia24/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 23: Prisma Studio - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-23-prisma-studio" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 23: Prisma Studio
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es Prisma Studio?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-que-nos-sirve-en-este-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Para qué nos sirve en este reto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prisma-studio-no-es-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma Studio no es la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prisma-studio-frente-a-adminer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma Studio frente a Adminer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-veremos-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué veremos hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-debemos-comprobar-en-la-tabla-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué debemos comprobar en la tabla <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué debemos comprobar en la tabla User">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#campos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Campos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tipos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Restricciones
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-revisar-database_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Revisar <code>DATABASE_URL</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-comprobar-que-la-migracion-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Comprobar que la migración existe
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-ejecutar-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Ejecutar Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-observar-la-pantalla-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Observar la pantalla inicial
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-revisar-las-columnas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Revisar las columnas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-comprobar-que-todavia-no-hay-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Comprobar que todavía no hay usuarios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-crear-un-usuario-temporal-desde-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Crear un usuario temporal desde Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-observar-valores-automaticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Observar valores automáticos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-intentar-crear-un-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Intentar crear un email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-probar-el-enum-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Probar el enum <code>Role</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-modificar-isactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Modificar <code>isActive</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-borrar-el-usuario-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Borrar el usuario temporal
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-cerrar-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Cerrar Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-el-documento-del-dia-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Crear el documento del día 23
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-anadir-comparacion-con-adminer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Añadir comparación con Adminer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prisma-studio-no-se-abre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma Studio no se abre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-de-conexion-con-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error de conexión con la base de datos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-aparece-la-tabla-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        No aparece la tabla <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-tabla-aparece-vacia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La tabla aparece vacía
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-al-crear-un-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error al crear un email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#he-creado-usuarios-manualmente-y-ahora-no-se-si-borrarlos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        He creado usuarios manualmente y ahora no sé si borrarlos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-para-que-sirve-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar para qué sirve Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-comparar-herramientas-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Comparar herramientas de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-observar-restricciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Observar restricciones
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-crear-y-borrar-un-usuario-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Crear y borrar un usuario temporal
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 23
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es Prisma Studio?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#para-que-nos-sirve-en-este-reto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Para qué nos sirve en este reto?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prisma-studio-no-es-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma Studio no es la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prisma-studio-frente-a-adminer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma Studio frente a Adminer
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-veremos-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué veremos hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-debemos-comprobar-en-la-tabla-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué debemos comprobar en la tabla <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Qué debemos comprobar en la tabla User">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#campos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Campos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tipos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tipos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Restricciones
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-revisar-database_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Revisar <code>DATABASE_URL</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-comprobar-que-la-migracion-existe" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Comprobar que la migración existe
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-ejecutar-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Ejecutar Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-observar-la-pantalla-inicial" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Observar la pantalla inicial
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-revisar-las-columnas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Revisar las columnas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-comprobar-que-todavia-no-hay-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Comprobar que todavía no hay usuarios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-crear-un-usuario-temporal-desde-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Crear un usuario temporal desde Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-observar-valores-automaticos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Observar valores automáticos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-intentar-crear-un-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Intentar crear un email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-probar-el-enum-role" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Probar el enum <code>Role</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-modificar-isactive" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Modificar <code>isActive</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-borrar-el-usuario-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Borrar el usuario temporal
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-cerrar-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Cerrar Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-crear-el-documento-del-dia-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Crear el documento del día 23
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-anadir-comparacion-con-adminer" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Añadir comparación con Adminer
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prisma-studio-no-se-abre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Prisma Studio no se abre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-de-conexion-con-la-base-de-datos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error de conexión con la base de datos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-aparece-la-tabla-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        No aparece la tabla <code>User</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-tabla-aparece-vacia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La tabla aparece vacía
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-al-crear-un-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error al crear un email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#he-creado-usuarios-manualmente-y-ahora-no-se-si-borrarlos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        He creado usuarios manualmente y ahora no sé si borrarlos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-para-que-sirve-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar para qué sirve Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-comparar-herramientas-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Comparar herramientas de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-observar-restricciones" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Observar restricciones
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-crear-y-borrar-un-usuario-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Crear y borrar un usuario temporal
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 24
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 23
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-23-prisma-studio">Día 23: Prisma Studio<a class="headerlink" href="#dia-23-prisma-studio" title="Permanent link">&para;</a></h1>
+<p>En el día 22 creamos la primera migración con Prisma.</p>
+<p>Hasta ese momento teníamos un modelo <code>User</code> definido en <code>prisma/schema.prisma</code>.</p>
+<p>Después ejecutamos una migración y Prisma creó la tabla correspondiente en PostgreSQL.</p>
+<p>Ahora nuestra base de datos ya tiene una estructura real.</p>
+<p>Deberíamos tener, como mínimo, las tablas <code>User</code> y <code>_prisma_migrations</code>.</p>
+<p>La tabla <code>User</code> almacenará los usuarios de nuestra API.</p>
+<p>La tabla <code>_prisma_migrations</code> sirve para que Prisma controle qué migraciones se han aplicado.</p>
+<p>Hoy vamos a trabajar con una herramienta visual de Prisma: <strong>Prisma Studio</strong>.</p>
+<p>Prisma Studio nos permite ver y modificar los datos de la base de datos desde el navegador.</p>
+<p>No sustituye a la API, ni sustituye al código, ni sustituye a las migraciones. Es una herramienta de apoyo para comprobar qué hay realmente guardado en la base de datos.</p>
+<p>El objetivo del día será abrir Prisma Studio, explorar la tabla <code>User</code>, entender la estructura generada por la migración y comprobar visualmente cómo se comporta nuestro modelo.</p>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prisma Studio</td>
+<td>Cómo abrir la interfaz visual de Prisma</td>
+</tr>
+<tr>
+<td>Tablas y registros</td>
+<td>Cómo explorar la información almacenada</td>
+</tr>
+<tr>
+<td>Columnas</td>
+<td>Cómo relacionarlas con el modelo Prisma</td>
+</tr>
+<tr>
+<td>Edición manual</td>
+<td>Cómo crear, modificar y eliminar datos temporales</td>
+</tr>
+<tr>
+<td>Restricciones</td>
+<td>Cómo comprobar valores únicos, enums y valores por defecto</td>
+</tr>
+<tr>
+<td>Persistencia</td>
+<td>Cómo verificar qué datos existen realmente en PostgreSQL</td>
+</tr>
+<tr>
+<td>Herramientas de desarrollo</td>
+<td>Cuándo utilizar Prisma Studio durante el proyecto</td>
+</tr>
+</tbody>
+</table>
+<p>El producto del día será Prisma Studio funcionando y documentado.</p>
+<p>El resultado esperado será poder observar visualmente la tabla <code>User</code> y comprobar su estructura.</p>
+<h2 id="que-es-prisma-studio">¿Qué es Prisma Studio?<a class="headerlink" href="#que-es-prisma-studio" title="Permanent link">&para;</a></h2>
+<p>Prisma Studio es una herramienta visual que permite explorar la base de datos asociada al proyecto Prisma.</p>
+<p>En lugar de mirar la base de datos solo desde terminal o desde Adminer, podemos abrir una interfaz web y ver las tablas de forma más cómoda.</p>
+<p>Con Prisma Studio podremos:</p>
+<ul>
+<li>Ver tablas y registros.</li>
+<li>Crear, editar y eliminar registros manualmente.</li>
+<li>Comprobar campos y valores por defecto.</li>
+<li>Revisar si una migración ha creado correctamente la estructura.</li>
+</ul>
+<p>En nuestro caso, lo usaremos para observar el modelo <code>User</code>.</p>
+<p>El flujo será:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[schema.prisma] --&gt; B[Migración aplicada]
+    B --&gt; C[PostgreSQL]
+    C --&gt; D[Prisma Studio]
+    D --&gt; E[Visualización de datos]</code></pre>
+<h2 id="para-que-nos-sirve-en-este-reto">¿Para qué nos sirve en este reto?<a class="headerlink" href="#para-que-nos-sirve-en-este-reto" title="Permanent link">&para;</a></h2>
+<p>Prisma Studio será útil durante muchos días del reto.</p>
+<p>Por ejemplo, nos permitirá comprobar:</p>
+<ul>
+<li>Si la tabla <code>User</code> existe y sus campos se han creado correctamente.</li>
+<li>Si <code>email</code> es único.</li>
+<li>Si <code>role</code> contiene los valores <code>USER</code> o <code>ADMIN</code>.</li>
+<li>Si <code>isActive</code> contiene <code>true</code> o <code>false</code>.</li>
+<li>Si <code>createdAt</code> y <code>updatedAt</code> se rellenan.</li>
+<li>Si el seed del día 24 ha funcionado.</li>
+<li>Si el registro y el login crean usuarios correctamente.</li>
+<li>Si un cambio desde la API se refleja en la base de datos.</li>
+</ul>
+<div class="admonition question">
+<p class="admonition-title">Pregunta clave</p>
+<p>¿Qué hay realmente guardado en la base de datos?</p>
+</div>
+<p>Durante los primeros días del reto, mirábamos el array <code>users</code> dentro del código.</p>
+<p>Ahora, los datos estarán en PostgreSQL.</p>
+<p>Prisma Studio será una ventana visual a esos datos.</p>
+<h2 id="prisma-studio-no-es-la-api">Prisma Studio no es la API<a class="headerlink" href="#prisma-studio-no-es-la-api" title="Permanent link">&para;</a></h2>
+<p>Es importante no confundir Prisma Studio con nuestra API.</p>
+<p>Prisma Studio es una herramienta para desarrolladores.</p>
+<p>Nuestra API es el producto que estamos construyendo.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Para qué sirve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>API Express</td>
+<td>Responder peticiones HTTP</td>
+</tr>
+<tr>
+<td>Prisma</td>
+<td>Comunicar el backend con PostgreSQL</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Guardar los datos reales</td>
+</tr>
+<tr>
+<td>Prisma Studio</td>
+<td>Ver y editar datos visualmente</td>
+</tr>
+<tr>
+<td>Thunder/Postman</td>
+<td>Probar endpoints HTTP</td>
+</tr>
+<tr>
+<td>Frontend entregado</td>
+<td>Probar la API como cliente real</td>
+</tr>
+</tbody>
+</table>
+<p>Prisma Studio no debe usarse como forma normal de gestionar usuarios en una aplicación final.</p>
+<p>En una aplicación real, los usuarios se crearán desde endpoints como:</p>
+<ul>
+<li><code>POST /api/auth/register</code></li>
+<li><code>POST /api/users</code></li>
+</ul>
+<p>Pero para desarrollo y pruebas, Prisma Studio es muy útil.</p>
+<h2 id="prisma-studio-frente-a-adminer">Prisma Studio frente a Adminer<a class="headerlink" href="#prisma-studio-frente-a-adminer" title="Permanent link">&para;</a></h2>
+<p>En el día 17 usamos Adminer para comprobar que PostgreSQL estaba funcionando.</p>
+<p>Adminer es una herramienta genérica para bases de datos.</p>
+<p>Prisma Studio, en cambio, está pensada para trabajar con proyectos Prisma.</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Ventaja principal</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Adminer</td>
+<td>Permite gestionar bases de datos de forma general</td>
+</tr>
+<tr>
+<td>Prisma Studio</td>
+<td>Muestra los datos desde el punto de vista del modelo Prisma</td>
+</tr>
+</tbody>
+</table>
+<p>Adminer ve la base de datos como una base de datos.</p>
+<p>Prisma Studio ve la base de datos desde el ecosistema de Prisma.</p>
+<p>Para este reto usaremos ambas herramientas en momentos diferentes.</p>
+<h2 id="que-veremos-hoy">¿Qué veremos hoy?<a class="headerlink" href="#que-veremos-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy deberíamos poder ver la tabla <code>User</code> con estos campos:</p>
+<ul>
+<li><code>id</code></li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>passwordHash</code></li>
+<li><code>role</code></li>
+<li><code>isActive</code></li>
+<li><code>createdAt</code></li>
+<li><code>updatedAt</code></li>
+</ul>
+<p>Es probable que todavía no haya ningún usuario.</p>
+<p>Eso es normal.</p>
+<p>La migración creó la estructura de la tabla, pero no creó datos.</p>
+<p>Los datos iniciales los crearemos en el día 24 con un seed.</p>
+<p>Hoy, como práctica, podemos crear un usuario temporal desde Prisma Studio para observar cómo funciona la herramienta.</p>
+<p>Después podremos borrarlo para dejar la base de datos limpia antes del seed.</p>
+<h2 id="que-debemos-comprobar-en-la-tabla-user">Qué debemos comprobar en la tabla <code>User</code><a class="headerlink" href="#que-debemos-comprobar-en-la-tabla-user" title="Permanent link">&para;</a></h2>
+<p>Al abrir la tabla <code>User</code>, debemos fijarnos en varios aspectos.</p>
+<h3 id="campos">Campos<a class="headerlink" href="#campos" title="Permanent link">&para;</a></h3>
+<p>La tabla debe contener los campos definidos en el modelo Prisma:</p>
+<ul>
+<li><code>id</code></li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>passwordHash</code></li>
+<li><code>role</code></li>
+<li><code>isActive</code></li>
+<li><code>createdAt</code></li>
+<li><code>updatedAt</code></li>
+</ul>
+<h3 id="tipos">Tipos<a class="headerlink" href="#tipos" title="Permanent link">&para;</a></h3>
+<p>Cada campo debe tener un tipo coherente:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Tipo o valores</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Número</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Texto</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>Texto</td>
+</tr>
+<tr>
+<td><code>passwordHash</code></td>
+<td>Texto</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>USER</code> o <code>ADMIN</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td>Booleano</td>
+</tr>
+<tr>
+<td><code>createdAt</code></td>
+<td>Fecha</td>
+</tr>
+<tr>
+<td><code>updatedAt</code></td>
+<td>Fecha</td>
+</tr>
+</tbody>
+</table>
+<h3 id="restricciones">Restricciones<a class="headerlink" href="#restricciones" title="Permanent link">&para;</a></h3>
+<p>Debemos recordar algunas reglas:</p>
+<ul>
+<li><code>email</code> no puede repetirse.</li>
+<li><code>role</code> solo puede ser <code>USER</code> o <code>ADMIN</code>.</li>
+<li><code>isActive</code> tendrá <code>true</code> por defecto.</li>
+<li><code>createdAt</code> se genera automáticamente.</li>
+<li><code>updatedAt</code> se actualiza al modificar el registro.</li>
+</ul>
+<p>Prisma Studio nos ayudará a observar estas reglas de forma visual.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre una terminal y entra en el repositorio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Comprueba que estás en la raíz del proyecto.</p>
+<p>Deberías ver:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>package.json
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker-compose.yml
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>prisma/
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>src/
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>docs/
+</span></code></pre></div>
+<h3 id="paso-2-arrancar-postgresql">Paso 2: Arrancar PostgreSQL<a class="headerlink" href="#paso-2-arrancar-postgresql" title="Permanent link">&para;</a></h3>
+<p>Antes de abrir Prisma Studio, la base de datos debe estar funcionando.</p>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<p>Comprueba los contenedores:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span></code></pre></div>
+<p>Debes tener PostgreSQL en ejecución.</p>
+<h3 id="paso-3-revisar-database_url">Paso 3: Revisar <code>DATABASE_URL</code><a class="headerlink" href="#paso-3-revisar-database_url" title="Permanent link">&para;</a></h3>
+<p>Abre <code>.env</code>.</p>
+<p>Comprueba que tienes una URL parecida a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span></code></pre></div>
+<p>Prisma Studio usará esa variable para conectarse a la base de datos.</p>
+<p>Si <code>DATABASE_URL</code> está mal, Prisma Studio no podrá abrir correctamente los datos.</p>
+<h3 id="paso-4-comprobar-que-la-migracion-existe">Paso 4: Comprobar que la migración existe<a class="headerlink" href="#paso-4-comprobar-que-la-migracion-existe" title="Permanent link">&para;</a></h3>
+<p>Revisa que existe la carpeta:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>prisma/migrations/
+</span></code></pre></div>
+<p>Dentro debería haber una migración inicial:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>prisma/migrations/&lt;timestamp&gt;_init/migration.sql
+</span></code></pre></div>
+<p>Si no existe, vuelve al trabajo del día 22 antes de continuar.</p>
+<p>Prisma Studio podrá abrirse, pero si la tabla no existe no veremos el modelo <code>User</code> como esperamos.</p>
+<h3 id="paso-5-ejecutar-prisma-studio">Paso 5: Ejecutar Prisma Studio<a class="headerlink" href="#paso-5-ejecutar-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>studio
+</span></code></pre></div>
+<p>También puedes usar el script si lo añadiste al <code>package.json</code>:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:studio
+</span></code></pre></div>
+<p>Prisma Studio abrirá una interfaz en el navegador.</p>
+<p>Normalmente se abrirá en <a href="http://localhost:5555">http://localhost:5555</a>.</p>
+<p>Si no se abre automáticamente, copia la URL que aparece en la terminal y pégala en el navegador.</p>
+<h3 id="paso-6-observar-la-pantalla-inicial">Paso 6: Observar la pantalla inicial<a class="headerlink" href="#paso-6-observar-la-pantalla-inicial" title="Permanent link">&para;</a></h3>
+<p>En Prisma Studio deberías ver una lista de modelos o tablas.</p>
+<p>Busca el modelo <code>User</code> y haz clic sobre él.</p>
+<p>Si no aparece, revisa:</p>
+<ul>
+<li>Que el modelo <code>User</code> exista en <code>schema.prisma</code>.</li>
+<li>Que hayas ejecutado la migración del día 22.</li>
+<li>Que <code>DATABASE_URL</code> apunte a la base de datos correcta.</li>
+</ul>
+<h3 id="paso-7-revisar-las-columnas">Paso 7: Revisar las columnas<a class="headerlink" href="#paso-7-revisar-las-columnas" title="Permanent link">&para;</a></h3>
+<p>Dentro de <code>User</code>, revisa estas columnas:</p>
+<ul>
+<li><code>id</code></li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>passwordHash</code></li>
+<li><code>role</code></li>
+<li><code>isActive</code></li>
+<li><code>createdAt</code></li>
+<li><code>updatedAt</code></li>
+</ul>
+<p>Compara la tabla visual con el modelo de Prisma:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>model User {
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  id           Int      @id @default(autoincrement())
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  name         String
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>  email        String   @unique
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>  passwordHash String
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  role         Role     @default(USER)
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  isActive     Boolean  @default(true)
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  createdAt    DateTime @default(now())
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>  updatedAt    DateTime @updatedAt
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>}
+</span></code></pre></div>
+<p>La estructura visual debe coincidir con el modelo.</p>
+<h3 id="paso-8-comprobar-que-todavia-no-hay-usuarios">Paso 8: Comprobar que todavía no hay usuarios<a class="headerlink" href="#paso-8-comprobar-que-todavia-no-hay-usuarios" title="Permanent link">&para;</a></h3>
+<p>Es normal que la tabla esté vacía.</p>
+<p>La migración crea la estructura, pero no inserta datos.</p>
+<div class="admonition info">
+<p class="admonition-title">Diferencia importante</p>
+<p>Una <strong>migración</strong> crea o modifica la estructura; un <strong>seed</strong> crea los datos
+iniciales.</p>
+</div>
+<p>Hoy estamos justo entre ambos pasos.</p>
+<h3 id="paso-9-crear-un-usuario-temporal-desde-prisma-studio">Paso 9: Crear un usuario temporal desde Prisma Studio<a class="headerlink" href="#paso-9-crear-un-usuario-temporal-desde-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Como práctica, crea un usuario temporal desde Prisma Studio.</p>
+<p>Datos sugeridos:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>Usuario Temporal</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>temporal@email.com</code></td>
+</tr>
+<tr>
+<td><code>passwordHash</code></td>
+<td><code>hash_temporal</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>USER</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>No hace falta escribir <code>id</code> si Prisma Studio permite dejar que se genere automáticamente.</p>
+<p>Tampoco hace falta introducir manualmente <code>createdAt</code> si aparece gestionado automáticamente.</p>
+<p>Si Prisma Studio te pide algún campo obligatorio, rellénalo.</p>
+<p>El objetivo es observar cómo se comportan los campos del modelo.</p>
+<h3 id="paso-10-observar-valores-automaticos">Paso 10: Observar valores automáticos<a class="headerlink" href="#paso-10-observar-valores-automaticos" title="Permanent link">&para;</a></h3>
+<p>Después de crear el usuario temporal, revisa <code>id</code>, <code>createdAt</code> y <code>updatedAt</code>.</p>
+<p>El <code>id</code> debería generarse automáticamente.</p>
+<p><code>createdAt</code> debería tener una fecha de creación.</p>
+<p><code>updatedAt</code> debería tener una fecha relacionada con la creación o modificación.</p>
+<p>Esto confirma que los valores automáticos funcionan.</p>
+<h3 id="paso-11-intentar-crear-un-email-duplicado">Paso 11: Intentar crear un email duplicado<a class="headerlink" href="#paso-11-intentar-crear-un-email-duplicado" title="Permanent link">&para;</a></h3>
+<p>Intenta crear otro usuario temporal con el mismo email: <code>temporal@email.com</code>.</p>
+<p>Debería aparecer un error porque <code>email</code> tiene una restricción única.</p>
+<p>Esto viene de esta parte del modelo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>email String @unique
+</span></code></pre></div>
+<p>No pasa nada si aparece un error. De hecho, es una buena señal: la restricción está funcionando.</p>
+<h3 id="paso-12-probar-el-enum-role">Paso 12: Probar el enum <code>Role</code><a class="headerlink" href="#paso-12-probar-el-enum-role" title="Permanent link">&para;</a></h3>
+<p>Comprueba que el campo <code>role</code> solo permite los valores <code>USER</code> y <code>ADMIN</code> del enum.</p>
+<p>Esto viene de:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>enum Role {
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>  USER
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>  ADMIN
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>}
+</span></code></pre></div>
+<p>El objetivo es observar que <code>role</code> no es un texto libre cualquiera.</p>
+<h3 id="paso-13-modificar-isactive">Paso 13: Modificar <code>isActive</code><a class="headerlink" href="#paso-13-modificar-isactive" title="Permanent link">&para;</a></h3>
+<p>Edita el usuario temporal, cambia <code>isActive</code> a <code>false</code> y guarda el cambio.</p>
+<p>Esto simula una desactivación de cuenta.</p>
+<p>Más adelante, la API hará esto mediante endpoints como:</p>
+<ul>
+<li><code>PATCH /api/users/:id/status</code></li>
+<li><code>DELETE /api/users/:id</code></li>
+</ul>
+<p>Pero hoy solo queremos observar el dato visualmente.</p>
+<h3 id="paso-14-borrar-el-usuario-temporal">Paso 14: Borrar el usuario temporal<a class="headerlink" href="#paso-14-borrar-el-usuario-temporal" title="Permanent link">&para;</a></h3>
+<p>Al terminar la práctica, borra el usuario temporal.</p>
+<p>¿Por qué?</p>
+<p>Porque el día 24 crearemos usuarios iniciales con un seed.</p>
+<p>Conviene empezar el seed con una base de datos limpia o, al menos, sin registros manuales innecesarios.</p>
+<p>Si prefieres conservarlo para observarlo, puedes hacerlo, pero documenta que fue creado manualmente.</p>
+<h3 id="paso-15-cerrar-prisma-studio">Paso 15: Cerrar Prisma Studio<a class="headerlink" href="#paso-15-cerrar-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Para cerrar Prisma Studio, vuelve a la terminal donde se está ejecutando y pulsa
+<kbd>Ctrl</kbd> + <kbd>C</kbd>.</p>
+<p>Prisma Studio dejará de estar disponible en el navegador.</p>
+<p>La base de datos seguirá funcionando mientras el contenedor de PostgreSQL esté activo.</p>
+<h3 id="paso-16-crear-el-documento-del-dia-23">Paso 16: Crear el documento del día 23<a class="headerlink" href="#paso-16-crear-el-documento-del-dia-23" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>docs/dia-23-prisma-studio.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="gh"># Día 23 - Prisma Studio</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="k">-</span><span class="w"> </span>He arrancado PostgreSQL con Docker Compose.
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="k">-</span><span class="w"> </span>He comprobado que existe la migración inicial.
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="k">-</span><span class="w"> </span>He ejecutado Prisma Studio.
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a><span class="k">-</span><span class="w"> </span>He abierto la tabla User.
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="k">-</span><span class="w"> </span>He revisado las columnas del modelo.
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="k">-</span><span class="w"> </span>He comprobado visualmente los campos id, name, email, passwordHash, role, isActive, createdAt y updatedAt.
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="k">-</span><span class="w"> </span>He creado un usuario temporal.
+</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a><span class="k">-</span><span class="w"> </span>He comprobado valores automáticos.
+</span><span id="__span-13-13"><a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a><span class="k">-</span><span class="w"> </span>He probado la restricción de email único.
+</span><span id="__span-13-14"><a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a><span class="k">-</span><span class="w"> </span>He probado el enum Role.
+</span><span id="__span-13-15"><a id="__codelineno-13-15" name="__codelineno-13-15" href="#__codelineno-13-15"></a><span class="k">-</span><span class="w"> </span>He modificado isActive.
+</span><span id="__span-13-16"><a id="__codelineno-13-16" name="__codelineno-13-16" href="#__codelineno-13-16"></a><span class="k">-</span><span class="w"> </span>He eliminado el usuario temporal.
+</span><span id="__span-13-17"><a id="__codelineno-13-17" name="__codelineno-13-17" href="#__codelineno-13-17"></a>
+</span><span id="__span-13-18"><a id="__codelineno-13-18" name="__codelineno-13-18" href="#__codelineno-13-18"></a><span class="gu">## Comando usado</span>
+</span><span id="__span-13-19"><a id="__codelineno-13-19" name="__codelineno-13-19" href="#__codelineno-13-19"></a>
+</span><span id="__span-13-20"><a id="__codelineno-13-20" name="__codelineno-13-20" href="#__codelineno-13-20"></a><span class="sb">```bash</span>
+</span><span id="__span-13-21"><a id="__codelineno-13-21" name="__codelineno-13-21" href="#__codelineno-13-21"></a>npx<span class="w"> </span>prisma<span class="w"> </span>studio
+</span><span id="__span-13-22"><a id="__codelineno-13-22" name="__codelineno-13-22" href="#__codelineno-13-22"></a><span class="sb">```</span>
+</span><span id="__span-13-23"><a id="__codelineno-13-23" name="__codelineno-13-23" href="#__codelineno-13-23"></a>
+</span><span id="__span-13-24"><a id="__codelineno-13-24" name="__codelineno-13-24" href="#__codelineno-13-24"></a>O mediante script:
+</span><span id="__span-13-25"><a id="__codelineno-13-25" name="__codelineno-13-25" href="#__codelineno-13-25"></a>
+</span><span id="__span-13-26"><a id="__codelineno-13-26" name="__codelineno-13-26" href="#__codelineno-13-26"></a><span class="sb">```bash</span>
+</span><span id="__span-13-27"><a id="__codelineno-13-27" name="__codelineno-13-27" href="#__codelineno-13-27"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:studio
+</span><span id="__span-13-28"><a id="__codelineno-13-28" name="__codelineno-13-28" href="#__codelineno-13-28"></a><span class="sb">```</span>
+</span><span id="__span-13-29"><a id="__codelineno-13-29" name="__codelineno-13-29" href="#__codelineno-13-29"></a>
+</span><span id="__span-13-30"><a id="__codelineno-13-30" name="__codelineno-13-30" href="#__codelineno-13-30"></a><span class="gu">## URL habitual</span>
+</span><span id="__span-13-31"><a id="__codelineno-13-31" name="__codelineno-13-31" href="#__codelineno-13-31"></a>
+</span><span id="__span-13-32"><a id="__codelineno-13-32" name="__codelineno-13-32" href="#__codelineno-13-32"></a><span class="sb">```text</span>
+</span><span id="__span-13-33"><a id="__codelineno-13-33" name="__codelineno-13-33" href="#__codelineno-13-33"></a>http://localhost:5555
+</span><span id="__span-13-34"><a id="__codelineno-13-34" name="__codelineno-13-34" href="#__codelineno-13-34"></a><span class="sb">```</span>
+</span><span id="__span-13-35"><a id="__codelineno-13-35" name="__codelineno-13-35" href="#__codelineno-13-35"></a>
+</span><span id="__span-13-36"><a id="__codelineno-13-36" name="__codelineno-13-36" href="#__codelineno-13-36"></a><span class="gu">## Tabla revisada</span>
+</span><span id="__span-13-37"><a id="__codelineno-13-37" name="__codelineno-13-37" href="#__codelineno-13-37"></a>
+</span><span id="__span-13-38"><a id="__codelineno-13-38" name="__codelineno-13-38" href="#__codelineno-13-38"></a><span class="sb">```text</span>
+</span><span id="__span-13-39"><a id="__codelineno-13-39" name="__codelineno-13-39" href="#__codelineno-13-39"></a>User
+</span><span id="__span-13-40"><a id="__codelineno-13-40" name="__codelineno-13-40" href="#__codelineno-13-40"></a><span class="sb">```</span>
+</span><span id="__span-13-41"><a id="__codelineno-13-41" name="__codelineno-13-41" href="#__codelineno-13-41"></a>
+</span><span id="__span-13-42"><a id="__codelineno-13-42" name="__codelineno-13-42" href="#__codelineno-13-42"></a><span class="gu">## Campos observados</span>
+</span><span id="__span-13-43"><a id="__codelineno-13-43" name="__codelineno-13-43" href="#__codelineno-13-43"></a>
+</span><span id="__span-13-44"><a id="__codelineno-13-44" name="__codelineno-13-44" href="#__codelineno-13-44"></a><span class="sb">```text</span>
+</span><span id="__span-13-45"><a id="__codelineno-13-45" name="__codelineno-13-45" href="#__codelineno-13-45"></a>id
+</span><span id="__span-13-46"><a id="__codelineno-13-46" name="__codelineno-13-46" href="#__codelineno-13-46"></a>name
+</span><span id="__span-13-47"><a id="__codelineno-13-47" name="__codelineno-13-47" href="#__codelineno-13-47"></a>email
+</span><span id="__span-13-48"><a id="__codelineno-13-48" name="__codelineno-13-48" href="#__codelineno-13-48"></a>passwordHash
+</span><span id="__span-13-49"><a id="__codelineno-13-49" name="__codelineno-13-49" href="#__codelineno-13-49"></a>role
+</span><span id="__span-13-50"><a id="__codelineno-13-50" name="__codelineno-13-50" href="#__codelineno-13-50"></a>isActive
+</span><span id="__span-13-51"><a id="__codelineno-13-51" name="__codelineno-13-51" href="#__codelineno-13-51"></a>createdAt
+</span><span id="__span-13-52"><a id="__codelineno-13-52" name="__codelineno-13-52" href="#__codelineno-13-52"></a>updatedAt
+</span><span id="__span-13-53"><a id="__codelineno-13-53" name="__codelineno-13-53" href="#__codelineno-13-53"></a><span class="sb">```</span>
+</span><span id="__span-13-54"><a id="__codelineno-13-54" name="__codelineno-13-54" href="#__codelineno-13-54"></a>
+</span><span id="__span-13-55"><a id="__codelineno-13-55" name="__codelineno-13-55" href="#__codelineno-13-55"></a><span class="gu">## Diferencia entre migración y seed</span>
+</span><span id="__span-13-56"><a id="__codelineno-13-56" name="__codelineno-13-56" href="#__codelineno-13-56"></a>
+</span><span id="__span-13-57"><a id="__codelineno-13-57" name="__codelineno-13-57" href="#__codelineno-13-57"></a>| Concepto | Qué hace |
+</span><span id="__span-13-58"><a id="__codelineno-13-58" name="__codelineno-13-58" href="#__codelineno-13-58"></a>|---|---|
+</span><span id="__span-13-59"><a id="__codelineno-13-59" name="__codelineno-13-59" href="#__codelineno-13-59"></a>| Migración | Crea o modifica la estructura de la base de datos |
+</span><span id="__span-13-60"><a id="__codelineno-13-60" name="__codelineno-13-60" href="#__codelineno-13-60"></a>| Seed | Inserta datos iniciales |
+</span><span id="__span-13-61"><a id="__codelineno-13-61" name="__codelineno-13-61" href="#__codelineno-13-61"></a>
+</span><span id="__span-13-62"><a id="__codelineno-13-62" name="__codelineno-13-62" href="#__codelineno-13-62"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-13-63"><a id="__codelineno-13-63" name="__codelineno-13-63" href="#__codelineno-13-63"></a>
+</span><span id="__span-13-64"><a id="__codelineno-13-64" name="__codelineno-13-64" href="#__codelineno-13-64"></a>Prisma Studio es una herramienta visual que permite ver y editar los datos de la base de datos. Me ayuda a comprobar que la migración ha creado correctamente la tabla User y que las restricciones del modelo funcionan.
+</span></code></pre></div>
+<h3 id="paso-17-anadir-comparacion-con-adminer">Paso 17: Añadir comparación con Adminer<a class="headerlink" href="#paso-17-anadir-comparacion-con-adminer" title="Permanent link">&para;</a></h3>
+<p>Añade al documento:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="gu">## Prisma Studio frente a Adminer</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>| Herramienta | Para qué sirve |
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>|---|---|
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>| Adminer | Gestionar la base de datos de forma general |
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>| Prisma Studio | Ver y editar datos desde el modelo Prisma |
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>Adminer muestra la base de datos desde un punto de vista más general. Prisma Studio está más integrado con el proyecto Prisma.
+</span></code></pre></div>
+<h3 id="paso-18-anadir-diagrama-mermaid">Paso 18: Añadir diagrama Mermaid<a class="headerlink" href="#paso-18-anadir-diagrama-mermaid" title="Permanent link">&para;</a></h3>
+<p>Añade este diagrama:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[PostgreSQL] --&gt; B[Prisma]
+    B --&gt; C[Prisma Studio]
+    C --&gt; D[Visualización de User]</code></pre>
+<p>Explicación sugerida:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>Prisma Studio se conecta a la base de datos usando la configuración de Prisma y permite visualizar los modelos como tablas editables.
+</span></code></pre></div>
+<h3 id="paso-19-actualizar-el-readme">Paso 19: Actualizar el README<a class="headerlink" href="#paso-19-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Añade una sección al README:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="gu">## Prisma Studio</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>Prisma Studio permite explorar visualmente los datos de la base de datos.
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>Comando:
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="sb">```bash</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>npx<span class="w"> </span>prisma<span class="w"> </span>studio
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="sb">```</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>O mediante script:
+</span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
+</span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a><span class="sb">```bash</span>
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:studio
+</span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a><span class="sb">```</span>
+</span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>URL habitual:
+</span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>
+</span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a><span class="sb">```text</span>
+</span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>http://localhost:5555
+</span><span id="__span-16-21"><a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a><span class="sb">```</span>
+</span><span id="__span-16-22"><a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>
+</span><span id="__span-16-23"><a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>Uso en el proyecto:
+</span><span id="__span-16-24"><a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>
+</span><span id="__span-16-25"><a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a><span class="sb">```text</span>
+</span><span id="__span-16-26"><a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>Comprobar tablas.
+</span><span id="__span-16-27"><a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>Revisar usuarios.
+</span><span id="__span-16-28"><a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>Ver datos iniciales del seed.
+</span><span id="__span-16-29"><a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>Comprobar cambios realizados desde la API.
+</span><span id="__span-16-30"><a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>Detectar errores de persistencia.
+</span><span id="__span-16-31"><a id="__codelineno-16-31" name="__codelineno-16-31" href="#__codelineno-16-31"></a><span class="sb">```</span>
+</span><span id="__span-16-32"><a id="__codelineno-16-32" name="__codelineno-16-32" href="#__codelineno-16-32"></a>
+</span><span id="__span-16-33"><a id="__codelineno-16-33" name="__codelineno-16-33" href="#__codelineno-16-33"></a>Prisma Studio es una herramienta de desarrollo. La gestión real de usuarios se hará desde la API.
+</span></code></pre></div>
+<h3 id="paso-20-actualizar-el-indice-del-readme">Paso 20: Actualizar el índice del README<a class="headerlink" href="#paso-20-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 23 - Prisma Studio</span>](<span class="na">docs/dia-23-prisma-studio.md</span>)
+</span></code></pre></div>
+<p>El bloque debería quedar parecido a:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-depuracion.md</span>)
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-18-13"><a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-18-14"><a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-18-15"><a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-18-16"><a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span><span id="__span-18-17"><a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 15 - Middleware centralizado de errores</span>](<span class="na">docs/dia-15-middleware-errores.md</span>)
+</span><span id="__span-18-18"><a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 16 - Base de datos y persistencia</span>](<span class="na">docs/dia-16-base-datos-persistencia.md</span>)
+</span><span id="__span-18-19"><a id="__codelineno-18-19" name="__codelineno-18-19" href="#__codelineno-18-19"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 17 - PostgreSQL con Docker Compose</span>](<span class="na">docs/dia-17-postgresql-docker-compose.md</span>)
+</span><span id="__span-18-20"><a id="__codelineno-18-20" name="__codelineno-18-20" href="#__codelineno-18-20"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 18 - Diseño del modelo persistente User</span>](<span class="na">docs/dia-18-diseno-modelo-persistente-user.md</span>)
+</span><span id="__span-18-21"><a id="__codelineno-18-21" name="__codelineno-18-21" href="#__codelineno-18-21"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 19 - ORM o acceso a datos</span>](<span class="na">docs/dia-19-orm-acceso-datos.md</span>)
+</span><span id="__span-18-22"><a id="__codelineno-18-22" name="__codelineno-18-22" href="#__codelineno-18-22"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 20 - Instalación y configuración inicial de Prisma</span>](<span class="na">docs/dia-20-instalacion-prisma.md</span>)
+</span><span id="__span-18-23"><a id="__codelineno-18-23" name="__codelineno-18-23" href="#__codelineno-18-23"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 21 - Modelo Prisma User</span>](<span class="na">docs/dia-21-modelo-prisma-user.md</span>)
+</span><span id="__span-18-24"><a id="__codelineno-18-24" name="__codelineno-18-24" href="#__codelineno-18-24"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 22 - Primera migración con Prisma</span>](<span class="na">docs/dia-22-primera-migracion-prisma.md</span>)
+</span><span id="__span-18-25"><a id="__codelineno-18-25" name="__codelineno-18-25" href="#__codelineno-18-25"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 23 - Prisma Studio</span>](<span class="na">docs/dia-23-prisma-studio.md</span>)
+</span></code></pre></div>
+<h3 id="paso-21-guardar-cambios-en-git">Paso 21: Guardar cambios en Git<a class="headerlink" href="#paso-21-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 23 - Explorar base de datos con Prisma Studio&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="problemas-frecuentes">Problemas frecuentes<a class="headerlink" href="#problemas-frecuentes" title="Permanent link">&para;</a></h2>
+<h3 id="prisma-studio-no-se-abre">Prisma Studio no se abre<a class="headerlink" href="#prisma-studio-no-se-abre" title="Permanent link">&para;</a></h3>
+<p>Prueba a ejecutar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>studio
+</span></code></pre></div>
+<p>Y copia manualmente la URL que aparece en la terminal.</p>
+<p>Normalmente será:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>http://localhost:5555
+</span></code></pre></div>
+<h3 id="error-de-conexion-con-la-base-de-datos">Error de conexión con la base de datos<a class="headerlink" href="#error-de-conexion-con-la-base-de-datos" title="Permanent link">&para;</a></h3>
+<p>Revisa:</p>
+<ul>
+<li>Que PostgreSQL esté arrancado.</li>
+<li>Que <code>DATABASE_URL</code> sea correcta.</li>
+<li>Que el puerto coincida.</li>
+<li>Que la base de datos exista.</li>
+</ul>
+<p>Comandos útiles:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span></code></pre></div>
+<h3 id="no-aparece-la-tabla-user">No aparece la tabla <code>User</code><a class="headerlink" href="#no-aparece-la-tabla-user" title="Permanent link">&para;</a></h3>
+<p>Comprueba que ejecutaste la migración del día 22:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>dev<span class="w"> </span>--name<span class="w"> </span>init
+</span></code></pre></div>
+<p>También puedes comprobar que existe:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>prisma/migrations/
+</span></code></pre></div>
+<h3 id="la-tabla-aparece-vacia">La tabla aparece vacía<a class="headerlink" href="#la-tabla-aparece-vacia" title="Permanent link">&para;</a></h3>
+<p>Es normal.</p>
+<p>Hoy todavía no hemos creado el seed.</p>
+<p>La tabla puede estar vacía porque solo hemos creado la estructura.</p>
+<h3 id="error-al-crear-un-email-duplicado">Error al crear un email duplicado<a class="headerlink" href="#error-al-crear-un-email-duplicado" title="Permanent link">&para;</a></h3>
+<p>Es correcto.</p>
+<p>El campo <code>email</code> tiene esta restricción:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>email String @unique
+</span></code></pre></div>
+<p>Eso significa que no puede haber dos usuarios con el mismo email.</p>
+<h3 id="he-creado-usuarios-manualmente-y-ahora-no-se-si-borrarlos">He creado usuarios manualmente y ahora no sé si borrarlos<a class="headerlink" href="#he-creado-usuarios-manualmente-y-ahora-no-se-si-borrarlos" title="Permanent link">&para;</a></h3>
+<p>Para este reto, lo recomendable es borrar los usuarios manuales antes del día 24.</p>
+<p>El día 24 crearemos usuarios iniciales mediante seed.</p>
+<p>Si dejas usuarios manuales, documenta cuáles son y por qué existen.</p>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-explicar-para-que-sirve-prisma-studio">Tarea libre 1: Explicar para qué sirve Prisma Studio<a class="headerlink" href="#tarea-libre-1-explicar-para-que-sirve-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="gu">## Para qué sirve Prisma Studio</span>
+</span></code></pre></div>
+<p>Explica con tus palabras qué utilidad tiene esta herramienta durante el desarrollo.</p>
+<p>Puedes apoyarte en estas ideas:</p>
+<ul>
+<li>Ver datos.</li>
+<li>Comprobar migraciones.</li>
+<li>Editar registros temporales.</li>
+<li>Revisar si una operación de la API se ha guardado.</li>
+<li>Detectar errores de persistencia.</li>
+</ul>
+<h3 id="tarea-libre-2-comparar-herramientas-de-prueba">Tarea libre 2: Comparar herramientas de prueba<a class="headerlink" href="#tarea-libre-2-comparar-herramientas-de-prueba" title="Permanent link">&para;</a></h3>
+<p>Completa esta tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Herramienta</th>
+<th>Qué prueba</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Thunder/Postman</td>
+<td></td>
+</tr>
+<tr>
+<td>Prisma Studio</td>
+<td></td>
+</tr>
+<tr>
+<td>Adminer</td>
+<td></td>
+</tr>
+<tr>
+<td>Frontend entregado</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-3-observar-restricciones">Tarea libre 3: Observar restricciones<a class="headerlink" href="#tarea-libre-3-observar-restricciones" title="Permanent link">&para;</a></h3>
+<p>Intenta comprobar visualmente estas restricciones:</p>
+<ul>
+<li><code>email</code> único.</li>
+<li><code>role</code> limitado a <code>USER</code> o <code>ADMIN</code>.</li>
+<li><code>isActive</code> booleano.</li>
+</ul>
+<p>Documenta qué has observado.</p>
+<h3 id="tarea-libre-4-crear-y-borrar-un-usuario-temporal">Tarea libre 4: Crear y borrar un usuario temporal<a class="headerlink" href="#tarea-libre-4-crear-y-borrar-un-usuario-temporal" title="Permanent link">&para;</a></h3>
+<p>Crea un usuario temporal con estos datos:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>Usuario Temporal</code></td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td><code>temporal@email.com</code></td>
+</tr>
+<tr>
+<td><code>passwordHash</code></td>
+<td><code>hash_temporal</code></td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td><code>USER</code></td>
+</tr>
+<tr>
+<td><code>isActive</code></td>
+<td><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<p>Después bórralo.</p>
+<p>En la documentación, explica por qué no conviene dejar datos manuales antes del seed.</p>
+<h3 id="tarea-libre-5-preparar-el-dia-24">Tarea libre 5: Preparar el día 24<a class="headerlink" href="#tarea-libre-5-preparar-el-dia-24" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="gu">## Preparación para el seed</span>
+</span></code></pre></div>
+<p>Escribe qué usuarios iniciales crees que debería tener el proyecto.</p>
+<p>Propuesta mínima:</p>
+<ul>
+<li>Un usuario <code>ADMIN</code>.</li>
+<li>Un usuario <code>USER</code> activo.</li>
+<li>Un usuario <code>USER</code> inactivo.</li>
+</ul>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>Admin Principal
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>admin@email.com
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>ADMIN
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>activo
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>Usuario Demo
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a>user@email.com
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>USER
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>activo
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a>Usuario Inactivo
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a>inactive@email.com
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a>USER
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a>inactivo
+</span></code></pre></div>
+<h2 id="entrega-recomendada-del-dia-23">Entrega recomendada del día 23<a class="headerlink" href="#entrega-recomendada-del-dia-23" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 23, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>usermanager-api/
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>  .env.example
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>  .gitignore
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>  docker-compose.yml
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>  README.md
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>  package.json
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>  package-lock.json
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a>  tsconfig.json
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>  prisma/
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>    schema.prisma
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a>    migrations/
+</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a>      &lt;timestamp&gt;_init/
+</span><span id="__span-32-13"><a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>        migration.sql
+</span><span id="__span-32-14"><a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>  src/
+</span><span id="__span-32-15"><a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a>    server.ts
+</span><span id="__span-32-16"><a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a>  docs/
+</span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-32-18"><a id="__codelineno-32-18" name="__codelineno-32-18" href="#__codelineno-32-18"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-32-19"><a id="__codelineno-32-19" name="__codelineno-32-19" href="#__codelineno-32-19"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-32-20"><a id="__codelineno-32-20" name="__codelineno-32-20" href="#__codelineno-32-20"></a>    dia-04-metodos-http.md
+</span><span id="__span-32-21"><a id="__codelineno-32-21" name="__codelineno-32-21" href="#__codelineno-32-21"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-32-22"><a id="__codelineno-32-22" name="__codelineno-32-22" href="#__codelineno-32-22"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-32-23"><a id="__codelineno-32-23" name="__codelineno-32-23" href="#__codelineno-32-23"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-32-24"><a id="__codelineno-32-24" name="__codelineno-32-24" href="#__codelineno-32-24"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-32-25"><a id="__codelineno-32-25" name="__codelineno-32-25" href="#__codelineno-32-25"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-32-26"><a id="__codelineno-32-26" name="__codelineno-32-26" href="#__codelineno-32-26"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-32-27"><a id="__codelineno-32-27" name="__codelineno-32-27" href="#__codelineno-32-27"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-32-28"><a id="__codelineno-32-28" name="__codelineno-32-28" href="#__codelineno-32-28"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-32-29"><a id="__codelineno-32-29" name="__codelineno-32-29" href="#__codelineno-32-29"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-32-30"><a id="__codelineno-32-30" name="__codelineno-32-30" href="#__codelineno-32-30"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-32-31"><a id="__codelineno-32-31" name="__codelineno-32-31" href="#__codelineno-32-31"></a>    dia-15-middleware-errores.md
+</span><span id="__span-32-32"><a id="__codelineno-32-32" name="__codelineno-32-32" href="#__codelineno-32-32"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-32-33"><a id="__codelineno-32-33" name="__codelineno-32-33" href="#__codelineno-32-33"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-32-34"><a id="__codelineno-32-34" name="__codelineno-32-34" href="#__codelineno-32-34"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-32-35"><a id="__codelineno-32-35" name="__codelineno-32-35" href="#__codelineno-32-35"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-32-36"><a id="__codelineno-32-36" name="__codelineno-32-36" href="#__codelineno-32-36"></a>    dia-20-instalacion-prisma.md
+</span><span id="__span-32-37"><a id="__codelineno-32-37" name="__codelineno-32-37" href="#__codelineno-32-37"></a>    dia-21-modelo-prisma-user.md
+</span><span id="__span-32-38"><a id="__codelineno-32-38" name="__codelineno-32-38" href="#__codelineno-32-38"></a>    dia-22-primera-migracion-prisma.md
+</span><span id="__span-32-39"><a id="__codelineno-32-39" name="__codelineno-32-39" href="#__codelineno-32-39"></a>    dia-23-prisma-studio.md
+</span></code></pre></div>
+<p>El documento del día 23 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>docs/dia-23-prisma-studio.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Comando usado para abrir Prisma Studio.</li>
+<li>URL habitual.</li>
+<li>Tabla revisada.</li>
+<li>Campos observados.</li>
+<li>Diferencia entre migración y seed.</li>
+<li>Comparación entre Prisma Studio y Adminer.</li>
+<li>Diagrama de funcionamiento.</li>
+<li>Explicación de restricciones observadas.</li>
+<li>Preparación para el seed del día 24.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>Hola, comparto el avance del día 23 del reto UserManager API:
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>He usado Prisma Studio para explorar visualmente la tabla User y comprobar la estructura creada por la migración. La documentación está en:
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>docs/dia-23-prisma-studio.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos usado Prisma Studio para observar visualmente la base de datos.</p>
+<p>Después de crear la migración en el día 22, necesitábamos comprobar que la tabla <code>User</code> existe y que sus campos son los esperados.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li>Prisma Studio.</li>
+<li>Visualización de tablas.</li>
+<li>Tabla <code>User</code>.</li>
+<li>Campos del modelo.</li>
+<li>Restricción <code>unique</code>.</li>
+<li>Enum <code>Role</code>.</li>
+<li><code>isActive</code>.</li>
+<li>Datos temporales.</li>
+<li>Diferencia entre migración y seed.</li>
+<li>Herramientas de desarrollo.</li>
+</ul>
+<p>Todavía no hemos creado datos iniciales de forma controlada. Eso llegará en el día 24 con el seed.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Prisma Studio no sustituye a la API, pero nos permite comprobar visualmente
+qué estructura y qué datos existen realmente en la base de datos.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia22/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 22">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 22
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia24/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 24">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 24
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

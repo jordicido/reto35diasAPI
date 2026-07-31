@@ -1,0 +1,3423 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 39: Pruebas de integración desde el frontend - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-39-pruebas-de-integracion-desde-el-frontend" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 39: Pruebas de integración desde el frontend
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-significa-probar-integracion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué significa probar integración
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-que-estamos-probando" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo que estamos probando
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-partes-del-sistema-vamos-a-comprobar" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué partes del sistema vamos a comprobar
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#codigos-http-que-debemos-distinguir" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Códigos HTTP que debemos distinguir
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferencia-entre-401-y-403" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Diferencia entre 401 y 403
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#matriz-general-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Matriz general de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usuarios-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuarios de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparacion-del-entorno" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Preparación del entorno
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preparación del entorno">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-instalar-dependencias-del-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Instalar dependencias del backend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-generar-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Generar Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-ejecutar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Ejecutar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-arrancar-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Arrancar backend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-arrancar-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Arrancar frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-abrir-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Abrir Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada-checklist-completa" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada: checklist completa
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada: checklist completa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-registro-desde-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Registro desde frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-login-desde-frontend" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Login desde frontend
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-login-como-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Login como USER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-login-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Login como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-login-con-usuario-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Login con usuario inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-ver-mi-perfil" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Ver mi perfil
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-observar-la-peticion-en-network" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Observar la petición en Network
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-editar-mi-nombre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Editar mi nombre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-panel-admin-con-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Panel admin con USER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-panel-admin-con-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Panel admin con ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-listar-usuarios-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Listar usuarios como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-crear-usuario-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Crear usuario como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-desactivar-usuario-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Desactivar usuario como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-cerrar-sesion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 22: Cerrar sesión
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-ruta-protegida-sin-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 23: Ruta protegida sin token
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabla-de-evidencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tabla de evidencias
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#como-recoger-evidencias" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cómo recoger evidencias
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#no-compartir-tokens-reales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        No compartir tokens reales
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pruebas-centradas-en-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Pruebas centradas en seguridad
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pruebas centradas en seguridad">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#user-intenta-acceder-al-panel-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>USER</code> intenta acceder al panel admin
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ruta-protegida-sin-token" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ruta protegida sin token
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-inactivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#checklist-de-pruebas-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Checklist de pruebas del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-documentacion-del-dia-39" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear documentación del día 39
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear documentación del día 39">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 24: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-anadir-matriz-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 25: Añadir matriz de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#login-correcto-pero-dashboard-falla" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Login correcto pero dashboard falla
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-caducado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Token caducado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-intentando-entrar-en-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>USER</code> intentando entrar en admin
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seed-no-ejecutado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Seed no ejecutado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contrasena-incorrecta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Contraseña incorrecta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usuario-inactivo_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Usuario inactivo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#los-datos-no-aparecen-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Los datos no aparecen en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-frontend-muestra-error-generico" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El frontend muestra error genérico
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-disenar-dos-pruebas-negativas-adicionales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Diseñar dos pruebas negativas adicionales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-probar-modificacion-de-isactive-con-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Probar modificación de <code>isActive</code> con USER
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-probar-token-inventado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Probar token inventado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-documentar-una-incidencia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Documentar una incidencia
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-40" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 40
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-39" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 39
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-39-pruebas-de-integracion-desde-el-frontend">Día 39: Pruebas de integración desde el frontend<a class="headerlink" href="#dia-39-pruebas-de-integracion-desde-el-frontend" title="Permanent link">&para;</a></h1>
+<p>En el día 38 conectamos el frontend entregado con nuestra API.</p>
+<p>Hasta ese momento habíamos probado la mayoría de funcionalidades usando herramientas como Thunder Client, Postman o peticiones manuales.</p>
+<p>Ahora ya tenemos una interfaz web sencilla que se comunica con nuestro backend.</p>
+<p>Hoy no vamos a programar muchas funcionalidades nuevas.</p>
+<p>El objetivo del día será comprobar que todas las piezas funcionan juntas:</p>
+<ul>
+<li>Navegador.</li>
+<li>Frontend.</li>
+<li>API Express.</li>
+<li>Autenticación.</li>
+<li>JWT.</li>
+<li>Permisos.</li>
+<li>Prisma.</li>
+<li>PostgreSQL.</li>
+<li>Seed.</li>
+</ul>
+<p>Esto se llama prueba de integración.</p>
+<p>Una prueba de integración no comprueba una función aislada.</p>
+<p>Comprueba que varias partes del sistema colaboran correctamente.</p>
+<div class="admonition info">
+<p class="admonition-title">Idea principal</p>
+<p>Una prueba de integración comprueba que varias piezas del proyecto funcionan correctamente cuando trabajan juntas.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<ul>
+<li>Pruebas de integración.</li>
+<li>Frontend como cliente de la API.</li>
+<li>Login desde interfaz.</li>
+<li>Registro desde interfaz.</li>
+<li>Token JWT en <code>localStorage</code>.</li>
+<li>Cabecera <code>Authorization</code>.</li>
+<li>Rutas protegidas.</li>
+<li>Permisos <code>USER</code> y <code>ADMIN</code>.</li>
+<li>Códigos HTTP.</li>
+<li>Prisma Studio.</li>
+<li>Persistencia de datos.</li>
+<li>Diagnóstico de errores.</li>
+<li>DevTools.</li>
+<li>Network.</li>
+</ul>
+<p>El producto del día será:</p>
+<p><strong>Checklist de integración completada con resultados y evidencias.</strong></p>
+<p>El resultado esperado será que podamos demostrar que el frontend y el backend trabajan correctamente juntos.</p>
+<h2 id="que-significa-probar-integracion">Qué significa probar integración<a class="headerlink" href="#que-significa-probar-integracion" title="Permanent link">&para;</a></h2>
+<p>En días anteriores hemos probado muchas partes por separado.</p>
+<p>Por ejemplo:</p>
+<ul>
+<li>Probar una ruta desde Thunder Client.</li>
+<li>Comprobar un usuario en Prisma Studio.</li>
+<li>Hacer login y copiar un token.</li>
+<li>Enviar manualmente <code>Authorization</code>.</li>
+<li>Comprobar un middleware.</li>
+</ul>
+<p>Hoy haremos algo diferente.</p>
+<p>Vamos a probar flujos completos desde la interfaz.</p>
+<p>Por ejemplo:</p>
+<ul>
+<li>El usuario escribe email y contraseña en el frontend.</li>
+<li>El frontend llama a <code>POST /api/auth/login</code>.</li>
+<li>La API valida las credenciales.</li>
+<li>La API genera un JWT.</li>
+<li>El frontend guarda el token.</li>
+<li>El frontend llama a <code>GET /api/users/me</code>.</li>
+<li>La API verifica el token.</li>
+<li>La API consulta PostgreSQL.</li>
+<li>El frontend muestra el perfil.</li>
+</ul>
+<p>Ese recorrido atraviesa muchas capas.</p>
+<p>Por eso es una prueba de integración.</p>
+<h2 id="flujo-que-estamos-probando">Flujo que estamos probando<a class="headerlink" href="#flujo-que-estamos-probando" title="Permanent link">&para;</a></h2>
+<p>El flujo principal será:</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Login frontend] --&gt; B[API valida credenciales]
+    B --&gt; C[API devuelve JWT]
+    C --&gt; D[Frontend guarda token]
+    D --&gt; E[Frontend llama rutas protegidas]
+    E --&gt; F[API comprueba autenticación]
+    F --&gt; G[API comprueba permisos]
+    G --&gt; H[Prisma consulta PostgreSQL]
+    H --&gt; I[Frontend muestra resultado]</code></pre>
+<p>Hoy no nos basta con que una pantalla “parezca funcionar”.</p>
+<p>Queremos comprobar:</p>
+<ul>
+<li>Qué petición se envía.</li>
+<li>Qué endpoint se llama.</li>
+<li>Qué código HTTP responde la API.</li>
+<li>Qué JSON devuelve.</li>
+<li>Qué datos cambian en PostgreSQL.</li>
+<li>Qué ocurre con <code>USER</code>.</li>
+<li>Qué ocurre con <code>ADMIN</code>.</li>
+<li>Qué ocurre cuando falta el token.</li>
+<li>Qué ocurre cuando el usuario no tiene permiso.</li>
+</ul>
+<h2 id="que-partes-del-sistema-vamos-a-comprobar">Qué partes del sistema vamos a comprobar<a class="headerlink" href="#que-partes-del-sistema-vamos-a-comprobar" title="Permanent link">&para;</a></h2>
+<p>Durante el día comprobaremos estas partes:</p>
+<table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Qué comprobaremos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frontend</td>
+<td>Formularios, botones, navegación y mensajes</td>
+</tr>
+<tr>
+<td>API</td>
+<td>Respuestas, códigos HTTP y reglas de permisos</td>
+</tr>
+<tr>
+<td>JWT</td>
+<td>Token guardado y enviado en <code>Authorization</code></td>
+</tr>
+<tr>
+<td>Roles</td>
+<td>Diferencias entre <code>USER</code> y <code>ADMIN</code></td>
+</tr>
+<tr>
+<td>Prisma</td>
+<td>Consultas y modificaciones reales</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Persistencia de usuarios</td>
+</tr>
+<tr>
+<td>DevTools</td>
+<td>Peticiones, headers, payloads y respuestas</td>
+</tr>
+</tbody>
+</table>
+<h2 id="codigos-http-que-debemos-distinguir">Códigos HTTP que debemos distinguir<a class="headerlink" href="#codigos-http-que-debemos-distinguir" title="Permanent link">&para;</a></h2>
+<p>Durante las pruebas aparecerán varios códigos.</p>
+<p>Es importante no interpretarlos todos como “error genérico”.</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Significado</th>
+<th>Ejemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>Petición correcta</td>
+<td>Login correcto o perfil obtenido</td>
+</tr>
+<tr>
+<td><code>201 Created</code></td>
+<td>Recurso creado</td>
+<td>Registro o creación de usuario</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>Datos incorrectos o incompletos</td>
+<td>Nombre vacío, email inválido o ID inválido</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>No autenticado</td>
+<td>Token ausente, inválido o caducado</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>Autenticado sin permiso</td>
+<td><code>USER</code> intenta listar usuarios</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Recurso no encontrado</td>
+<td>Usuario inexistente</td>
+</tr>
+<tr>
+<td><code>409 Conflict</code></td>
+<td>Conflicto con el estado actual</td>
+<td>Email duplicado</td>
+</tr>
+</tbody>
+</table>
+<p>La diferencia más importante de hoy será:</p>
+<div class="admonition warning">
+<p class="admonition-title">Regla importante</p>
+<p><code>401</code> no significa lo mismo que <code>403</code>.</p>
+</div>
+<h2 id="diferencia-entre-401-y-403">Diferencia entre 401 y 403<a class="headerlink" href="#diferencia-entre-401-y-403" title="Permanent link">&para;</a></h2>
+<p>Estos dos códigos suelen confundirse.</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Pregunta que responde</th>
+<th>Situación</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>¿Te has autenticado correctamente?</td>
+<td>No hay token o el token no es válido</td>
+</tr>
+<tr>
+<td><code>403 Forbidden</code></td>
+<td>¿Tienes permiso para hacer esta acción?</td>
+<td>Hay token válido, pero el rol no permite la acción</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplos:</p>
+<ul>
+<li><code>GET /api/users</code> sin token: <code>401</code>.</li>
+<li><code>GET /api/users</code> con token de <code>USER</code>: <code>403</code>.</li>
+<li><code>GET /api/users</code> con token de <code>ADMIN</code>: <code>200</code>.</li>
+</ul>
+<p>Esto demuestra que autenticación y autorización no son lo mismo.</p>
+<h2 id="matriz-general-de-pruebas">Matriz general de pruebas<a class="headerlink" href="#matriz-general-de-pruebas" title="Permanent link">&para;</a></h2>
+<p>Usaremos esta matriz como guía.</p>
+<table>
+<thead>
+<tr>
+<th>Acción</th>
+<th>Endpoint</th>
+<th>Rol necesario</th>
+<th>Resultado con USER</th>
+<th>Resultado con ADMIN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registro</td>
+<td><code>POST /api/auth/register</code></td>
+<td>Público</td>
+<td><code>201</code></td>
+<td><code>201</code></td>
+</tr>
+<tr>
+<td>Login</td>
+<td><code>POST /api/auth/login</code></td>
+<td>Público</td>
+<td><code>200</code> + JWT</td>
+<td><code>200</code> + JWT</td>
+</tr>
+<tr>
+<td>Ver perfil</td>
+<td><code>GET /api/users/me</code></td>
+<td>Autenticado</td>
+<td><code>200</code>, propio perfil</td>
+<td><code>200</code>, propio perfil</td>
+</tr>
+<tr>
+<td>Editar nombre</td>
+<td><code>PATCH /api/users/:id</code></td>
+<td>Propio usuario o <code>ADMIN</code></td>
+<td><code>200</code> si es propio</td>
+<td><code>200</code></td>
+</tr>
+<tr>
+<td>Listar usuarios</td>
+<td><code>GET /api/users</code></td>
+<td><code>ADMIN</code></td>
+<td><code>403</code></td>
+<td><code>200</code></td>
+</tr>
+<tr>
+<td>Crear usuario</td>
+<td><code>POST /api/users</code></td>
+<td><code>ADMIN</code></td>
+<td><code>403</code></td>
+<td><code>201</code></td>
+</tr>
+<tr>
+<td>Desactivar usuario</td>
+<td><code>DELETE /api/users/:id</code></td>
+<td><code>ADMIN</code></td>
+<td><code>403</code></td>
+<td><code>200</code></td>
+</tr>
+<tr>
+<td>Ruta protegida sin token</td>
+<td>Varias</td>
+<td>Token válido</td>
+<td><code>401</code></td>
+<td><code>401</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="usuarios-de-prueba">Usuarios de prueba<a class="headerlink" href="#usuarios-de-prueba" title="Permanent link">&para;</a></h2>
+<p>Usaremos los usuarios del seed.</p>
+<table>
+<thead>
+<tr>
+<th>Usuario</th>
+<th>Email</th>
+<th>Password</th>
+<th>Rol</th>
+<th>Estado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Admin Principal</td>
+<td><code>admin@email.com</code></td>
+<td><code>admin123</code></td>
+<td><code>ADMIN</code></td>
+<td>Activo</td>
+</tr>
+<tr>
+<td>Usuario Demo</td>
+<td><code>user@email.com</code></td>
+<td><code>user123</code></td>
+<td><code>USER</code></td>
+<td>Activo</td>
+</tr>
+<tr>
+<td>Usuario Inactivo</td>
+<td><code>inactive@email.com</code></td>
+<td><code>inactive123</code></td>
+<td><code>USER</code></td>
+<td>Inactivo</td>
+</tr>
+</tbody>
+</table>
+<p>Estos usuarios nos permiten probar tres situaciones diferentes:</p>
+<ul>
+<li>Un administrador.</li>
+<li>Un usuario normal activo.</li>
+<li>Un usuario inactivo.</li>
+</ul>
+<h2 id="preparacion-del-entorno">Preparación del entorno<a class="headerlink" href="#preparacion-del-entorno" title="Permanent link">&para;</a></h2>
+<p>Antes de empezar las pruebas, necesitamos tener todo en marcha.</p>
+<h3 id="paso-1-arrancar-postgresql">Paso 1: Arrancar PostgreSQL<a class="headerlink" href="#paso-1-arrancar-postgresql" title="Permanent link">&para;</a></h3>
+<p>Desde la raíz del proyecto:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<p>Comprueba que está activo:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span></code></pre></div>
+<h3 id="paso-2-instalar-dependencias-del-backend">Paso 2: Instalar dependencias del backend<a class="headerlink" href="#paso-2-instalar-dependencias-del-backend" title="Permanent link">&para;</a></h3>
+<p>Si hace falta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>npm<span class="w"> </span>install
+</span></code></pre></div>
+<h3 id="paso-3-generar-prisma-client">Paso 3: Generar Prisma Client<a class="headerlink" href="#paso-3-generar-prisma-client" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:generate
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>generate
+</span></code></pre></div>
+<p>Recuerda que el proyecto usa Prisma 7, cliente generado en <code>src/generated/prisma</code> y adapter PostgreSQL.</p>
+<h3 id="paso-4-ejecutar-el-seed">Paso 4: Ejecutar el seed<a class="headerlink" href="#paso-4-ejecutar-el-seed" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span></code></pre></div>
+<p>Esto nos asegura que existen los usuarios de prueba.</p>
+<h3 id="paso-5-arrancar-backend">Paso 5: Arrancar backend<a class="headerlink" href="#paso-5-arrancar-backend" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Comprueba:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>http://localhost:3000/api/health
+</span></code></pre></div>
+<h3 id="paso-6-arrancar-frontend">Paso 6: Arrancar frontend<a class="headerlink" href="#paso-6-arrancar-frontend" title="Permanent link">&para;</a></h3>
+<p>En otra terminal:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nb">cd</span><span class="w"> </span>frontend
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>npm<span class="w"> </span>install
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>El frontend debería quedar disponible en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>http://localhost:3001
+</span></code></pre></div>
+<h3 id="paso-7-abrir-prisma-studio">Paso 7: Abrir Prisma Studio<a class="headerlink" href="#paso-7-abrir-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>En otra terminal, si quieres observar los datos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>studio
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:studio
+</span></code></pre></div>
+<p>Prisma Studio nos servirá para comprobar que los cambios realizados desde el frontend realmente llegan a PostgreSQL.</p>
+<h2 id="parte-guiada-checklist-completa">Parte guiada: checklist completa<a class="headerlink" href="#parte-guiada-checklist-completa" title="Permanent link">&para;</a></h2>
+<p>Durante las pruebas anota siempre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>Cuenta usada.
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>Acción realizada.
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Endpoint llamado.
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>Código HTTP esperado.
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Código HTTP obtenido.
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>Resultado observado.
+</span></code></pre></div>
+<h3 id="paso-8-registro-desde-frontend">Paso 8: Registro desde frontend<a class="headerlink" href="#paso-8-registro-desde-frontend" title="Permanent link">&para;</a></h3>
+<p>Entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>/register
+</span></code></pre></div>
+<p>Crea una cuenta nueva.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Nombre: Usuario Integración
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>Email: usuario.integracion@email.com
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>Password: 123456
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>201 Created
+</span></code></pre></div>
+<p>Comprueba que el frontend muestra un mensaje de éxito o la respuesta de la API.</p>
+<p>Después abre Prisma Studio y comprueba que el usuario existe.</p>
+<h3 id="paso-9-email-duplicado">Paso 9: Email duplicado<a class="headerlink" href="#paso-9-email-duplicado" title="Permanent link">&para;</a></h3>
+<p>Repite el mismo registro con el mismo email:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>usuario.integracion@email.com
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>409 Conflict
+</span></code></pre></div>
+<p>Mensaje esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>El email ya está registrado
+</span></code></pre></div>
+<p>Esto confirma que la restricción de email único sigue funcionando desde el frontend.</p>
+<h3 id="paso-10-login-desde-frontend">Paso 10: Login desde frontend<a class="headerlink" href="#paso-10-login-desde-frontend" title="Permanent link">&para;</a></h3>
+<p>Entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>/login
+</span></code></pre></div>
+<p>Usa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>user@email.com / user123
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>200 OK + JWT
+</span></code></pre></div>
+<p>Comprueba en DevTools:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>Application → Local Storage
+</span></code></pre></div>
+<p>Debe aparecer una clave:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>token
+</span></code></pre></div>
+<h3 id="paso-11-login-como-user">Paso 11: Login como USER<a class="headerlink" href="#paso-11-login-como-user" title="Permanent link">&para;</a></h3>
+<p>Haz login con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>user@email.com / user123
+</span></code></pre></div>
+<p>Comprueba que el frontend identifica al usuario como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>USER
+</span></code></pre></div>
+<p>Este usuario nos servirá para probar restricciones de permisos.</p>
+<h3 id="paso-12-login-como-admin">Paso 12: Login como ADMIN<a class="headerlink" href="#paso-12-login-como-admin" title="Permanent link">&para;</a></h3>
+<p>Cierra sesión.</p>
+<p>Haz login con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>admin@email.com / admin123
+</span></code></pre></div>
+<p>Comprueba que el frontend identifica al usuario como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>ADMIN
+</span></code></pre></div>
+<p>Este usuario nos servirá para probar acciones administrativas.</p>
+<h3 id="paso-13-login-con-usuario-inactivo">Paso 13: Login con usuario inactivo<a class="headerlink" href="#paso-13-login-con-usuario-inactivo" title="Permanent link">&para;</a></h3>
+<p>Cierra sesión.</p>
+<p>Intenta iniciar sesión con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>inactive@email.com / inactive123
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>403 Forbidden
+</span></code></pre></div>
+<p>El usuario existe en PostgreSQL, pero no debe conseguir un token válido porque está inactivo.</p>
+<p>Comprueba en Prisma Studio que:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>isActive = false
+</span></code></pre></div>
+<h3 id="paso-14-ver-mi-perfil">Paso 14: Ver mi perfil<a class="headerlink" href="#paso-14-ver-mi-perfil" title="Permanent link">&para;</a></h3>
+<p>Haz login como usuario normal:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>user@email.com / user123
+</span></code></pre></div>
+<p>Entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>/dashboard
+</span></code></pre></div>
+<p>El frontend debería llamar a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>GET /api/users/me
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>200 OK
+</span></code></pre></div>
+<p>Debe mostrar datos como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>id
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>name
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a>email
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a>role
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a>isActive
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a>createdAt
+</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a>updatedAt
+</span></code></pre></div>
+<h3 id="paso-15-observar-la-peticion-en-network">Paso 15: Observar la petición en Network<a class="headerlink" href="#paso-15-observar-la-peticion-en-network" title="Permanent link">&para;</a></h3>
+<p>Abre DevTools:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>Network
+</span></code></pre></div>
+<p>Busca la petición a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>/api/users/me
+</span></code></pre></div>
+<p>Comprueba:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>Método: GET
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>Status: 200
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>Authorization: Bearer eyJ...
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>Respuesta JSON con el usuario
+</span></code></pre></div>
+<p>No compartas públicamente un JWT real.</p>
+<p>En capturas puedes ocultar parte del token.</p>
+<h3 id="paso-16-editar-mi-nombre">Paso 16: Editar mi nombre<a class="headerlink" href="#paso-16-editar-mi-nombre" title="Permanent link">&para;</a></h3>
+<p>Desde el dashboard, cambia el nombre del usuario.</p>
+<p>Por ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>Usuario Demo Actualizado
+</span></code></pre></div>
+<p>El frontend debería llamar a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>PATCH /api/users/:id
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>200 OK
+</span></code></pre></div>
+<p>Después recarga el dashboard.</p>
+<p>El cambio debe persistir.</p>
+<p>Comprueba también en Prisma Studio que el nombre se ha actualizado.</p>
+<h3 id="paso-17-panel-admin-con-user">Paso 17: Panel admin con USER<a class="headerlink" href="#paso-17-panel-admin-con-user" title="Permanent link">&para;</a></h3>
+<p>Con sesión iniciada como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>user@email.com
+</span></code></pre></div>
+<p>entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>/admin/users
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>403 Forbidden
+</span></code></pre></div>
+<p>El frontend debe mostrar un mensaje claro, por ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>No tienes permiso para realizar esta acción.
+</span></code></pre></div>
+<p>Esto es correcto.</p>
+<p>No estamos buscando ocultar totalmente el panel.</p>
+<p>Queremos observar que la API bloquea la acción.</p>
+<h3 id="paso-18-panel-admin-con-admin">Paso 18: Panel admin con ADMIN<a class="headerlink" href="#paso-18-panel-admin-con-admin" title="Permanent link">&para;</a></h3>
+<p>Cierra sesión.</p>
+<p>Haz login con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>admin@email.com / admin123
+</span></code></pre></div>
+<p>Entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>/admin/users
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>200 OK
+</span></code></pre></div>
+<p>Debe mostrarse el listado de usuarios.</p>
+<h3 id="paso-19-listar-usuarios-como-admin">Paso 19: Listar usuarios como ADMIN<a class="headerlink" href="#paso-19-listar-usuarios-como-admin" title="Permanent link">&para;</a></h3>
+<p>Desde el panel admin, comprueba que se llama a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>GET /api/users
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>200 OK
+</span></code></pre></div>
+<p>Debe aparecer una tabla con usuarios.</p>
+<p>Comprueba que no se muestra:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>passwordHash
+</span></code></pre></div>
+<h3 id="paso-20-crear-usuario-como-admin">Paso 20: Crear usuario como ADMIN<a class="headerlink" href="#paso-20-crear-usuario-como-admin" title="Permanent link">&para;</a></h3>
+<p>Desde el panel admin, crea un usuario nuevo.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>Nombre: Usuario Admin Test
+</span><span id="__span-52-2"><a id="__codelineno-52-2" name="__codelineno-52-2" href="#__codelineno-52-2"></a>Email: admin.test@email.com
+</span><span id="__span-52-3"><a id="__codelineno-52-3" name="__codelineno-52-3" href="#__codelineno-52-3"></a>Password: 123456
+</span></code></pre></div>
+<p>El frontend debería llamar a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a>POST /api/users
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>201 Created
+</span></code></pre></div>
+<p>Comprueba que el usuario aparece en la tabla.</p>
+<p>Después confirma en Prisma Studio que se ha guardado.</p>
+<h3 id="paso-21-desactivar-usuario-como-admin">Paso 21: Desactivar usuario como ADMIN<a class="headerlink" href="#paso-21-desactivar-usuario-como-admin" title="Permanent link">&para;</a></h3>
+<p>Desde el panel admin, desactiva un usuario de prueba.</p>
+<p>El frontend debería llamar a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a>DELETE /api/users/:id
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a>200 OK
+</span></code></pre></div>
+<p>Dependiendo de la implementación, también podría usarse <code>204 No Content</code>, pero en nuestro backend venimos trabajando normalmente con <code>200 OK</code> y una respuesta JSON.</p>
+<p>Comprueba en Prisma Studio que:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>isActive = false
+</span></code></pre></div>
+<h3 id="paso-22-cerrar-sesion">Paso 22: Cerrar sesión<a class="headerlink" href="#paso-22-cerrar-sesion" title="Permanent link">&para;</a></h3>
+<p>Pulsa logout.</p>
+<p>El frontend debe eliminar el token de:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>localStorage
+</span></code></pre></div>
+<p>Comprueba en DevTools que ya no aparece la clave:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>token
+</span></code></pre></div>
+<h3 id="paso-23-ruta-protegida-sin-token">Paso 23: Ruta protegida sin token<a class="headerlink" href="#paso-23-ruta-protegida-sin-token" title="Permanent link">&para;</a></h3>
+<p>Después de cerrar sesión, intenta entrar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>/dashboard
+</span></code></pre></div>
+<p>El frontend intentará llamar a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>GET /api/users/me
+</span></code></pre></div>
+<p>pero no llevará <code>Authorization</code>.</p>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a>401 Unauthorized
+</span></code></pre></div>
+<p>Este caso demuestra que el backend no permite acceder a rutas protegidas sin token.</p>
+<h2 id="tabla-de-evidencias">Tabla de evidencias<a class="headerlink" href="#tabla-de-evidencias" title="Permanent link">&para;</a></h2>
+<p>Completa una tabla como esta durante la sesión:</p>
+<table>
+<thead>
+<tr>
+<th>Prueba</th>
+<th>Usuario usado</th>
+<th>Endpoint</th>
+<th>Código esperado</th>
+<th>Código obtenido</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registro nuevo</td>
+<td>Nuevo</td>
+<td><code>POST /api/auth/register</code></td>
+<td><code>201</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+<td>Nuevo</td>
+<td><code>POST /api/auth/register</code></td>
+<td><code>409</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Login USER</td>
+<td><code>user@email.com</code></td>
+<td><code>POST /api/auth/login</code></td>
+<td><code>200</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Login ADMIN</td>
+<td><code>admin@email.com</code></td>
+<td><code>POST /api/auth/login</code></td>
+<td><code>200</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Login inactivo</td>
+<td><code>inactive@email.com</code></td>
+<td><code>POST /api/auth/login</code></td>
+<td><code>403</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Ver perfil</td>
+<td>USER</td>
+<td><code>GET /api/users/me</code></td>
+<td><code>200</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Panel admin con USER</td>
+<td>USER</td>
+<td><code>GET /api/users</code></td>
+<td><code>403</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Panel admin con ADMIN</td>
+<td>ADMIN</td>
+<td><code>GET /api/users</code></td>
+<td><code>200</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Crear usuario admin</td>
+<td>ADMIN</td>
+<td><code>POST /api/users</code></td>
+<td><code>201</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Ruta sin token</td>
+<td>Sin sesión</td>
+<td><code>GET /api/users/me</code></td>
+<td><code>401</code></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="como-recoger-evidencias">Cómo recoger evidencias<a class="headerlink" href="#como-recoger-evidencias" title="Permanent link">&para;</a></h2>
+<p>Para cada prueba importante, usa DevTools.</p>
+<p>Entra en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a>DevTools → Network
+</span></code></pre></div>
+<p>Selecciona una petición y anota:</p>
+<table>
+<thead>
+<tr>
+<th>Dato</th>
+<th>Dónde verlo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL</td>
+<td>General</td>
+</tr>
+<tr>
+<td>Método</td>
+<td>General</td>
+</tr>
+<tr>
+<td>Código HTTP</td>
+<td>Status</td>
+</tr>
+<tr>
+<td>Token enviado</td>
+<td>Request Headers</td>
+</tr>
+<tr>
+<td>Body enviado</td>
+<td>Payload</td>
+</tr>
+<tr>
+<td>JSON recibido</td>
+<td>Response</td>
+</tr>
+<tr>
+<td>Tiempo de respuesta</td>
+<td>Timing</td>
+</tr>
+</tbody>
+</table>
+<p>No hace falta capturar todo.</p>
+<p>Basta con recoger evidencias claras de:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a>Una petición correcta.
+</span><span id="__span-64-2"><a id="__codelineno-64-2" name="__codelineno-64-2" href="#__codelineno-64-2"></a>Un error 401.
+</span><span id="__span-64-3"><a id="__codelineno-64-3" name="__codelineno-64-3" href="#__codelineno-64-3"></a>Un error 403.
+</span><span id="__span-64-4"><a id="__codelineno-64-4" name="__codelineno-64-4" href="#__codelineno-64-4"></a>Una modificación persistida en base de datos.
+</span></code></pre></div>
+<h2 id="no-compartir-tokens-reales">No compartir tokens reales<a class="headerlink" href="#no-compartir-tokens-reales" title="Permanent link">&para;</a></h2>
+<p>Los JWT son credenciales temporales.</p>
+<p>Durante las prácticas podemos verlos para aprender, pero no debemos compartirlos públicamente.</p>
+<p>Si haces una captura, puedes ocultar parte del token:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...OCULTO
+</span></code></pre></div>
+<p>La idea es demostrar que se envía el header, no publicar el token completo.</p>
+<h2 id="pruebas-centradas-en-seguridad">Pruebas centradas en seguridad<a class="headerlink" href="#pruebas-centradas-en-seguridad" title="Permanent link">&para;</a></h2>
+<h3 id="user-intenta-acceder-al-panel-admin"><code>USER</code> intenta acceder al panel admin<a class="headerlink" href="#user-intenta-acceder-al-panel-admin" title="Permanent link">&para;</a></h3>
+<p>Esta prueba es muy importante.</p>
+<p>No ocultamos totalmente el enlace al panel admin porque queremos provocar la petición.</p>
+<p>Lo importante es observar que la API responde:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>403 Forbidden
+</span></code></pre></div>
+<p>Esto demuestra que la seguridad no depende de ocultar botones en el frontend.</p>
+<p>Aunque alguien construyera su propia petición manualmente, la API seguiría rechazando la acción.</p>
+<h3 id="ruta-protegida-sin-token">Ruta protegida sin token<a class="headerlink" href="#ruta-protegida-sin-token" title="Permanent link">&para;</a></h3>
+<p>Después de logout, abre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a>/dashboard
+</span></code></pre></div>
+<p>La petición no llevará:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a>Authorization
+</span></code></pre></div>
+<p>La API debe responder:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a>401 Unauthorized
+</span></code></pre></div>
+<p>Esto demuestra que la autenticación se comprueba en el backend.</p>
+<h3 id="usuario-inactivo">Usuario inactivo<a class="headerlink" href="#usuario-inactivo" title="Permanent link">&para;</a></h3>
+<p>El usuario inactivo existe en la base de datos, pero no debe conseguir un token válido al hacer login.</p>
+<p>Prueba:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a>inactive@email.com / inactive123
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a>403 Forbidden
+</span></code></pre></div>
+<p>Esto comprueba que <code>isActive</code> se tiene en cuenta en el login.</p>
+<h3 id="email-duplicado">Email duplicado<a class="headerlink" href="#email-duplicado" title="Permanent link">&para;</a></h3>
+<p>Al intentar registrar dos veces el mismo email, la API debe responder:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a>409 Conflict
+</span></code></pre></div>
+<p>Esto comprueba que se mantiene la restricción de unicidad.</p>
+<h2 id="checklist-de-pruebas-del-dia">Checklist de pruebas del día<a class="headerlink" href="#checklist-de-pruebas-del-dia" title="Permanent link">&para;</a></h2>
+<p>Completa esta checklist:</p>
+<table>
+<thead>
+<tr>
+<th>Prueba</th>
+<th>Resultado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Registro desde frontend</td>
+<td></td>
+</tr>
+<tr>
+<td>Email duplicado devuelve <code>409</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Login desde frontend devuelve token</td>
+<td></td>
+</tr>
+<tr>
+<td>Login como USER funciona</td>
+<td></td>
+</tr>
+<tr>
+<td>Login como ADMIN funciona</td>
+<td></td>
+</tr>
+<tr>
+<td>Login con usuario inactivo falla</td>
+<td></td>
+</tr>
+<tr>
+<td>Dashboard muestra mi perfil</td>
+<td></td>
+</tr>
+<tr>
+<td>Dashboard envía <code>Authorization</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Editar mi nombre funciona</td>
+<td></td>
+</tr>
+<tr>
+<td>El cambio persiste al recargar</td>
+<td></td>
+</tr>
+<tr>
+<td>El cambio aparece en Prisma Studio</td>
+<td></td>
+</tr>
+<tr>
+<td>Panel admin con USER devuelve <code>403</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Panel admin con ADMIN devuelve listado</td>
+<td></td>
+</tr>
+<tr>
+<td>ADMIN puede crear usuario</td>
+<td></td>
+</tr>
+<tr>
+<td>ADMIN puede desactivar usuario</td>
+<td></td>
+</tr>
+<tr>
+<td>Prisma Studio refleja los cambios</td>
+<td></td>
+</tr>
+<tr>
+<td>Logout elimina token</td>
+<td></td>
+</tr>
+<tr>
+<td>Ruta protegida sin token devuelve <code>401</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="crear-documentacion-del-dia-39">Crear documentación del día 39<a class="headerlink" href="#crear-documentacion-del-dia-39" title="Permanent link">&para;</a></h2>
+<p>Dentro de la carpeta <code>docs/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>docs/dia-39-pruebas-integracion-frontend.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a><span class="gh"># Día 39 - Pruebas de integración desde el frontend</span>
+</span><span id="__span-74-2"><a id="__codelineno-74-2" name="__codelineno-74-2" href="#__codelineno-74-2"></a>
+</span><span id="__span-74-3"><a id="__codelineno-74-3" name="__codelineno-74-3" href="#__codelineno-74-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-74-4"><a id="__codelineno-74-4" name="__codelineno-74-4" href="#__codelineno-74-4"></a>
+</span><span id="__span-74-5"><a id="__codelineno-74-5" name="__codelineno-74-5" href="#__codelineno-74-5"></a><span class="k">-</span><span class="w"> </span>He arrancado PostgreSQL.
+</span><span id="__span-74-6"><a id="__codelineno-74-6" name="__codelineno-74-6" href="#__codelineno-74-6"></a><span class="k">-</span><span class="w"> </span>He ejecutado el seed.
+</span><span id="__span-74-7"><a id="__codelineno-74-7" name="__codelineno-74-7" href="#__codelineno-74-7"></a><span class="k">-</span><span class="w"> </span>He arrancado el backend.
+</span><span id="__span-74-8"><a id="__codelineno-74-8" name="__codelineno-74-8" href="#__codelineno-74-8"></a><span class="k">-</span><span class="w"> </span>He arrancado el frontend.
+</span><span id="__span-74-9"><a id="__codelineno-74-9" name="__codelineno-74-9" href="#__codelineno-74-9"></a><span class="k">-</span><span class="w"> </span>He probado registro desde el frontend.
+</span><span id="__span-74-10"><a id="__codelineno-74-10" name="__codelineno-74-10" href="#__codelineno-74-10"></a><span class="k">-</span><span class="w"> </span>He probado email duplicado.
+</span><span id="__span-74-11"><a id="__codelineno-74-11" name="__codelineno-74-11" href="#__codelineno-74-11"></a><span class="k">-</span><span class="w"> </span>He probado login como USER.
+</span><span id="__span-74-12"><a id="__codelineno-74-12" name="__codelineno-74-12" href="#__codelineno-74-12"></a><span class="k">-</span><span class="w"> </span>He probado login como ADMIN.
+</span><span id="__span-74-13"><a id="__codelineno-74-13" name="__codelineno-74-13" href="#__codelineno-74-13"></a><span class="k">-</span><span class="w"> </span>He probado login con usuario inactivo.
+</span><span id="__span-74-14"><a id="__codelineno-74-14" name="__codelineno-74-14" href="#__codelineno-74-14"></a><span class="k">-</span><span class="w"> </span>He comprobado el token en localStorage.
+</span><span id="__span-74-15"><a id="__codelineno-74-15" name="__codelineno-74-15" href="#__codelineno-74-15"></a><span class="k">-</span><span class="w"> </span>He comprobado la cabecera Authorization en Network.
+</span><span id="__span-74-16"><a id="__codelineno-74-16" name="__codelineno-74-16" href="#__codelineno-74-16"></a><span class="k">-</span><span class="w"> </span>He probado el dashboard.
+</span><span id="__span-74-17"><a id="__codelineno-74-17" name="__codelineno-74-17" href="#__codelineno-74-17"></a><span class="k">-</span><span class="w"> </span>He editado mi nombre desde el frontend.
+</span><span id="__span-74-18"><a id="__codelineno-74-18" name="__codelineno-74-18" href="#__codelineno-74-18"></a><span class="k">-</span><span class="w"> </span>He comprobado persistencia en Prisma Studio.
+</span><span id="__span-74-19"><a id="__codelineno-74-19" name="__codelineno-74-19" href="#__codelineno-74-19"></a><span class="k">-</span><span class="w"> </span>He probado panel admin con USER.
+</span><span id="__span-74-20"><a id="__codelineno-74-20" name="__codelineno-74-20" href="#__codelineno-74-20"></a><span class="k">-</span><span class="w"> </span>He probado panel admin con ADMIN.
+</span><span id="__span-74-21"><a id="__codelineno-74-21" name="__codelineno-74-21" href="#__codelineno-74-21"></a><span class="k">-</span><span class="w"> </span>He creado un usuario como ADMIN.
+</span><span id="__span-74-22"><a id="__codelineno-74-22" name="__codelineno-74-22" href="#__codelineno-74-22"></a><span class="k">-</span><span class="w"> </span>He desactivado un usuario como ADMIN.
+</span><span id="__span-74-23"><a id="__codelineno-74-23" name="__codelineno-74-23" href="#__codelineno-74-23"></a><span class="k">-</span><span class="w"> </span>He probado logout.
+</span><span id="__span-74-24"><a id="__codelineno-74-24" name="__codelineno-74-24" href="#__codelineno-74-24"></a><span class="k">-</span><span class="w"> </span>He probado una ruta protegida sin token.
+</span><span id="__span-74-25"><a id="__codelineno-74-25" name="__codelineno-74-25" href="#__codelineno-74-25"></a><span class="k">-</span><span class="w"> </span>He distinguido códigos 400, 401, 403 y 409.
+</span><span id="__span-74-26"><a id="__codelineno-74-26" name="__codelineno-74-26" href="#__codelineno-74-26"></a>
+</span><span id="__span-74-27"><a id="__codelineno-74-27" name="__codelineno-74-27" href="#__codelineno-74-27"></a><span class="gu">## Idea principal</span>
+</span><span id="__span-74-28"><a id="__codelineno-74-28" name="__codelineno-74-28" href="#__codelineno-74-28"></a>
+</span><span id="__span-74-29"><a id="__codelineno-74-29" name="__codelineno-74-29" href="#__codelineno-74-29"></a><span class="sb">```text</span>
+</span><span id="__span-74-30"><a id="__codelineno-74-30" name="__codelineno-74-30" href="#__codelineno-74-30"></a>Una prueba de integración comprueba que varias piezas del proyecto funcionan correctamente cuando trabajan juntas.
+</span><span id="__span-74-31"><a id="__codelineno-74-31" name="__codelineno-74-31" href="#__codelineno-74-31"></a><span class="sb">```</span>
+</span><span id="__span-74-32"><a id="__codelineno-74-32" name="__codelineno-74-32" href="#__codelineno-74-32"></a>
+</span><span id="__span-74-33"><a id="__codelineno-74-33" name="__codelineno-74-33" href="#__codelineno-74-33"></a><span class="gu">## Flujo probado</span>
+</span><span id="__span-74-34"><a id="__codelineno-74-34" name="__codelineno-74-34" href="#__codelineno-74-34"></a>
+</span><span id="__span-74-35"><a id="__codelineno-74-35" name="__codelineno-74-35" href="#__codelineno-74-35"></a><span class="sb">```text</span>
+</span><span id="__span-74-36"><a id="__codelineno-74-36" name="__codelineno-74-36" href="#__codelineno-74-36"></a>Frontend → API → JWT → permisos → Prisma → PostgreSQL
+</span><span id="__span-74-37"><a id="__codelineno-74-37" name="__codelineno-74-37" href="#__codelineno-74-37"></a><span class="sb">```</span>
+</span><span id="__span-74-38"><a id="__codelineno-74-38" name="__codelineno-74-38" href="#__codelineno-74-38"></a>
+</span><span id="__span-74-39"><a id="__codelineno-74-39" name="__codelineno-74-39" href="#__codelineno-74-39"></a><span class="gu">## Códigos trabajados</span>
+</span><span id="__span-74-40"><a id="__codelineno-74-40" name="__codelineno-74-40" href="#__codelineno-74-40"></a>
+</span><span id="__span-74-41"><a id="__codelineno-74-41" name="__codelineno-74-41" href="#__codelineno-74-41"></a>| Código | Significado | Ejemplo |
+</span><span id="__span-74-42"><a id="__codelineno-74-42" name="__codelineno-74-42" href="#__codelineno-74-42"></a>| --- | --- |---|
+</span><span id="__span-74-43"><a id="__codelineno-74-43" name="__codelineno-74-43" href="#__codelineno-74-43"></a>| <span class="sb">`400`</span> | Datos incorrectos | Email inválido |
+</span><span id="__span-74-44"><a id="__codelineno-74-44" name="__codelineno-74-44" href="#__codelineno-74-44"></a>| <span class="sb">`401`</span> | No autenticado | Falta token |
+</span><span id="__span-74-45"><a id="__codelineno-74-45" name="__codelineno-74-45" href="#__codelineno-74-45"></a>| <span class="sb">`403`</span> | Sin permiso | USER intenta listar usuarios |
+</span><span id="__span-74-46"><a id="__codelineno-74-46" name="__codelineno-74-46" href="#__codelineno-74-46"></a>| <span class="sb">`409`</span> | Conflicto | Email duplicado |
+</span><span id="__span-74-47"><a id="__codelineno-74-47" name="__codelineno-74-47" href="#__codelineno-74-47"></a>
+</span><span id="__span-74-48"><a id="__codelineno-74-48" name="__codelineno-74-48" href="#__codelineno-74-48"></a><span class="gu">## Usuarios usados</span>
+</span><span id="__span-74-49"><a id="__codelineno-74-49" name="__codelineno-74-49" href="#__codelineno-74-49"></a>
+</span><span id="__span-74-50"><a id="__codelineno-74-50" name="__codelineno-74-50" href="#__codelineno-74-50"></a>| Email | Rol | Uso |
+</span><span id="__span-74-51"><a id="__codelineno-74-51" name="__codelineno-74-51" href="#__codelineno-74-51"></a>| --- | --- |---|
+</span><span id="__span-74-52"><a id="__codelineno-74-52" name="__codelineno-74-52" href="#__codelineno-74-52"></a>| <span class="sb">`user@email.com`</span> | USER | Probar usuario normal |
+</span><span id="__span-74-53"><a id="__codelineno-74-53" name="__codelineno-74-53" href="#__codelineno-74-53"></a>| <span class="sb">`admin@email.com`</span> | ADMIN | Probar administración |
+</span><span id="__span-74-54"><a id="__codelineno-74-54" name="__codelineno-74-54" href="#__codelineno-74-54"></a>| <span class="sb">`inactive@email.com`</span> | USER inactivo | Probar bloqueo de login |
+</span><span id="__span-74-55"><a id="__codelineno-74-55" name="__codelineno-74-55" href="#__codelineno-74-55"></a>
+</span><span id="__span-74-56"><a id="__codelineno-74-56" name="__codelineno-74-56" href="#__codelineno-74-56"></a><span class="gu">## Evidencias recogidas</span>
+</span><span id="__span-74-57"><a id="__codelineno-74-57" name="__codelineno-74-57" href="#__codelineno-74-57"></a>
+</span><span id="__span-74-58"><a id="__codelineno-74-58" name="__codelineno-74-58" href="#__codelineno-74-58"></a>| Evidencia | Descripción |
+</span><span id="__span-74-59"><a id="__codelineno-74-59" name="__codelineno-74-59" href="#__codelineno-74-59"></a>| --- | --- |
+</span><span id="__span-74-60"><a id="__codelineno-74-60" name="__codelineno-74-60" href="#__codelineno-74-60"></a>| Petición correcta | |
+</span><span id="__span-74-61"><a id="__codelineno-74-61" name="__codelineno-74-61" href="#__codelineno-74-61"></a>| Error 401 | |
+</span><span id="__span-74-62"><a id="__codelineno-74-62" name="__codelineno-74-62" href="#__codelineno-74-62"></a>| Error 403 | |
+</span><span id="__span-74-63"><a id="__codelineno-74-63" name="__codelineno-74-63" href="#__codelineno-74-63"></a>| Cambio en Prisma Studio | |
+</span><span id="__span-74-64"><a id="__codelineno-74-64" name="__codelineno-74-64" href="#__codelineno-74-64"></a>
+</span><span id="__span-74-65"><a id="__codelineno-74-65" name="__codelineno-74-65" href="#__codelineno-74-65"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-74-66"><a id="__codelineno-74-66" name="__codelineno-74-66" href="#__codelineno-74-66"></a>
+</span><span id="__span-74-67"><a id="__codelineno-74-67" name="__codelineno-74-67" href="#__codelineno-74-67"></a>Hoy he usado el frontend como punto de entrada para comprobar que todas las capas funcionan juntas. No basta con que la pantalla muestre datos; también hay que revisar códigos HTTP, cabeceras, respuestas JSON y persistencia en base de datos.
+</span></code></pre></div>
+<h3 id="paso-24-anadir-diagrama-mermaid">Paso 24: Añadir diagrama Mermaid<a class="headerlink" href="#paso-24-anadir-diagrama-mermaid" title="Permanent link">&para;</a></h3>
+<p>Añade al documento:</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Login frontend] --&gt; B[API valida credenciales]
+    B --&gt; C[API devuelve JWT]
+    C --&gt; D[Frontend guarda token]
+    D --&gt; E[Frontend llama rutas protegidas]
+    E --&gt; F[API comprueba permisos]
+    F --&gt; G[Prisma consulta PostgreSQL]
+    G --&gt; H[Frontend muestra resultado]</code></pre>
+<h3 id="paso-25-anadir-matriz-de-pruebas">Paso 25: Añadir matriz de pruebas<a class="headerlink" href="#paso-25-anadir-matriz-de-pruebas" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a><span class="gu">## Matriz de pruebas</span>
+</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>
+</span><span id="__span-75-3"><a id="__codelineno-75-3" name="__codelineno-75-3" href="#__codelineno-75-3"></a>| Acción | Endpoint | Rol necesario | Resultado con USER | Resultado con ADMIN |
+</span><span id="__span-75-4"><a id="__codelineno-75-4" name="__codelineno-75-4" href="#__codelineno-75-4"></a>| --- | --- |---| --- | --- |
+</span><span id="__span-75-5"><a id="__codelineno-75-5" name="__codelineno-75-5" href="#__codelineno-75-5"></a>| Registro | <span class="sb">`POST /api/auth/register`</span> | Público | <span class="sb">`201`</span> | <span class="sb">`201`</span> |
+</span><span id="__span-75-6"><a id="__codelineno-75-6" name="__codelineno-75-6" href="#__codelineno-75-6"></a>| Login | <span class="sb">`POST /api/auth/login`</span> | Público | <span class="sb">`200`</span> + JWT | <span class="sb">`200`</span> + JWT |
+</span><span id="__span-75-7"><a id="__codelineno-75-7" name="__codelineno-75-7" href="#__codelineno-75-7"></a>| Ver perfil | <span class="sb">`GET /api/users/me`</span> | Autenticado | <span class="sb">`200`</span> | <span class="sb">`200`</span> |
+</span><span id="__span-75-8"><a id="__codelineno-75-8" name="__codelineno-75-8" href="#__codelineno-75-8"></a>| Editar nombre | <span class="sb">`PATCH /api/users/:id`</span> | Propio o ADMIN | <span class="sb">`200`</span> si es propio | <span class="sb">`200`</span> |
+</span><span id="__span-75-9"><a id="__codelineno-75-9" name="__codelineno-75-9" href="#__codelineno-75-9"></a>| Listar usuarios | <span class="sb">`GET /api/users`</span> | ADMIN | <span class="sb">`403`</span> | <span class="sb">`200`</span> |
+</span><span id="__span-75-10"><a id="__codelineno-75-10" name="__codelineno-75-10" href="#__codelineno-75-10"></a>| Crear usuario | <span class="sb">`POST /api/users`</span> | ADMIN | <span class="sb">`403`</span> | <span class="sb">`201`</span> |
+</span><span id="__span-75-11"><a id="__codelineno-75-11" name="__codelineno-75-11" href="#__codelineno-75-11"></a>| Desactivar usuario | <span class="sb">`DELETE /api/users/:id`</span> | ADMIN | <span class="sb">`403`</span> | <span class="sb">`200`</span> |
+</span><span id="__span-75-12"><a id="__codelineno-75-12" name="__codelineno-75-12" href="#__codelineno-75-12"></a>| Ruta sin token | <span class="sb">`GET /api/users/me`</span> | Autenticado | <span class="sb">`401`</span> | <span class="sb">`401`</span> |
+</span></code></pre></div>
+<h2 id="problemas-frecuentes">Problemas frecuentes<a class="headerlink" href="#problemas-frecuentes" title="Permanent link">&para;</a></h2>
+<h3 id="login-correcto-pero-dashboard-falla">Login correcto pero dashboard falla<a class="headerlink" href="#login-correcto-pero-dashboard-falla" title="Permanent link">&para;</a></h3>
+<p>Comprueba:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-76-1"><a id="__codelineno-76-1" name="__codelineno-76-1" href="#__codelineno-76-1"></a>Que el token se guarda con la clave correcta.
+</span><span id="__span-76-2"><a id="__codelineno-76-2" name="__codelineno-76-2" href="#__codelineno-76-2"></a>Que apiFetch lee esa misma clave.
+</span><span id="__span-76-3"><a id="__codelineno-76-3" name="__codelineno-76-3" href="#__codelineno-76-3"></a>Que la cabecera empieza por Bearer.
+</span><span id="__span-76-4"><a id="__codelineno-76-4" name="__codelineno-76-4" href="#__codelineno-76-4"></a>Que GET /api/users/me existe.
+</span><span id="__span-76-5"><a id="__codelineno-76-5" name="__codelineno-76-5" href="#__codelineno-76-5"></a>Que GET /api/users/me está declarado antes de GET /api/users/:id.
+</span></code></pre></div>
+<p>Si <code>/me</code> se interpreta como un ID, revisa el orden de rutas.</p>
+<h3 id="token-caducado">Token caducado<a class="headerlink" href="#token-caducado" title="Permanent link">&para;</a></h3>
+<p>Si el token ha caducado, la API debe responder:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-77-1"><a id="__codelineno-77-1" name="__codelineno-77-1" href="#__codelineno-77-1"></a>401 Unauthorized
+</span></code></pre></div>
+<p>No debe responder <code>403</code>.</p>
+<p>Solución:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-78-1"><a id="__codelineno-78-1" name="__codelineno-78-1" href="#__codelineno-78-1"></a>Eliminar token.
+</span><span id="__span-78-2"><a id="__codelineno-78-2" name="__codelineno-78-2" href="#__codelineno-78-2"></a>Volver a iniciar sesión.
+</span><span id="__span-78-3"><a id="__codelineno-78-3" name="__codelineno-78-3" href="#__codelineno-78-3"></a>Repetir la petición.
+</span></code></pre></div>
+<h3 id="user-intentando-entrar-en-admin"><code>USER</code> intentando entrar en admin<a class="headerlink" href="#user-intentando-entrar-en-admin" title="Permanent link">&para;</a></h3>
+<p>Si has iniciado sesión con:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-79-1"><a id="__codelineno-79-1" name="__codelineno-79-1" href="#__codelineno-79-1"></a>user@email.com
+</span></code></pre></div>
+<p>y entras en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-80-1"><a id="__codelineno-80-1" name="__codelineno-80-1" href="#__codelineno-80-1"></a>/admin/users
+</span></code></pre></div>
+<p>el resultado correcto es:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-81-1"><a id="__codelineno-81-1" name="__codelineno-81-1" href="#__codelineno-81-1"></a>403 Forbidden
+</span></code></pre></div>
+<p>Para continuar con operaciones administrativas, inicia sesión como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-82-1"><a id="__codelineno-82-1" name="__codelineno-82-1" href="#__codelineno-82-1"></a>admin@email.com
+</span></code></pre></div>
+<h3 id="seed-no-ejecutado">Seed no ejecutado<a class="headerlink" href="#seed-no-ejecutado" title="Permanent link">&para;</a></h3>
+<p>Si las credenciales de prueba no funcionan, puede que no existan los usuarios.</p>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-83-1"><a id="__codelineno-83-1" name="__codelineno-83-1" href="#__codelineno-83-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span></code></pre></div>
+<p>Después vuelve a probar login.</p>
+<h3 id="contrasena-incorrecta">Contraseña incorrecta<a class="headerlink" href="#contrasena-incorrecta" title="Permanent link">&para;</a></h3>
+<p>Revisa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-84-1"><a id="__codelineno-84-1" name="__codelineno-84-1" href="#__codelineno-84-1"></a>Mayúsculas.
+</span><span id="__span-84-2"><a id="__codelineno-84-2" name="__codelineno-84-2" href="#__codelineno-84-2"></a>Minúsculas.
+</span><span id="__span-84-3"><a id="__codelineno-84-3" name="__codelineno-84-3" href="#__codelineno-84-3"></a>Espacios al copiar.
+</span><span id="__span-84-4"><a id="__codelineno-84-4" name="__codelineno-84-4" href="#__codelineno-84-4"></a>Usuario correcto.
+</span></code></pre></div>
+<p>La API no debería indicar con demasiado detalle si falló el email o la contraseña.</p>
+<h3 id="usuario-inactivo_1">Usuario inactivo<a class="headerlink" href="#usuario-inactivo_1" title="Permanent link">&para;</a></h3>
+<p>Si <code>inactive@email.com</code> no puede iniciar sesión, es correcto.</p>
+<p>Comprueba en Prisma Studio:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-85-1"><a id="__codelineno-85-1" name="__codelineno-85-1" href="#__codelineno-85-1"></a>isActive = false
+</span></code></pre></div>
+<p>El rechazo es intencionado.</p>
+<h3 id="los-datos-no-aparecen-en-prisma-studio">Los datos no aparecen en Prisma Studio<a class="headerlink" href="#los-datos-no-aparecen-en-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<ul>
+<li>Pulsar Refresh.</li>
+<li>Comprobar que Prisma Studio usa la misma <code>DATABASE_URL</code>.</li>
+<li>Comprobar que el backend apunta a la misma base de datos.</li>
+<li>Revisar si la operación realmente respondió <code>200</code> o <code>201</code>.</li>
+</ul>
+<h3 id="el-frontend-muestra-error-generico">El frontend muestra error genérico<a class="headerlink" href="#el-frontend-muestra-error-generico" title="Permanent link">&para;</a></h3>
+<p>Revisa la pestaña Network.</p>
+<p>A veces el mensaje visual es genérico, pero la respuesta JSON de la API contiene más información.</p>
+<p>Busca:</p>
+<ul>
+<li>Status code.</li>
+<li>Response.</li>
+<li>Payload.</li>
+<li>Request headers.</li>
+</ul>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-disenar-dos-pruebas-negativas-adicionales">Tarea libre 1: Diseñar dos pruebas negativas adicionales<a class="headerlink" href="#tarea-libre-1-disenar-dos-pruebas-negativas-adicionales" title="Permanent link">&para;</a></h3>
+<p>Diseña dos pruebas negativas antes de ejecutarlas.</p>
+<p>Ejemplos:</p>
+<ul>
+<li>Contraseña demasiado corta.</li>
+<li>Email inválido.</li>
+<li>ID inexistente.</li>
+<li>Body vacío.</li>
+<li>Modificar <code>isActive</code> con <code>USER</code>.</li>
+<li>Token inventado.</li>
+</ul>
+<p>Completa esta tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Prueba negativa</th>
+<th>Resultado esperado</th>
+<th>Resultado obtenido</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-2-probar-modificacion-de-isactive-con-user">Tarea libre 2: Probar modificación de <code>isActive</code> con USER<a class="headerlink" href="#tarea-libre-2-probar-modificacion-de-isactive-con-user" title="Permanent link">&para;</a></h3>
+<p>Haz login como:</p>
+<p><code>user@email.com</code>.</p>
+<p>Intenta enviar una modificación de estado:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-86-1"><a id="__codelineno-86-1" name="__codelineno-86-1" href="#__codelineno-86-1"></a><span class="p">{</span>
+</span><span id="__span-86-2"><a id="__codelineno-86-2" name="__codelineno-86-2" href="#__codelineno-86-2"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-86-3"><a id="__codelineno-86-3" name="__codelineno-86-3" href="#__codelineno-86-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-87-1"><a id="__codelineno-87-1" name="__codelineno-87-1" href="#__codelineno-87-1"></a>403 Forbidden
+</span></code></pre></div>
+<p>Explica por qué esta acción debe estar reservada para <code>ADMIN</code>.</p>
+<h3 id="tarea-libre-3-probar-token-inventado">Tarea libre 3: Probar token inventado<a class="headerlink" href="#tarea-libre-3-probar-token-inventado" title="Permanent link">&para;</a></h3>
+<p>Elimina el token real y prueba manualmente uno falso:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-88-1"><a id="__codelineno-88-1" name="__codelineno-88-1" href="#__codelineno-88-1"></a>Authorization: Bearer token_inventado
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-89-1"><a id="__codelineno-89-1" name="__codelineno-89-1" href="#__codelineno-89-1"></a>401 Unauthorized
+</span></code></pre></div>
+<h3 id="tarea-libre-4-documentar-una-incidencia">Tarea libre 4: Documentar una incidencia<a class="headerlink" href="#tarea-libre-4-documentar-una-incidencia" title="Permanent link">&para;</a></h3>
+<p>Elige un problema encontrado durante las pruebas y documenta:</p>
+<ul>
+<li>Qué ocurrió.</li>
+<li>Qué esperabas.</li>
+<li>Qué viste en Network.</li>
+<li>Qué parte estaba fallando.</li>
+<li>Cómo lo resolviste.</li>
+</ul>
+<h3 id="tarea-libre-5-preparar-el-dia-40">Tarea libre 5: Preparar el día 40<a class="headerlink" href="#tarea-libre-5-preparar-el-dia-40" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-90-1"><a id="__codelineno-90-1" name="__codelineno-90-1" href="#__codelineno-90-1"></a><span class="gu">## Preparación para demo final</span>
+</span></code></pre></div>
+<p>Responde:</p>
+<ul>
+<li>¿Qué flujo enseñarías en una demo?</li>
+<li>¿Qué usuario usarías primero?</li>
+<li>¿Qué error mostrarías para demostrar permisos?</li>
+<li>¿Qué captura incluirías?</li>
+<li>¿Qué comandos necesita otra persona para arrancar el proyecto?</li>
+</ul>
+<h2 id="entrega-recomendada-del-dia-39">Entrega recomendada del día 39<a class="headerlink" href="#entrega-recomendada-del-dia-39" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 39, el repositorio debería mantener una estructura parecida a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-91-1"><a id="__codelineno-91-1" name="__codelineno-91-1" href="#__codelineno-91-1"></a>usermanager-api/
+</span><span id="__span-91-2"><a id="__codelineno-91-2" name="__codelineno-91-2" href="#__codelineno-91-2"></a>  .env.example
+</span><span id="__span-91-3"><a id="__codelineno-91-3" name="__codelineno-91-3" href="#__codelineno-91-3"></a>  .gitignore
+</span><span id="__span-91-4"><a id="__codelineno-91-4" name="__codelineno-91-4" href="#__codelineno-91-4"></a>  docker-compose.yml
+</span><span id="__span-91-5"><a id="__codelineno-91-5" name="__codelineno-91-5" href="#__codelineno-91-5"></a>  package.json
+</span><span id="__span-91-6"><a id="__codelineno-91-6" name="__codelineno-91-6" href="#__codelineno-91-6"></a>  package-lock.json
+</span><span id="__span-91-7"><a id="__codelineno-91-7" name="__codelineno-91-7" href="#__codelineno-91-7"></a>  prisma.config.ts
+</span><span id="__span-91-8"><a id="__codelineno-91-8" name="__codelineno-91-8" href="#__codelineno-91-8"></a>  tsconfig.json
+</span><span id="__span-91-9"><a id="__codelineno-91-9" name="__codelineno-91-9" href="#__codelineno-91-9"></a>  prisma/
+</span><span id="__span-91-10"><a id="__codelineno-91-10" name="__codelineno-91-10" href="#__codelineno-91-10"></a>    schema.prisma
+</span><span id="__span-91-11"><a id="__codelineno-91-11" name="__codelineno-91-11" href="#__codelineno-91-11"></a>    seed.ts
+</span><span id="__span-91-12"><a id="__codelineno-91-12" name="__codelineno-91-12" href="#__codelineno-91-12"></a>    migrations/
+</span><span id="__span-91-13"><a id="__codelineno-91-13" name="__codelineno-91-13" href="#__codelineno-91-13"></a>      &lt;timestamp&gt;_init/
+</span><span id="__span-91-14"><a id="__codelineno-91-14" name="__codelineno-91-14" href="#__codelineno-91-14"></a>        migration.sql
+</span><span id="__span-91-15"><a id="__codelineno-91-15" name="__codelineno-91-15" href="#__codelineno-91-15"></a>  src/
+</span><span id="__span-91-16"><a id="__codelineno-91-16" name="__codelineno-91-16" href="#__codelineno-91-16"></a>    generated/
+</span><span id="__span-91-17"><a id="__codelineno-91-17" name="__codelineno-91-17" href="#__codelineno-91-17"></a>      prisma/
+</span><span id="__span-91-18"><a id="__codelineno-91-18" name="__codelineno-91-18" href="#__codelineno-91-18"></a>        client/
+</span><span id="__span-91-19"><a id="__codelineno-91-19" name="__codelineno-91-19" href="#__codelineno-91-19"></a>    controllers/
+</span><span id="__span-91-20"><a id="__codelineno-91-20" name="__codelineno-91-20" href="#__codelineno-91-20"></a>    errors/
+</span><span id="__span-91-21"><a id="__codelineno-91-21" name="__codelineno-91-21" href="#__codelineno-91-21"></a>    middlewares/
+</span><span id="__span-91-22"><a id="__codelineno-91-22" name="__codelineno-91-22" href="#__codelineno-91-22"></a>    repositories/
+</span><span id="__span-91-23"><a id="__codelineno-91-23" name="__codelineno-91-23" href="#__codelineno-91-23"></a>    routes/
+</span><span id="__span-91-24"><a id="__codelineno-91-24" name="__codelineno-91-24" href="#__codelineno-91-24"></a>    services/
+</span><span id="__span-91-25"><a id="__codelineno-91-25" name="__codelineno-91-25" href="#__codelineno-91-25"></a>    types/
+</span><span id="__span-91-26"><a id="__codelineno-91-26" name="__codelineno-91-26" href="#__codelineno-91-26"></a>    utils/
+</span><span id="__span-91-27"><a id="__codelineno-91-27" name="__codelineno-91-27" href="#__codelineno-91-27"></a>    prisma.ts
+</span><span id="__span-91-28"><a id="__codelineno-91-28" name="__codelineno-91-28" href="#__codelineno-91-28"></a>    server.ts
+</span><span id="__span-91-29"><a id="__codelineno-91-29" name="__codelineno-91-29" href="#__codelineno-91-29"></a>  frontend/
+</span><span id="__span-91-30"><a id="__codelineno-91-30" name="__codelineno-91-30" href="#__codelineno-91-30"></a>    README.md
+</span><span id="__span-91-31"><a id="__codelineno-91-31" name="__codelineno-91-31" href="#__codelineno-91-31"></a>    .env.example
+</span><span id="__span-91-32"><a id="__codelineno-91-32" name="__codelineno-91-32" href="#__codelineno-91-32"></a>    .env.local
+</span><span id="__span-91-33"><a id="__codelineno-91-33" name="__codelineno-91-33" href="#__codelineno-91-33"></a>    package.json
+</span><span id="__span-91-34"><a id="__codelineno-91-34" name="__codelineno-91-34" href="#__codelineno-91-34"></a>    src/
+</span><span id="__span-91-35"><a id="__codelineno-91-35" name="__codelineno-91-35" href="#__codelineno-91-35"></a>  docs/
+</span><span id="__span-91-36"><a id="__codelineno-91-36" name="__codelineno-91-36" href="#__codelineno-91-36"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-91-37"><a id="__codelineno-91-37" name="__codelineno-91-37" href="#__codelineno-91-37"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-91-38"><a id="__codelineno-91-38" name="__codelineno-91-38" href="#__codelineno-91-38"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-91-39"><a id="__codelineno-91-39" name="__codelineno-91-39" href="#__codelineno-91-39"></a>    dia-04-metodos-http.md
+</span><span id="__span-91-40"><a id="__codelineno-91-40" name="__codelineno-91-40" href="#__codelineno-91-40"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-91-41"><a id="__codelineno-91-41" name="__codelineno-91-41" href="#__codelineno-91-41"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-91-42"><a id="__codelineno-91-42" name="__codelineno-91-42" href="#__codelineno-91-42"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-91-43"><a id="__codelineno-91-43" name="__codelineno-91-43" href="#__codelineno-91-43"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-91-44"><a id="__codelineno-91-44" name="__codelineno-91-44" href="#__codelineno-91-44"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-91-45"><a id="__codelineno-91-45" name="__codelineno-91-45" href="#__codelineno-91-45"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-91-46"><a id="__codelineno-91-46" name="__codelineno-91-46" href="#__codelineno-91-46"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-91-47"><a id="__codelineno-91-47" name="__codelineno-91-47" href="#__codelineno-91-47"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-91-48"><a id="__codelineno-91-48" name="__codelineno-91-48" href="#__codelineno-91-48"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-91-49"><a id="__codelineno-91-49" name="__codelineno-91-49" href="#__codelineno-91-49"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-91-50"><a id="__codelineno-91-50" name="__codelineno-91-50" href="#__codelineno-91-50"></a>    dia-15-middleware-errores.md
+</span><span id="__span-91-51"><a id="__codelineno-91-51" name="__codelineno-91-51" href="#__codelineno-91-51"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-91-52"><a id="__codelineno-91-52" name="__codelineno-91-52" href="#__codelineno-91-52"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-91-53"><a id="__codelineno-91-53" name="__codelineno-91-53" href="#__codelineno-91-53"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-91-54"><a id="__codelineno-91-54" name="__codelineno-91-54" href="#__codelineno-91-54"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-91-55"><a id="__codelineno-91-55" name="__codelineno-91-55" href="#__codelineno-91-55"></a>    dia-20-instalacion-prisma.md
+</span><span id="__span-91-56"><a id="__codelineno-91-56" name="__codelineno-91-56" href="#__codelineno-91-56"></a>    dia-21-modelo-prisma-user.md
+</span><span id="__span-91-57"><a id="__codelineno-91-57" name="__codelineno-91-57" href="#__codelineno-91-57"></a>    dia-22-primera-migracion-prisma.md
+</span><span id="__span-91-58"><a id="__codelineno-91-58" name="__codelineno-91-58" href="#__codelineno-91-58"></a>    dia-23-prisma-studio.md
+</span><span id="__span-91-59"><a id="__codelineno-91-59" name="__codelineno-91-59" href="#__codelineno-91-59"></a>    dia-24-seed-datos-iniciales.md
+</span><span id="__span-91-60"><a id="__codelineno-91-60" name="__codelineno-91-60" href="#__codelineno-91-60"></a>    dia-25-consultas-basicas-prisma.md
+</span><span id="__span-91-61"><a id="__codelineno-91-61" name="__codelineno-91-61" href="#__codelineno-91-61"></a>    dia-26-separar-rutas.md
+</span><span id="__span-91-62"><a id="__codelineno-91-62" name="__codelineno-91-62" href="#__codelineno-91-62"></a>    dia-27-controladores.md
+</span><span id="__span-91-63"><a id="__codelineno-91-63" name="__codelineno-91-63" href="#__codelineno-91-63"></a>    dia-28-servicios.md
+</span><span id="__span-91-64"><a id="__codelineno-91-64" name="__codelineno-91-64" href="#__codelineno-91-64"></a>    dia-29-repositorio-prisma.md
+</span><span id="__span-91-65"><a id="__codelineno-91-65" name="__codelineno-91-65" href="#__codelineno-91-65"></a>    dia-30-crud-persistente-ordenado.md
+</span><span id="__span-91-66"><a id="__codelineno-91-66" name="__codelineno-91-66" href="#__codelineno-91-66"></a>    dia-31-limpieza-refactor.md
+</span><span id="__span-91-67"><a id="__codelineno-91-67" name="__codelineno-91-67" href="#__codelineno-91-67"></a>    dia-32-bcrypt-passwords.md
+</span><span id="__span-91-68"><a id="__codelineno-91-68" name="__codelineno-91-68" href="#__codelineno-91-68"></a>    dia-33-auth-register.md
+</span><span id="__span-91-69"><a id="__codelineno-91-69" name="__codelineno-91-69" href="#__codelineno-91-69"></a>    dia-34-auth-login.md
+</span><span id="__span-91-70"><a id="__codelineno-91-70" name="__codelineno-91-70" href="#__codelineno-91-70"></a>    dia-35-jwt.md
+</span><span id="__span-91-71"><a id="__codelineno-91-71" name="__codelineno-91-71" href="#__codelineno-91-71"></a>    dia-36-auth-middleware.md
+</span><span id="__span-91-72"><a id="__codelineno-91-72" name="__codelineno-91-72" href="#__codelineno-91-72"></a>    dia-37-roles-permisos.md
+</span><span id="__span-91-73"><a id="__codelineno-91-73" name="__codelineno-91-73" href="#__codelineno-91-73"></a>    dia-38-frontend-conexion-api.md
+</span><span id="__span-91-74"><a id="__codelineno-91-74" name="__codelineno-91-74" href="#__codelineno-91-74"></a>    dia-39-pruebas-integracion-frontend.md
+</span></code></pre></div>
+<p>El documento del día 39 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-92-1"><a id="__codelineno-92-1" name="__codelineno-92-1" href="#__codelineno-92-1"></a>docs/dia-39-pruebas-integracion-frontend.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Idea principal.</li>
+<li>Flujo probado.</li>
+<li>Códigos HTTP trabajados.</li>
+<li>Usuarios usados.</li>
+<li>Evidencias recogidas.</li>
+<li>Diagrama Mermaid.</li>
+<li>Matriz de pruebas.</li>
+<li>Checklist completa.</li>
+<li>Problemas frecuentes.</li>
+<li>Pruebas negativas.</li>
+<li>Preparación para demo final.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-93-1"><a id="__codelineno-93-1" name="__codelineno-93-1" href="#__codelineno-93-1"></a>Hola, comparto el avance del día 39 del reto UserManager API:
+</span><span id="__span-93-2"><a id="__codelineno-93-2" name="__codelineno-93-2" href="#__codelineno-93-2"></a>
+</span><span id="__span-93-3"><a id="__codelineno-93-3" name="__codelineno-93-3" href="#__codelineno-93-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-93-4"><a id="__codelineno-93-4" name="__codelineno-93-4" href="#__codelineno-93-4"></a>
+</span><span id="__span-93-5"><a id="__codelineno-93-5" name="__codelineno-93-5" href="#__codelineno-93-5"></a>He probado la integración completa desde el frontend: registro, login, token, perfil, permisos USER/ADMIN y cambios persistidos en base de datos. La documentación está en:
+</span><span id="__span-93-6"><a id="__codelineno-93-6" name="__codelineno-93-6" href="#__codelineno-93-6"></a>
+</span><span id="__span-93-7"><a id="__codelineno-93-7" name="__codelineno-93-7" href="#__codelineno-93-7"></a>docs/dia-39-pruebas-integracion-frontend.md
+</span></code></pre></div>
+<p>Además, se recomienda adjuntar o incluir:</p>
+<ul>
+<li>Checklist completada.</li>
+<li>Tabla con código esperado y código obtenido.</li>
+<li>Captura de una petición correcta.</li>
+<li>Captura de un error <code>401</code>.</li>
+<li>Captura de un error <code>403</code>.</li>
+<li>Explicación breve de una incidencia y su diagnóstico.</li>
+</ul>
+<h2 id="guardar-cambios-en-git">Guardar cambios en Git<a class="headerlink" href="#guardar-cambios-en-git" title="Permanent link">&para;</a></h2>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-94-1"><a id="__codelineno-94-1" name="__codelineno-94-1" href="#__codelineno-94-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Deberías ver cambios en:</p>
+<p><code>docs/dia-39-pruebas-integracion-frontend.md</code>.</p>
+<p>Si has ajustado algo del frontend para mostrar mejor errores o evidencias, también aparecerán cambios en:</p>
+<p><code>frontend/</code>.</p>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-95-1"><a id="__codelineno-95-1" name="__codelineno-95-1" href="#__codelineno-95-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-96-1"><a id="__codelineno-96-1" name="__codelineno-96-1" href="#__codelineno-96-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 39 - Probar integracion desde frontend&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-97-1"><a id="__codelineno-97-1" name="__codelineno-97-1" href="#__codelineno-97-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos usado el frontend como punto de entrada, pero realmente hemos comprobado todas las capas del proyecto.</p>
+<p>Hemos comprobado que:</p>
+<ul>
+<li>El frontend envía peticiones HTTP.</li>
+<li>La API responde con códigos correctos.</li>
+<li>El login genera token.</li>
+<li>El token se guarda y se envía.</li>
+<li>Las rutas protegidas exigen autenticación.</li>
+<li>Los permisos distinguen <code>USER</code> y <code>ADMIN</code>.</li>
+<li>Los cambios se guardan en PostgreSQL.</li>
+<li>Prisma Studio permite verificar la persistencia.</li>
+</ul>
+<p>Esto es mucho más completo que probar solo una función aislada.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li>Pruebas de integración.</li>
+<li>Frontend.</li>
+<li>Backend.</li>
+<li>JWT.</li>
+<li><code>Authorization</code>.</li>
+<li><code>401</code>.</li>
+<li><code>403</code>.</li>
+<li><code>409</code>.</li>
+<li>Roles.</li>
+<li>Permisos.</li>
+<li>Prisma Studio.</li>
+<li>DevTools.</li>
+<li>Network.</li>
+<li>Persistencia.</li>
+</ul>
+<p>Mañana dejaremos el proyecto preparado para enseñarlo, documentarlo y presentarlo como cierre del reto.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Una aplicación no está realmente probada hasta que comprobamos que sus piezas principales funcionan juntas en un flujo real.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,3327 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia19/">
+      
+      
+        <link rel="next" href="../dia21/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 20: Instalación y configuración inicial de Prisma - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-20-instalacion-y-configuracion-inicial-de-prisma" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 20: Instalación y configuración inicial de Prisma
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-prisma-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es Prisma CLI?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es Prisma Client?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-schemaprisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es <code>schema.prisma</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-database_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es <code>DATABASE_URL</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#env-y-envexample" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>.env</code> y <code>.env.example</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-de-configuracion-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo de configuración de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-revisar-docker-composeyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Revisar <code>docker-compose.yml</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-instalar-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Instalar Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-comprobar-que-prisma-esta-instalado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Comprobar que Prisma está instalado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-inicializar-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Inicializar Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-revisar-la-nueva-carpeta-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Revisar la nueva carpeta <code>prisma</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-revisar-schemaprisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Revisar <code>schema.prisma</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-entender-generator-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Entender <code>generator client</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-entender-datasource-db" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Entender <code>datasource db</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-configurar-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Configurar <code>.env</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-revisar-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Revisar <code>.gitignore</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-crear-o-actualizar-envexample" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Crear o actualizar <code>.env.example</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-probar-conexion-de-prisma-de-forma-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Probar conexión de Prisma de forma básica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-generar-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Generar Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-revisar-packagejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Revisar <code>package.json</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-anadir-scripts-utiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Añadir scripts útiles
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-crear-el-documento-del-dia-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Crear el documento del día 20
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-npx-prisma-no-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: <code>npx prisma</code> no funciona
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-en-database_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error en <code>DATABASE_URL</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-postgresql-no-esta-arrancado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: PostgreSQL no está arrancado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-env-se-quiere-subir-a-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: <code>.env</code> se quiere subir a Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schemaprisma-tiene-una-sintaxis-diferente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>schema.prisma</code> tiene una sintaxis diferente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-prisma-cli-y-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar Prisma CLI y Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-analizar-schemaprisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Analizar <code>schema.prisma</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-relacionar-env-con-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Relacionar <code>.env</code> con Docker Compose
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-crear-un-esquema-de-flujo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Crear un esquema de flujo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 21
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 20
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-prisma-cli" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es Prisma CLI?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es Prisma Client?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-schemaprisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es <code>schema.prisma</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-database_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué es <code>DATABASE_URL</code>?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#env-y-envexample" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>.env</code> y <code>.env.example</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-de-configuracion-de-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo de configuración de Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-revisar-docker-composeyml" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Revisar <code>docker-compose.yml</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-instalar-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Instalar Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-comprobar-que-prisma-esta-instalado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Comprobar que Prisma está instalado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-inicializar-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Inicializar Prisma
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-revisar-la-nueva-carpeta-prisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Revisar la nueva carpeta <code>prisma</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-revisar-schemaprisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Revisar <code>schema.prisma</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-entender-generator-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Entender <code>generator client</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-entender-datasource-db" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Entender <code>datasource db</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-configurar-env" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Configurar <code>.env</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-revisar-gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Revisar <code>.gitignore</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-crear-o-actualizar-envexample" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Crear o actualizar <code>.env.example</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-probar-conexion-de-prisma-de-forma-basica" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Probar conexión de Prisma de forma básica
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-generar-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Generar Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-revisar-packagejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Revisar <code>package.json</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-anadir-scripts-utiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Añadir scripts útiles
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-crear-el-documento-del-dia-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Crear el documento del día 20
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-actualizar-el-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Actualizar el README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-actualizar-el-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Actualizar el índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-npx-prisma-no-funciona" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: <code>npx prisma</code> no funciona
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-en-database_url" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error en <code>DATABASE_URL</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-postgresql-no-esta-arrancado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: PostgreSQL no está arrancado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-env-se-quiere-subir-a-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: <code>.env</code> se quiere subir a Git
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#schemaprisma-tiene-una-sintaxis-diferente" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>schema.prisma</code> tiene una sintaxis diferente
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-prisma-cli-y-prisma-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar Prisma CLI y Prisma Client
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-analizar-schemaprisma" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Analizar <code>schema.prisma</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-relacionar-env-con-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Relacionar <code>.env</code> con Docker Compose
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-crear-un-esquema-de-flujo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Crear un esquema de flujo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 21
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 20
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-20-instalacion-y-configuracion-inicial-de-prisma">Día 20: Instalación y configuración inicial de Prisma<a class="headerlink" href="#dia-20-instalacion-y-configuracion-inicial-de-prisma" title="Permanent link">&para;</a></h1>
+<p>En el día 19 analizamos distintas formas de acceder a una base de datos desde el backend. Comparamos varias opciones:</p>
+<ul>
+<li>SQL directo</li>
+<li>Prisma</li>
+<li>TypeORM</li>
+<li>Sequelize</li>
+</ul>
+<p>Y tomamos una decisión técnica para el resto del reto:</p>
+<div class="admonition success">
+<p class="admonition-title">Decisión del reto</p>
+<p>Usaremos Prisma como ORM principal.</p>
+</div>
+<p>Hoy vamos a empezar a aplicar esa decisión.</p>
+<p>No vamos a crear todavía el modelo completo <code>User</code>. Tampoco vamos a ejecutar migraciones. Eso llegará en los próximos días.</p>
+<p>El objetivo de hoy será preparar el proyecto para que pueda usar Prisma.</p>
+<p>Vamos a instalar las dependencias necesarias, inicializar Prisma y revisar los archivos que se generan.</p>
+<p>Al final del día, el proyecto tendrá una nueva carpeta: <code>prisma/</code>.</p>
+<p>Y dentro aparecerá el archivo principal de configuración: <code>schema.prisma</code>.</p>
+<p>Ese archivo será muy importante durante toda la fase de persistencia.</p>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué aprenderemos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prisma CLI</td>
+<td>Qué comandos ofrece Prisma</td>
+</tr>
+<tr>
+<td>Prisma Client</td>
+<td>Cómo consultará TypeScript la base de datos</td>
+</tr>
+<tr>
+<td><code>schema.prisma</code></td>
+<td>Dónde se define la configuración principal</td>
+</tr>
+<tr>
+<td><code>datasource</code></td>
+<td>Cómo se declara la conexión a PostgreSQL</td>
+</tr>
+<tr>
+<td><code>generator</code></td>
+<td>Cómo se genera Prisma Client</td>
+</tr>
+<tr>
+<td><code>DATABASE_URL</code></td>
+<td>Cómo se configura la URL de conexión</td>
+</tr>
+<tr>
+<td><code>.env</code></td>
+<td>Dónde guardar variables locales sensibles</td>
+</tr>
+<tr>
+<td><code>.env.example</code></td>
+<td>Cómo documentar variables sin secretos</td>
+</tr>
+<tr>
+<td><code>prisma init</code></td>
+<td>Cómo inicializar Prisma en el proyecto</td>
+</tr>
+<tr>
+<td>Conexión con PostgreSQL</td>
+<td>Cómo preparar Prisma para usar la base de datos</td>
+</tr>
+<tr>
+<td>Configuración inicial del ORM</td>
+<td>Qué dejamos listo para el día 21</td>
+</tr>
+</tbody>
+</table>
+<p>El producto del día será tener Prisma instalado e inicializado en el proyecto.</p>
+<p>El resultado esperado será que el proyecto quede preparado para que en el día 21 podamos definir el modelo <code>User</code>.</p>
+<h2 id="que-es-prisma-cli">¿Qué es Prisma CLI?<a class="headerlink" href="#que-es-prisma-cli" title="Permanent link">&para;</a></h2>
+<p>Prisma CLI es la herramienta de línea de comandos de Prisma.</p>
+<p>Nos permite ejecutar comandos como:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>init
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>npx<span class="w"> </span>prisma<span class="w"> </span>migrate<span class="w"> </span>dev
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>npx<span class="w"> </span>prisma<span class="w"> </span>generate
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>npx<span class="w"> </span>prisma<span class="w"> </span>studio
+</span></code></pre></div>
+<p>Cada comando tiene una función distinta.</p>
+<table>
+<thead>
+<tr>
+<th>Comando</th>
+<th>Para qué sirve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>prisma init</code></td>
+<td>Inicializa Prisma en el proyecto</td>
+</tr>
+<tr>
+<td><code>prisma migrate dev</code></td>
+<td>Crea y aplica migraciones</td>
+</tr>
+<tr>
+<td><code>prisma generate</code></td>
+<td>Genera el cliente de Prisma</td>
+</tr>
+<tr>
+<td><code>prisma studio</code></td>
+<td>Abre una interfaz visual para ver datos</td>
+</tr>
+<tr>
+<td><code>prisma --version</code></td>
+<td>Muestra la versión instalada</td>
+</tr>
+</tbody>
+</table>
+<p>Hoy usaremos principalmente:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>init
+</span></code></pre></div>
+<p>Y comprobaremos la instalación con:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>--version
+</span></code></pre></div>
+<h2 id="que-es-prisma-client">¿Qué es Prisma Client?<a class="headerlink" href="#que-es-prisma-client" title="Permanent link">&para;</a></h2>
+<p>Prisma Client es la herramienta que usaremos desde TypeScript para hacer consultas a la base de datos.</p>
+<p>Más adelante podremos escribir código parecido a este:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">users</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findMany</span><span class="p">();</span>
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findUnique</span><span class="p">({</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="kt">1</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Prisma Client se genera a partir del archivo <code>schema.prisma</code>.</p>
+<p>Por eso es tan importante definir bien el modelo en los próximos días.</p>
+<p>De momento, hoy solo instalaremos y dejaremos preparada la herramienta.</p>
+<h2 id="que-es-schemaprisma">¿Qué es <code>schema.prisma</code>?<a class="headerlink" href="#que-es-schemaprisma" title="Permanent link">&para;</a></h2>
+<p>El archivo <code>schema.prisma</code> es el centro de configuración de Prisma.</p>
+<p>En él definiremos tres cosas principales:</p>
+<ul>
+<li>El generador del cliente Prisma.</li>
+<li>La conexión con la base de datos.</li>
+<li>Los modelos de datos.</li>
+</ul>
+<p>Una versión inicial puede tener una forma parecida a esta:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>generator client {
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  provider = &quot;prisma-client-js&quot;
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>}
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>datasource db {
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  provider = &quot;postgresql&quot;
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  url      = env(&quot;DATABASE_URL&quot;)
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>}
+</span></code></pre></div>
+<p>La parte <code>generator</code> indica cómo se generará Prisma Client.</p>
+<p>La parte <code>datasource</code> indica qué base de datos usamos y de dónde saldrá la URL de conexión.</p>
+<p>Más adelante añadiremos aquí el modelo <code>User</code>.</p>
+<h2 id="que-es-database_url">¿Qué es <code>DATABASE_URL</code>?<a class="headerlink" href="#que-es-database_url" title="Permanent link">&para;</a></h2>
+<p><code>DATABASE_URL</code> es la variable de entorno que indica a Prisma cómo conectarse a la base de datos.</p>
+<p>En nuestro caso, como usamos PostgreSQL en Docker Compose, tendrá una forma parecida a esta:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span></code></pre></div>
+<p>Esta URL contiene varios datos:</p>
+<ul>
+<li>Protocolo: <code>postgresql://</code></li>
+<li>Usuario</li>
+<li>Contraseña</li>
+<li>Host</li>
+<li>Puerto</li>
+<li>Nombre de la base de datos</li>
+</ul>
+<p>Descomposición:</p>
+<table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuario</td>
+<td><code>usermanager</code></td>
+</tr>
+<tr>
+<td>Contraseña</td>
+<td><code>usermanager_password</code></td>
+</tr>
+<tr>
+<td>Host</td>
+<td><code>localhost</code></td>
+</tr>
+<tr>
+<td>Puerto</td>
+<td><code>5432</code></td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td><code>usermanager_db</code></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Importante</p>
+<p>La API se ejecuta fuera del contenedor, por eso usa <code>localhost</code>.</p>
+</div>
+<p>Adminer usaba <code>postgres</code> como servidor porque Adminer estaba dentro de Docker Compose.</p>
+<p>Pero Prisma, al ejecutarse desde nuestro proyecto local, se conectará a <code>localhost:5432</code>.</p>
+<h2 id="env-y-envexample"><code>.env</code> y <code>.env.example</code><a class="headerlink" href="#env-y-envexample" title="Permanent link">&para;</a></h2>
+<p>El archivo <code>.env</code> contiene variables de entorno reales para nuestro entorno local.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>PORT=3000
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>JWT_SECRET=&quot;super_secret_key&quot;
+</span></code></pre></div>
+<p>Este archivo no debe subirse a GitHub porque puede contener datos sensibles.</p>
+<p>Por eso lo añadimos a <code>.gitignore</code>.</p>
+<p>En cambio, sí subiremos un archivo <code>.env.example</code>.</p>
+<p>Este archivo sirve como plantilla para que otra persona sepa qué variables necesita.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>PORT=3000
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>JWT_SECRET=&quot;change_me&quot;
+</span></code></pre></div>
+<h2 id="flujo-de-configuracion-de-prisma">Flujo de configuración de Prisma<a class="headerlink" href="#flujo-de-configuracion-de-prisma" title="Permanent link">&para;</a></h2>
+<p>El trabajo de hoy seguirá este flujo:</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Abrir proyecto] --&gt; B[Comprobar Docker y PostgreSQL]
+    B --&gt; C[Instalar Prisma]
+    C --&gt; D[Ejecutar prisma init]
+    D --&gt; E[Revisar schema.prisma]
+    E --&gt; F[Configurar DATABASE_URL]
+    F --&gt; G[Comprobar Prisma CLI]
+    G --&gt; H[Documentar cambios]</code></pre>
+<p>Hoy no crearemos modelos todavía.</p>
+<p>La idea es preparar el terreno.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre una terminal y entra en el repositorio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Comprueba que estás en la raíz del proyecto.</p>
+<p>Deberías ver archivos como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>package.json
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>tsconfig.json
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>README.md
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>docker-compose.yml
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>src/
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>docs/
+</span></code></pre></div>
+<h3 id="paso-2-arrancar-postgresql">Paso 2: Arrancar PostgreSQL<a class="headerlink" href="#paso-2-arrancar-postgresql" title="Permanent link">&para;</a></h3>
+<p>Antes de configurar Prisma, necesitamos asegurarnos de que PostgreSQL está funcionando.</p>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<p>Comprueba los servicios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span></code></pre></div>
+<p>Deberías ver el servicio de PostgreSQL en ejecución.</p>
+<p>Por ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>usermanager_postgres   running
+</span></code></pre></div>
+<p>Si también tienes Adminer, también debería estar arrancado.</p>
+<h3 id="paso-3-revisar-docker-composeyml">Paso 3: Revisar <code>docker-compose.yml</code><a class="headerlink" href="#paso-3-revisar-docker-composeyml" title="Permanent link">&para;</a></h3>
+<p>Comprueba que tu <code>docker-compose.yml</code> contiene una configuración parecida a esta:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">services</span><span class="p">:</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">postgres</span><span class="p">:</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres:16</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usermanager_postgres</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">      </span><span class="nt">POSTGRES_USER</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usermanager</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">      </span><span class="nt">POSTGRES_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usermanager_password</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">      </span><span class="nt">POSTGRES_DB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usermanager_db</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;5432:5432&quot;</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres_data:/var/lib/postgresql/data</span>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>
+</span><span id="__span-14-15"><a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a><span class="w">  </span><span class="nt">adminer</span><span class="p">:</span>
+</span><span id="__span-14-16"><a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adminer:latest</span>
+</span><span id="__span-14-17"><a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usermanager_adminer</span>
+</span><span id="__span-14-18"><a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a><span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+</span><span id="__span-14-19"><a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span id="__span-14-20"><a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8080:8080&quot;</span>
+</span><span id="__span-14-21"><a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a><span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span>
+</span><span id="__span-14-22"><a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgres</span>
+</span><span id="__span-14-23"><a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+</span><span id="__span-14-24"><a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-14-25"><a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a><span class="w">  </span><span class="nt">postgres_data</span><span class="p">:</span>
+</span></code></pre></div>
+<p>Los datos importantes para Prisma serán:</p>
+<ul>
+<li><code>POSTGRES_USER</code></li>
+<li><code>POSTGRES_PASSWORD</code></li>
+<li><code>POSTGRES_DB</code></li>
+<li>Puerto <code>5432</code></li>
+</ul>
+<h3 id="paso-4-instalar-prisma">Paso 4: Instalar Prisma<a class="headerlink" href="#paso-4-instalar-prisma" title="Permanent link">&para;</a></h3>
+<p>Desde la raíz del proyecto, ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>prisma
+</span></code></pre></div>
+<p>Esto instala Prisma CLI como dependencia de desarrollo.</p>
+<p>Después instala Prisma Client:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>npm<span class="w"> </span>install<span class="w"> </span>@prisma/client
+</span></code></pre></div>
+<p>Resumen:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>prisma → herramienta de línea de comandos
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>@prisma/client → cliente que usaremos desde TypeScript
+</span></code></pre></div>
+<h3 id="paso-5-comprobar-que-prisma-esta-instalado">Paso 5: Comprobar que Prisma está instalado<a class="headerlink" href="#paso-5-comprobar-que-prisma-esta-instalado" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>--version
+</span></code></pre></div>
+<p>Deberías ver información sobre la versión de Prisma instalada.</p>
+<p>Si el comando responde correctamente, Prisma CLI ya está disponible dentro del proyecto.</p>
+<h3 id="paso-6-inicializar-prisma">Paso 6: Inicializar Prisma<a class="headerlink" href="#paso-6-inicializar-prisma" title="Permanent link">&para;</a></h3>
+<p>Ahora ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>init<span class="w"> </span>--datasource-provider<span class="w"> </span>postgresql
+</span></code></pre></div>
+<p>Este comando crea la estructura inicial de Prisma.</p>
+<p>Después de ejecutarlo, deberían aparecer archivos nuevos:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>prisma/
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>  schema.prisma
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>.env
+</span></code></pre></div>
+<p>Si ya existía <code>.env</code>, Prisma puede modificarlo o añadir la variable <code>DATABASE_URL</code>.</p>
+<h3 id="paso-7-revisar-la-nueva-carpeta-prisma">Paso 7: Revisar la nueva carpeta <code>prisma</code><a class="headerlink" href="#paso-7-revisar-la-nueva-carpeta-prisma" title="Permanent link">&para;</a></h3>
+<p>Después de ejecutar <code>prisma init</code>, revisa la estructura del proyecto.</p>
+<p>Debería quedar algo parecido a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>usermanager-api/
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>  prisma/
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    schema.prisma
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>  src/
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>    server.ts
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>  docs/
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>  docker-compose.yml
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>  package.json
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>  README.md
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>  .env
+</span></code></pre></div>
+<p>La carpeta <code>prisma</code> será muy importante.</p>
+<p>En ella estarán:</p>
+<ul>
+<li><code>schema.prisma</code></li>
+<li><code>migrations/</code> más adelante</li>
+<li><code>seed</code> más adelante</li>
+</ul>
+<p>Todavía no aparecerá la carpeta <code>migrations</code>.</p>
+<p>Se creará cuando hagamos la primera migración.</p>
+<h3 id="paso-8-revisar-schemaprisma">Paso 8: Revisar <code>schema.prisma</code><a class="headerlink" href="#paso-8-revisar-schemaprisma" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>prisma/schema.prisma
+</span></code></pre></div>
+<p>Deberías ver algo parecido a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>generator client {
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>  provider = &quot;prisma-client-js&quot;
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>}
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>datasource db {
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a>  provider = &quot;postgresql&quot;
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>  url      = env(&quot;DATABASE_URL&quot;)
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>}
+</span></code></pre></div>
+<p>Puede que, según la versión de Prisma, el archivo tenga pequeñas diferencias.</p>
+<p>Lo importante hoy es reconocer estas dos partes:</p>
+<ul>
+<li><code>generator client</code></li>
+<li><code>datasource db</code></li>
+</ul>
+<h3 id="paso-9-entender-generator-client">Paso 9: Entender <code>generator client</code><a class="headerlink" href="#paso-9-entender-generator-client" title="Permanent link">&para;</a></h3>
+<p>La parte:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>generator client {
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>  provider = &quot;prisma-client-js&quot;
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>}
+</span></code></pre></div>
+<p>indica que Prisma generará un cliente para JavaScript/TypeScript.</p>
+<p>Ese cliente será el que más adelante nos permitirá escribir:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">findMany</span><span class="p">()</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">create</span><span class="p">()</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">update</span><span class="p">()</span>
+</span></code></pre></div>
+<p>Todavía no podemos usar <code>prisma.user</code>, porque aún no hemos definido el modelo <code>User</code>.</p>
+<p>Eso llegará en el día 21.</p>
+<h3 id="paso-10-entender-datasource-db">Paso 10: Entender <code>datasource db</code><a class="headerlink" href="#paso-10-entender-datasource-db" title="Permanent link">&para;</a></h3>
+<p>La parte:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>datasource db {
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>  provider = &quot;postgresql&quot;
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>  url      = env(&quot;DATABASE_URL&quot;)
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a>}
+</span></code></pre></div>
+<p>indica que Prisma usará PostgreSQL como base de datos.</p>
+<p>La URL de conexión no se escribe directamente aquí.</p>
+<p>Se lee desde <code>DATABASE_URL</code>.</p>
+<p>Esto es una buena práctica, porque permite cambiar la conexión sin modificar el código del esquema.</p>
+<h3 id="paso-11-configurar-env">Paso 11: Configurar <code>.env</code><a class="headerlink" href="#paso-11-configurar-env" title="Permanent link">&para;</a></h3>
+<p>Abre el archivo <code>.env</code>.</p>
+<p>Asegúrate de que contiene:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>PORT=3000
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>JWT_SECRET=&quot;super_secret_key&quot;
+</span></code></pre></div>
+<p>Si Prisma ha creado una <code>DATABASE_URL</code> diferente, sustitúyela por la correspondiente a tu <code>docker-compose.yml</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Importante</p>
+<p><code>DATABASE_URL</code> debe coincidir con usuario, contraseña, puerto y base de datos
+de Docker Compose.</p>
+</div>
+<h3 id="paso-12-revisar-gitignore">Paso 12: Revisar <code>.gitignore</code><a class="headerlink" href="#paso-12-revisar-gitignore" title="Permanent link">&para;</a></h3>
+<p>Comprueba que tienes un archivo <code>.gitignore</code>.</p>
+<p>Y que incluye:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>node_modules/
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>dist/
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>.env
+</span></code></pre></div>
+<p>Esto evita subir el archivo <code>.env</code> a GitHub.</p>
+<h3 id="paso-13-crear-o-actualizar-envexample">Paso 13: Crear o actualizar <code>.env.example</code><a class="headerlink" href="#paso-13-crear-o-actualizar-envexample" title="Permanent link">&para;</a></h3>
+<p>Crea o actualiza el archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>.env.example
+</span></code></pre></div>
+<p>Añade:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>PORT=3000
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a>JWT_SECRET=&quot;change_me&quot;
+</span></code></pre></div>
+<p>Este archivo sí se sube al repositorio.</p>
+<p>Sirve como plantilla.</p>
+<h3 id="paso-14-probar-conexion-de-prisma-de-forma-basica">Paso 14: Probar conexión de Prisma de forma básica<a class="headerlink" href="#paso-14-probar-conexion-de-prisma-de-forma-basica" title="Permanent link">&para;</a></h3>
+<p>Hoy todavía no tenemos modelos, así que no vamos a consultar usuarios.</p>
+<p>Pero podemos comprobar que Prisma reconoce el esquema ejecutando:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>validate
+</span></code></pre></div>
+<p>Si todo está bien, deberías ver un mensaje indicando que el esquema es válido.</p>
+<p>Si aparece un error, revisa:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>schema.prisma
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>DATABASE_URL
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>Sintaxis del archivo
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>Comillas en .env
+</span></code></pre></div>
+<h3 id="paso-15-generar-prisma-client">Paso 15: Generar Prisma Client<a class="headerlink" href="#paso-15-generar-prisma-client" title="Permanent link">&para;</a></h3>
+<p>Aunque todavía no tengamos modelos propios, podemos ejecutar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>generate
+</span></code></pre></div>
+<p>Este comando genera Prisma Client.</p>
+<p>Más adelante, cada vez que cambiemos el modelo en <code>schema.prisma</code>, puede ser necesario regenerar el cliente.</p>
+<p>En muchas ocasiones Prisma lo hará automáticamente al instalar o migrar, pero conviene conocer el comando.</p>
+<h3 id="paso-16-revisar-packagejson">Paso 16: Revisar <code>package.json</code><a class="headerlink" href="#paso-16-revisar-packagejson" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>package.json
+</span></code></pre></div>
+<p>Comprueba que aparecen dependencias relacionadas con Prisma.</p>
+<p>Deberías ver algo parecido a:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span><span class="nt">&quot;@prisma/client&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="p">},</span>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="w">  </span><span class="nt">&quot;prisma&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>No hace falta tocar nada más hoy.</p>
+<h3 id="paso-17-anadir-scripts-utiles">Paso 17: Añadir scripts útiles<a class="headerlink" href="#paso-17-anadir-scripts-utiles" title="Permanent link">&para;</a></h3>
+<p>Puedes añadir algunos scripts a <code>package.json</code> para facilitar el trabajo.</p>
+<p>En la sección <code>"scripts"</code>, añade:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="p">{</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="nt">&quot;prisma:validate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prisma validate&quot;</span><span class="p">,</span>
+</span><span id="__span-36-3"><a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="nt">&quot;prisma:generate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prisma generate&quot;</span><span class="p">,</span>
+</span><span id="__span-36-4"><a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">  </span><span class="nt">&quot;prisma:studio&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prisma studio&quot;</span>
+</span><span id="__span-36-5"><a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Si ya tienes scripts como <code>dev</code>, <code>build</code> y <code>start</code>, la sección podría quedar parecida a:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nt">&quot;scripts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="nt">&quot;dev&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tsx watch src/server.ts&quot;</span><span class="p">,</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span><span class="nt">&quot;build&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;tsc&quot;</span><span class="p">,</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="w">  </span><span class="nt">&quot;start&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;node dist/server.js&quot;</span><span class="p">,</span>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="w">  </span><span class="nt">&quot;prisma:validate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prisma validate&quot;</span><span class="p">,</span>
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="w">  </span><span class="nt">&quot;prisma:generate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prisma generate&quot;</span><span class="p">,</span>
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="w">  </span><span class="nt">&quot;prisma:studio&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;prisma studio&quot;</span>
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Hoy no usaremos todavía Prisma Studio de forma importante. Lo veremos con más calma en el día 23.</p>
+<h3 id="paso-18-crear-el-documento-del-dia-20">Paso 18: Crear el documento del día 20<a class="headerlink" href="#paso-18-crear-el-documento-del-dia-20" title="Permanent link">&para;</a></h3>
+<p>Dentro de la carpeta <code>docs/</code>, crea un archivo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>docs/dia-20-instalacion-prisma.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="gh"># Día 20 - Instalación y configuración inicial de Prisma</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-39-4"><a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>
+</span><span id="__span-39-5"><a id="__codelineno-39-5" name="__codelineno-39-5" href="#__codelineno-39-5"></a><span class="k">-</span><span class="w"> </span>He instalado Prisma CLI.
+</span><span id="__span-39-6"><a id="__codelineno-39-6" name="__codelineno-39-6" href="#__codelineno-39-6"></a><span class="k">-</span><span class="w"> </span>He instalado Prisma Client.
+</span><span id="__span-39-7"><a id="__codelineno-39-7" name="__codelineno-39-7" href="#__codelineno-39-7"></a><span class="k">-</span><span class="w"> </span>He ejecutado prisma init.
+</span><span id="__span-39-8"><a id="__codelineno-39-8" name="__codelineno-39-8" href="#__codelineno-39-8"></a><span class="k">-</span><span class="w"> </span>He creado la carpeta prisma.
+</span><span id="__span-39-9"><a id="__codelineno-39-9" name="__codelineno-39-9" href="#__codelineno-39-9"></a><span class="k">-</span><span class="w"> </span>He revisado el archivo schema.prisma.
+</span><span id="__span-39-10"><a id="__codelineno-39-10" name="__codelineno-39-10" href="#__codelineno-39-10"></a><span class="k">-</span><span class="w"> </span>He configurado DATABASE_URL.
+</span><span id="__span-39-11"><a id="__codelineno-39-11" name="__codelineno-39-11" href="#__codelineno-39-11"></a><span class="k">-</span><span class="w"> </span>He revisado .env y .env.example.
+</span><span id="__span-39-12"><a id="__codelineno-39-12" name="__codelineno-39-12" href="#__codelineno-39-12"></a><span class="k">-</span><span class="w"> </span>He comprobado que .env está en .gitignore.
+</span><span id="__span-39-13"><a id="__codelineno-39-13" name="__codelineno-39-13" href="#__codelineno-39-13"></a><span class="k">-</span><span class="w"> </span>He validado el esquema de Prisma.
+</span><span id="__span-39-14"><a id="__codelineno-39-14" name="__codelineno-39-14" href="#__codelineno-39-14"></a><span class="k">-</span><span class="w"> </span>He generado Prisma Client.
+</span><span id="__span-39-15"><a id="__codelineno-39-15" name="__codelineno-39-15" href="#__codelineno-39-15"></a>
+</span><span id="__span-39-16"><a id="__codelineno-39-16" name="__codelineno-39-16" href="#__codelineno-39-16"></a><span class="gu">## Comandos usados</span>
+</span><span id="__span-39-17"><a id="__codelineno-39-17" name="__codelineno-39-17" href="#__codelineno-39-17"></a>
+</span><span id="__span-39-18"><a id="__codelineno-39-18" name="__codelineno-39-18" href="#__codelineno-39-18"></a><span class="sb">```bash</span>
+</span><span id="__span-39-19"><a id="__codelineno-39-19" name="__codelineno-39-19" href="#__codelineno-39-19"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>prisma
+</span><span id="__span-39-20"><a id="__codelineno-39-20" name="__codelineno-39-20" href="#__codelineno-39-20"></a>npm<span class="w"> </span>install<span class="w"> </span>@prisma/client
+</span><span id="__span-39-21"><a id="__codelineno-39-21" name="__codelineno-39-21" href="#__codelineno-39-21"></a>npx<span class="w"> </span>prisma<span class="w"> </span>--version
+</span><span id="__span-39-22"><a id="__codelineno-39-22" name="__codelineno-39-22" href="#__codelineno-39-22"></a>npx<span class="w"> </span>prisma<span class="w"> </span>init<span class="w"> </span>--datasource-provider<span class="w"> </span>postgresql
+</span><span id="__span-39-23"><a id="__codelineno-39-23" name="__codelineno-39-23" href="#__codelineno-39-23"></a>npx<span class="w"> </span>prisma<span class="w"> </span>validate
+</span><span id="__span-39-24"><a id="__codelineno-39-24" name="__codelineno-39-24" href="#__codelineno-39-24"></a>npx<span class="w"> </span>prisma<span class="w"> </span>generate
+</span><span id="__span-39-25"><a id="__codelineno-39-25" name="__codelineno-39-25" href="#__codelineno-39-25"></a><span class="sb">```</span>
+</span><span id="__span-39-26"><a id="__codelineno-39-26" name="__codelineno-39-26" href="#__codelineno-39-26"></a>
+</span><span id="__span-39-27"><a id="__codelineno-39-27" name="__codelineno-39-27" href="#__codelineno-39-27"></a><span class="gu">## Archivos generados o modificados</span>
+</span><span id="__span-39-28"><a id="__codelineno-39-28" name="__codelineno-39-28" href="#__codelineno-39-28"></a>
+</span><span id="__span-39-29"><a id="__codelineno-39-29" name="__codelineno-39-29" href="#__codelineno-39-29"></a><span class="sb">```text</span>
+</span><span id="__span-39-30"><a id="__codelineno-39-30" name="__codelineno-39-30" href="#__codelineno-39-30"></a>prisma/schema.prisma
+</span><span id="__span-39-31"><a id="__codelineno-39-31" name="__codelineno-39-31" href="#__codelineno-39-31"></a>.env
+</span><span id="__span-39-32"><a id="__codelineno-39-32" name="__codelineno-39-32" href="#__codelineno-39-32"></a>.env.example
+</span><span id="__span-39-33"><a id="__codelineno-39-33" name="__codelineno-39-33" href="#__codelineno-39-33"></a>.gitignore
+</span><span id="__span-39-34"><a id="__codelineno-39-34" name="__codelineno-39-34" href="#__codelineno-39-34"></a>package.json
+</span><span id="__span-39-35"><a id="__codelineno-39-35" name="__codelineno-39-35" href="#__codelineno-39-35"></a>package-lock.json
+</span><span id="__span-39-36"><a id="__codelineno-39-36" name="__codelineno-39-36" href="#__codelineno-39-36"></a><span class="sb">```</span>
+</span><span id="__span-39-37"><a id="__codelineno-39-37" name="__codelineno-39-37" href="#__codelineno-39-37"></a>
+</span><span id="__span-39-38"><a id="__codelineno-39-38" name="__codelineno-39-38" href="#__codelineno-39-38"></a><span class="gu">## schema.prisma inicial</span>
+</span><span id="__span-39-39"><a id="__codelineno-39-39" name="__codelineno-39-39" href="#__codelineno-39-39"></a>
+</span><span id="__span-39-40"><a id="__codelineno-39-40" name="__codelineno-39-40" href="#__codelineno-39-40"></a><span class="sb">```prisma</span>
+</span><span id="__span-39-41"><a id="__codelineno-39-41" name="__codelineno-39-41" href="#__codelineno-39-41"></a><span class="s">generator client {</span>
+</span><span id="__span-39-42"><a id="__codelineno-39-42" name="__codelineno-39-42" href="#__codelineno-39-42"></a><span class="s">  provider = &quot;prisma-client-js&quot;</span>
+</span><span id="__span-39-43"><a id="__codelineno-39-43" name="__codelineno-39-43" href="#__codelineno-39-43"></a><span class="s">}</span>
+</span><span id="__span-39-44"><a id="__codelineno-39-44" name="__codelineno-39-44" href="#__codelineno-39-44"></a>
+</span><span id="__span-39-45"><a id="__codelineno-39-45" name="__codelineno-39-45" href="#__codelineno-39-45"></a><span class="s">datasource db {</span>
+</span><span id="__span-39-46"><a id="__codelineno-39-46" name="__codelineno-39-46" href="#__codelineno-39-46"></a><span class="s">  provider = &quot;postgresql&quot;</span>
+</span><span id="__span-39-47"><a id="__codelineno-39-47" name="__codelineno-39-47" href="#__codelineno-39-47"></a><span class="s">  url      = env(&quot;DATABASE_URL&quot;)</span>
+</span><span id="__span-39-48"><a id="__codelineno-39-48" name="__codelineno-39-48" href="#__codelineno-39-48"></a><span class="s">}</span>
+</span><span id="__span-39-49"><a id="__codelineno-39-49" name="__codelineno-39-49" href="#__codelineno-39-49"></a><span class="sb">```</span>
+</span><span id="__span-39-50"><a id="__codelineno-39-50" name="__codelineno-39-50" href="#__codelineno-39-50"></a>
+</span><span id="__span-39-51"><a id="__codelineno-39-51" name="__codelineno-39-51" href="#__codelineno-39-51"></a><span class="gu">## DATABASE_URL</span>
+</span><span id="__span-39-52"><a id="__codelineno-39-52" name="__codelineno-39-52" href="#__codelineno-39-52"></a>
+</span><span id="__span-39-53"><a id="__codelineno-39-53" name="__codelineno-39-53" href="#__codelineno-39-53"></a><span class="sb">```env</span>
+</span><span id="__span-39-54"><a id="__codelineno-39-54" name="__codelineno-39-54" href="#__codelineno-39-54"></a><span class="s">DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;</span>
+</span><span id="__span-39-55"><a id="__codelineno-39-55" name="__codelineno-39-55" href="#__codelineno-39-55"></a><span class="sb">```</span>
+</span><span id="__span-39-56"><a id="__codelineno-39-56" name="__codelineno-39-56" href="#__codelineno-39-56"></a>
+</span><span id="__span-39-57"><a id="__codelineno-39-57" name="__codelineno-39-57" href="#__codelineno-39-57"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-39-58"><a id="__codelineno-39-58" name="__codelineno-39-58" href="#__codelineno-39-58"></a>
+</span><span id="__span-39-59"><a id="__codelineno-39-59" name="__codelineno-39-59" href="#__codelineno-39-59"></a>Prisma necesita un archivo schema.prisma para saber qué base de datos usamos y qué modelos tendrá el proyecto. Hoy todavía no hemos definido el modelo User, pero hemos dejado Prisma instalado y preparado para hacerlo en el siguiente día.
+</span></code></pre></div>
+<h3 id="paso-19-actualizar-el-readme">Paso 19: Actualizar el README<a class="headerlink" href="#paso-19-actualizar-el-readme" title="Permanent link">&para;</a></h3>
+<p>Añade una sección al README:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="gu">## Prisma</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>El proyecto utilizará Prisma como ORM principal para comunicarse con PostgreSQL.
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>Instalación:
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="sb">```bash</span>
+</span><span id="__span-40-8"><a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>prisma
+</span><span id="__span-40-9"><a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>npm<span class="w"> </span>install<span class="w"> </span>@prisma/client
+</span><span id="__span-40-10"><a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="sb">```</span>
+</span><span id="__span-40-11"><a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a>
+</span><span id="__span-40-12"><a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a>Inicialización:
+</span><span id="__span-40-13"><a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a>
+</span><span id="__span-40-14"><a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a><span class="sb">```bash</span>
+</span><span id="__span-40-15"><a id="__codelineno-40-15" name="__codelineno-40-15" href="#__codelineno-40-15"></a>npx<span class="w"> </span>prisma<span class="w"> </span>init<span class="w"> </span>--datasource-provider<span class="w"> </span>postgresql
+</span><span id="__span-40-16"><a id="__codelineno-40-16" name="__codelineno-40-16" href="#__codelineno-40-16"></a><span class="sb">```</span>
+</span><span id="__span-40-17"><a id="__codelineno-40-17" name="__codelineno-40-17" href="#__codelineno-40-17"></a>
+</span><span id="__span-40-18"><a id="__codelineno-40-18" name="__codelineno-40-18" href="#__codelineno-40-18"></a>Archivos importantes:
+</span><span id="__span-40-19"><a id="__codelineno-40-19" name="__codelineno-40-19" href="#__codelineno-40-19"></a>
+</span><span id="__span-40-20"><a id="__codelineno-40-20" name="__codelineno-40-20" href="#__codelineno-40-20"></a><span class="sb">```text</span>
+</span><span id="__span-40-21"><a id="__codelineno-40-21" name="__codelineno-40-21" href="#__codelineno-40-21"></a>prisma/schema.prisma
+</span><span id="__span-40-22"><a id="__codelineno-40-22" name="__codelineno-40-22" href="#__codelineno-40-22"></a>.env
+</span><span id="__span-40-23"><a id="__codelineno-40-23" name="__codelineno-40-23" href="#__codelineno-40-23"></a>.env.example
+</span><span id="__span-40-24"><a id="__codelineno-40-24" name="__codelineno-40-24" href="#__codelineno-40-24"></a><span class="sb">```</span>
+</span><span id="__span-40-25"><a id="__codelineno-40-25" name="__codelineno-40-25" href="#__codelineno-40-25"></a>
+</span><span id="__span-40-26"><a id="__codelineno-40-26" name="__codelineno-40-26" href="#__codelineno-40-26"></a>Validar esquema:
+</span><span id="__span-40-27"><a id="__codelineno-40-27" name="__codelineno-40-27" href="#__codelineno-40-27"></a>
+</span><span id="__span-40-28"><a id="__codelineno-40-28" name="__codelineno-40-28" href="#__codelineno-40-28"></a><span class="sb">```bash</span>
+</span><span id="__span-40-29"><a id="__codelineno-40-29" name="__codelineno-40-29" href="#__codelineno-40-29"></a>npx<span class="w"> </span>prisma<span class="w"> </span>validate
+</span><span id="__span-40-30"><a id="__codelineno-40-30" name="__codelineno-40-30" href="#__codelineno-40-30"></a><span class="sb">```</span>
+</span><span id="__span-40-31"><a id="__codelineno-40-31" name="__codelineno-40-31" href="#__codelineno-40-31"></a>
+</span><span id="__span-40-32"><a id="__codelineno-40-32" name="__codelineno-40-32" href="#__codelineno-40-32"></a>Generar cliente:
+</span><span id="__span-40-33"><a id="__codelineno-40-33" name="__codelineno-40-33" href="#__codelineno-40-33"></a>
+</span><span id="__span-40-34"><a id="__codelineno-40-34" name="__codelineno-40-34" href="#__codelineno-40-34"></a><span class="sb">```bash</span>
+</span><span id="__span-40-35"><a id="__codelineno-40-35" name="__codelineno-40-35" href="#__codelineno-40-35"></a>npx<span class="w"> </span>prisma<span class="w"> </span>generate
+</span><span id="__span-40-36"><a id="__codelineno-40-36" name="__codelineno-40-36" href="#__codelineno-40-36"></a><span class="sb">```</span>
+</span></code></pre></div>
+<h3 id="paso-20-actualizar-el-indice-del-readme">Paso 20: Actualizar el índice del README<a class="headerlink" href="#paso-20-actualizar-el-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade el enlace:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 20 - Instalación y configuración inicial de Prisma</span>](<span class="na">docs/dia-20-instalacion-prisma.md</span>)
+</span></code></pre></div>
+<p>El bloque debería quedar parecido a:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-42-4"><a id="__codelineno-42-4" name="__codelineno-42-4" href="#__codelineno-42-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-42-5"><a id="__codelineno-42-5" name="__codelineno-42-5" href="#__codelineno-42-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-42-6"><a id="__codelineno-42-6" name="__codelineno-42-6" href="#__codelineno-42-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-42-7"><a id="__codelineno-42-7" name="__codelineno-42-7" href="#__codelineno-42-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-42-8"><a id="__codelineno-42-8" name="__codelineno-42-8" href="#__codelineno-42-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-42-9"><a id="__codelineno-42-9" name="__codelineno-42-9" href="#__codelineno-42-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-42-10"><a id="__codelineno-42-10" name="__codelineno-42-10" href="#__codelineno-42-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-42-11"><a id="__codelineno-42-11" name="__codelineno-42-11" href="#__codelineno-42-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-42-12"><a id="__codelineno-42-12" name="__codelineno-42-12" href="#__codelineno-42-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-42-13"><a id="__codelineno-42-13" name="__codelineno-42-13" href="#__codelineno-42-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-42-14"><a id="__codelineno-42-14" name="__codelineno-42-14" href="#__codelineno-42-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-42-15"><a id="__codelineno-42-15" name="__codelineno-42-15" href="#__codelineno-42-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-42-16"><a id="__codelineno-42-16" name="__codelineno-42-16" href="#__codelineno-42-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span><span id="__span-42-17"><a id="__codelineno-42-17" name="__codelineno-42-17" href="#__codelineno-42-17"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 15 - Middleware centralizado de errores</span>](<span class="na">docs/dia-15-middleware-errores.md</span>)
+</span><span id="__span-42-18"><a id="__codelineno-42-18" name="__codelineno-42-18" href="#__codelineno-42-18"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 16 - Base de datos y persistencia</span>](<span class="na">docs/dia-16-base-datos-persistencia.md</span>)
+</span><span id="__span-42-19"><a id="__codelineno-42-19" name="__codelineno-42-19" href="#__codelineno-42-19"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 17 - PostgreSQL con Docker Compose</span>](<span class="na">docs/dia-17-postgresql-docker-compose.md</span>)
+</span><span id="__span-42-20"><a id="__codelineno-42-20" name="__codelineno-42-20" href="#__codelineno-42-20"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 18 - Diseño del modelo persistente User</span>](<span class="na">docs/dia-18-diseno-modelo-persistente-user.md</span>)
+</span><span id="__span-42-21"><a id="__codelineno-42-21" name="__codelineno-42-21" href="#__codelineno-42-21"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 19 - ORM o acceso a datos</span>](<span class="na">docs/dia-19-orm-acceso-datos.md</span>)
+</span><span id="__span-42-22"><a id="__codelineno-42-22" name="__codelineno-42-22" href="#__codelineno-42-22"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 20 - Instalación y configuración inicial de Prisma</span>](<span class="na">docs/dia-20-instalacion-prisma.md</span>)
+</span></code></pre></div>
+<h3 id="paso-21-guardar-cambios-en-git">Paso 21: Guardar cambios en Git<a class="headerlink" href="#paso-21-guardar-cambios-en-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Recuerda que <code>.env</code> no debería subirse.</p>
+<p>Añade los archivos:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<p>Crea un commit:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 20 - Instalar y configurar Prisma&quot;</span>
+</span></code></pre></div>
+<p>Sube los cambios:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="problemas-frecuentes">Problemas frecuentes<a class="headerlink" href="#problemas-frecuentes" title="Permanent link">&para;</a></h2>
+<h3 id="error-npx-prisma-no-funciona">Error: <code>npx prisma</code> no funciona<a class="headerlink" href="#error-npx-prisma-no-funciona" title="Permanent link">&para;</a></h3>
+<p>Comprueba que has instalado Prisma:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>prisma
+</span></code></pre></div>
+<p>Después prueba:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>--version
+</span></code></pre></div>
+<h3 id="error-en-database_url">Error en <code>DATABASE_URL</code><a class="headerlink" href="#error-en-database_url" title="Permanent link">&para;</a></h3>
+<p>Revisa que la URL coincida con <code>docker-compose.yml</code>.</p>
+<p>Ejemplo:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a>DATABASE_URL=&quot;postgresql://usermanager:usermanager_password@localhost:5432/usermanager_db&quot;
+</span></code></pre></div>
+<p>Comprueba especialmente:</p>
+<ul>
+<li>Usuario</li>
+<li>Contraseña</li>
+<li>Puerto</li>
+<li>Nombre de la base de datos</li>
+</ul>
+<h3 id="error-postgresql-no-esta-arrancado">Error: PostgreSQL no está arrancado<a class="headerlink" href="#error-postgresql-no-esta-arrancado" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span><span id="__span-50-2"><a id="__codelineno-50-2" name="__codelineno-50-2" href="#__codelineno-50-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span></code></pre></div>
+<h3 id="error-env-se-quiere-subir-a-git">Error: <code>.env</code> se quiere subir a Git<a class="headerlink" href="#error-env-se-quiere-subir-a-git" title="Permanent link">&para;</a></h3>
+<p>Comprueba <code>.gitignore</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>.env
+</span></code></pre></div>
+<p>Después revisa:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<h3 id="schemaprisma-tiene-una-sintaxis-diferente"><code>schema.prisma</code> tiene una sintaxis diferente<a class="headerlink" href="#schemaprisma-tiene-una-sintaxis-diferente" title="Permanent link">&para;</a></h3>
+<p>Según la versión de Prisma, el archivo generado puede tener pequeñas diferencias.</p>
+<p>Lo importante hoy es que existan estas dos partes:</p>
+<ul>
+<li><code>generator</code></li>
+<li><code>datasource</code></li>
+</ul>
+<p>Y que el datasource use:</p>
+<ul>
+<li><code>postgresql</code></li>
+<li><code>DATABASE_URL</code></li>
+</ul>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-explicar-prisma-cli-y-prisma-client">Tarea libre 1: Explicar Prisma CLI y Prisma Client<a class="headerlink" href="#tarea-libre-1-explicar-prisma-cli-y-prisma-client" title="Permanent link">&para;</a></h3>
+<p>Añade al documento una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="gu">## Prisma CLI y Prisma Client</span>
+</span></code></pre></div>
+<p>Explica con tus palabras la diferencia entre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>prisma
+</span><span id="__span-54-2"><a id="__codelineno-54-2" name="__codelineno-54-2" href="#__codelineno-54-2"></a>@prisma/client
+</span></code></pre></div>
+<p>Idea orientativa:</p>
+<blockquote>
+<p>Prisma CLI sirve para ejecutar comandos de Prisma. Prisma Client sirve para consultar la base de datos desde el código TypeScript.</p>
+</blockquote>
+<h3 id="tarea-libre-2-analizar-schemaprisma">Tarea libre 2: Analizar <code>schema.prisma</code><a class="headerlink" href="#tarea-libre-2-analizar-schemaprisma" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="gu">## Partes de schema.prisma</span>
+</span></code></pre></div>
+<p>Explica qué crees que hacen:</p>
+<ul>
+<li><code>generator client</code></li>
+<li><code>datasource db</code></li>
+<li><code>provider</code></li>
+<li><code>url</code></li>
+<li><code>env("DATABASE_URL")</code></li>
+</ul>
+<h3 id="tarea-libre-3-relacionar-env-con-docker-compose">Tarea libre 3: Relacionar <code>.env</code> con Docker Compose<a class="headerlink" href="#tarea-libre-3-relacionar-env-con-docker-compose" title="Permanent link">&para;</a></h3>
+<p>Completa una tabla:</p>
+<table>
+<thead>
+<tr>
+<th>Parte</th>
+<th>Valor en Docker Compose</th>
+<th>Valor en DATABASE_URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Usuario</td>
+<td><code>POSTGRES_USER</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Contraseña</td>
+<td><code>POSTGRES_PASSWORD</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Base de datos</td>
+<td><code>POSTGRES_DB</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Puerto</td>
+<td><code>5432:5432</code></td>
+<td></td>
+</tr>
+<tr>
+<td>Host</td>
+<td>ejecución local</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-4-crear-un-esquema-de-flujo">Tarea libre 4: Crear un esquema de flujo<a class="headerlink" href="#tarea-libre-4-crear-un-esquema-de-flujo" title="Permanent link">&para;</a></h3>
+<p>Añade un diagrama Mermaid al documento:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[schema.prisma] --&gt; B[Prisma Client]
+    B --&gt; C[API Express]
+    C --&gt; D[PostgreSQL]</code></pre>
+<p>Después explica qué representa cada elemento.</p>
+<h3 id="tarea-libre-5-preparar-el-dia-21">Tarea libre 5: Preparar el día 21<a class="headerlink" href="#tarea-libre-5-preparar-el-dia-21" title="Permanent link">&para;</a></h3>
+<p>En el documento, añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="gu">## Preparación para el modelo User</span>
+</span></code></pre></div>
+<p>Recupera del día 18 los campos que tendrá el modelo <code>User</code>:</p>
+<ul>
+<li><code>id</code></li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>passwordHash</code></li>
+<li><code>role</code></li>
+<li><code>isActive</code></li>
+<li><code>createdAt</code></li>
+<li><code>updatedAt</code></li>
+</ul>
+<p>Y escribe qué restricciones necesitará cada uno.</p>
+<h2 id="entrega-recomendada-del-dia-20">Entrega recomendada del día 20<a class="headerlink" href="#entrega-recomendada-del-dia-20" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 20, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>usermanager-api/
+</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>  .env.example
+</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a>  .gitignore
+</span><span id="__span-57-4"><a id="__codelineno-57-4" name="__codelineno-57-4" href="#__codelineno-57-4"></a>  docker-compose.yml
+</span><span id="__span-57-5"><a id="__codelineno-57-5" name="__codelineno-57-5" href="#__codelineno-57-5"></a>  README.md
+</span><span id="__span-57-6"><a id="__codelineno-57-6" name="__codelineno-57-6" href="#__codelineno-57-6"></a>  package.json
+</span><span id="__span-57-7"><a id="__codelineno-57-7" name="__codelineno-57-7" href="#__codelineno-57-7"></a>  package-lock.json
+</span><span id="__span-57-8"><a id="__codelineno-57-8" name="__codelineno-57-8" href="#__codelineno-57-8"></a>  tsconfig.json
+</span><span id="__span-57-9"><a id="__codelineno-57-9" name="__codelineno-57-9" href="#__codelineno-57-9"></a>  prisma/
+</span><span id="__span-57-10"><a id="__codelineno-57-10" name="__codelineno-57-10" href="#__codelineno-57-10"></a>    schema.prisma
+</span><span id="__span-57-11"><a id="__codelineno-57-11" name="__codelineno-57-11" href="#__codelineno-57-11"></a>  src/
+</span><span id="__span-57-12"><a id="__codelineno-57-12" name="__codelineno-57-12" href="#__codelineno-57-12"></a>    server.ts
+</span><span id="__span-57-13"><a id="__codelineno-57-13" name="__codelineno-57-13" href="#__codelineno-57-13"></a>  docs/
+</span><span id="__span-57-14"><a id="__codelineno-57-14" name="__codelineno-57-14" href="#__codelineno-57-14"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-57-15"><a id="__codelineno-57-15" name="__codelineno-57-15" href="#__codelineno-57-15"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-57-16"><a id="__codelineno-57-16" name="__codelineno-57-16" href="#__codelineno-57-16"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-57-17"><a id="__codelineno-57-17" name="__codelineno-57-17" href="#__codelineno-57-17"></a>    dia-04-metodos-http.md
+</span><span id="__span-57-18"><a id="__codelineno-57-18" name="__codelineno-57-18" href="#__codelineno-57-18"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-57-19"><a id="__codelineno-57-19" name="__codelineno-57-19" href="#__codelineno-57-19"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-57-20"><a id="__codelineno-57-20" name="__codelineno-57-20" href="#__codelineno-57-20"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-57-21"><a id="__codelineno-57-21" name="__codelineno-57-21" href="#__codelineno-57-21"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-57-22"><a id="__codelineno-57-22" name="__codelineno-57-22" href="#__codelineno-57-22"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-57-23"><a id="__codelineno-57-23" name="__codelineno-57-23" href="#__codelineno-57-23"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-57-24"><a id="__codelineno-57-24" name="__codelineno-57-24" href="#__codelineno-57-24"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-57-25"><a id="__codelineno-57-25" name="__codelineno-57-25" href="#__codelineno-57-25"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-57-26"><a id="__codelineno-57-26" name="__codelineno-57-26" href="#__codelineno-57-26"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-57-27"><a id="__codelineno-57-27" name="__codelineno-57-27" href="#__codelineno-57-27"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-57-28"><a id="__codelineno-57-28" name="__codelineno-57-28" href="#__codelineno-57-28"></a>    dia-15-middleware-errores.md
+</span><span id="__span-57-29"><a id="__codelineno-57-29" name="__codelineno-57-29" href="#__codelineno-57-29"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-57-30"><a id="__codelineno-57-30" name="__codelineno-57-30" href="#__codelineno-57-30"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-57-31"><a id="__codelineno-57-31" name="__codelineno-57-31" href="#__codelineno-57-31"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-57-32"><a id="__codelineno-57-32" name="__codelineno-57-32" href="#__codelineno-57-32"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-57-33"><a id="__codelineno-57-33" name="__codelineno-57-33" href="#__codelineno-57-33"></a>    dia-20-instalacion-prisma.md
+</span></code></pre></div>
+<p>El documento del día 20 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>docs/dia-20-instalacion-prisma.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Comandos usados.</li>
+<li>Archivos generados o modificados.</li>
+<li><code>schema.prisma</code> inicial.</li>
+<li><code>DATABASE_URL</code>.</li>
+<li>Explicación de Prisma CLI y Prisma Client.</li>
+<li>Partes de <code>schema.prisma</code>.</li>
+<li>Relación entre <code>.env</code> y Docker Compose.</li>
+<li>Preparación para el modelo <code>User</code>.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>Hola, comparto el avance del día 20 del reto UserManager API:
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>
+</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a>
+</span><span id="__span-59-5"><a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a>He instalado y configurado Prisma en el proyecto. La documentación está en:
+</span><span id="__span-59-6"><a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a>
+</span><span id="__span-59-7"><a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a>docs/dia-20-instalacion-prisma.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos preparado el proyecto para trabajar con Prisma.</p>
+<p>Todavía no hemos definido el modelo <code>User</code>, no hemos creado migraciones y no hemos consultado la base de datos desde la API. Pero hemos dado el paso necesario para poder hacerlo en los próximos días.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li>Prisma CLI.</li>
+<li>Prisma Client.</li>
+<li><code>schema.prisma</code>.</li>
+<li><code>datasource</code>.</li>
+<li><code>generator</code>.</li>
+<li><code>DATABASE_URL</code>.</li>
+<li><code>.env</code>.</li>
+<li><code>.env.example</code>.</li>
+<li><code>.gitignore</code>.</li>
+<li><code>prisma init</code>.</li>
+<li><code>prisma validate</code>.</li>
+<li><code>prisma generate</code>.</li>
+</ul>
+<p>A partir del próximo día convertiremos el diseño del modelo persistente <code>User</code> en un modelo real dentro de <code>schema.prisma</code>.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Antes de usar un ORM para consultar datos, necesitamos instalarlo,
+inicializarlo y conectar su configuración con la base de datos del proyecto.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia19/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 19">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 19
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia21/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 21">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 21
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

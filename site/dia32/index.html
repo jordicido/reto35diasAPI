@@ -1,0 +1,3939 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia31/">
+      
+      
+        <link rel="next" href="../dia33/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 32: Contraseñas seguras con bcrypt - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-32-contrasenas-seguras-con-bcrypt" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 32: Contraseñas seguras con bcrypt
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-problema-actual" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El problema actual
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-hash-de-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es un hash de contraseña
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-frente-a-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Password frente a passwordHash
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-son-los-salt-rounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué son los salt rounds
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-seguro-al-crear-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo seguro al crear usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-archivos-vamos-a-tocar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué archivos vamos a tocar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-instalar-bcrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Instalar <code>bcrypt</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-crear-passwordutilsts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Crear <code>password.utils.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-entender-hashpassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Entender <code>hashPassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-entender-comparepassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Entender <code>comparePassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modificar-creacion-de-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modificar creación de usuarios
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modificar creación de usuarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-abrir-userservicets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Abrir <code>user.service.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-importar-hashpassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Importar <code>hashPassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-generar-un-hash-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Generar un hash real
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-revisar-que-no-devolvemos-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Revisar que no devolvemos <code>passwordHash</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualizar el seed
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizar el seed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-abrir-prismaseedts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Abrir <code>prisma/seed.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-importar-bcrypt-en-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Importar <code>bcrypt</code> en el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-crear-constante-salt_rounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Crear constante <code>SALT_ROUNDS</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-generar-hashes-iniciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Generar hashes iniciales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-sustituir-hashes-temporales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Sustituir hashes temporales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-actualizar-tambien-usuarios-existentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Actualizar también usuarios existentes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-seed-actualizado-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Seed actualizado completo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-el-cambio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar el cambio
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar el cambio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-ejecutar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Ejecutar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-abrir-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Abrir Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-crear-un-usuario-nuevo-desde-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Crear un usuario nuevo desde la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-comprobar-el-usuario-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Comprobar el usuario en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-comparacion-de-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar comparación de contraseña
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar comparación de contraseña">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-crear-script-temporal-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Crear script temporal de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizar-documentacion-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualizar documentación del README
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizar documentación del README">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-anadir-seccion-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 22: Añadir sección de seguridad
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-actualizar-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 23: Actualizar arquitectura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-actualizar-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 24: Actualizar índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-el-documento-del-dia-32" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear el documento del día 32
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear el documento del día 32">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 25: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-26-anadir-checklist-de-comprobacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 26: Añadir checklist de comprobación
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar build
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-27-compilar-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 27: Compilar TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guardar cambios en Git">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-28-revisar-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 28: Revisar cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-29-anadir-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 29: Añadir archivos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-30-crear-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 30: Crear commit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-31-subir-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 31: Subir cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-al-importar-bcrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error al importar bcrypt
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-encuentra-tipos-de-bcrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: no encuentra tipos de bcrypt
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-seed-sigue-mostrando-hashes-temporales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El seed sigue mostrando hashes temporales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#los-usuarios-existentes-no-se-actualizan" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Los usuarios existentes no se actualizan
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-respuesta-de-la-api-muestra-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La respuesta de la API muestra <code>passwordHash</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparepassword-devuelve-false-siempre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>comparePassword</code> devuelve false siempre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-por-que-no-guardamos-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar por qué no guardamos password
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-probar-comparepassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Probar <code>comparePassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-revisar-usuarios-antiguos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Revisar usuarios antiguos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-mejorar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Mejorar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 33
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-32" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 32
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia33/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#el-problema-actual" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El problema actual
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-es-un-hash-de-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué es un hash de contraseña
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-frente-a-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Password frente a passwordHash
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-son-los-salt-rounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué son los salt rounds
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-seguro-al-crear-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo seguro al crear usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-archivos-vamos-a-tocar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué archivos vamos a tocar hoy
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-instalar-bcrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Instalar <code>bcrypt</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-crear-passwordutilsts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Crear <code>password.utils.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-entender-hashpassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Entender <code>hashPassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-entender-comparepassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Entender <code>comparePassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modificar-creacion-de-usuarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Modificar creación de usuarios
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Modificar creación de usuarios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-abrir-userservicets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Abrir <code>user.service.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-importar-hashpassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Importar <code>hashPassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-generar-un-hash-real" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Generar un hash real
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-revisar-que-no-devolvemos-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Revisar que no devolvemos <code>passwordHash</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualizar el seed
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizar el seed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-abrir-prismaseedts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Abrir <code>prisma/seed.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-importar-bcrypt-en-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Importar <code>bcrypt</code> en el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-crear-constante-salt_rounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Crear constante <code>SALT_ROUNDS</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-generar-hashes-iniciales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Generar hashes iniciales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-sustituir-hashes-temporales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Sustituir hashes temporales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-actualizar-tambien-usuarios-existentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Actualizar también usuarios existentes
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-seed-actualizado-completo" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Seed actualizado completo
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-el-cambio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar el cambio
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar el cambio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-ejecutar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Ejecutar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-abrir-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Abrir Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-crear-un-usuario-nuevo-desde-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Crear un usuario nuevo desde la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-comprobar-el-usuario-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Comprobar el usuario en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-comparacion-de-contrasena" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar comparación de contraseña
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar comparación de contraseña">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-crear-script-temporal-de-prueba" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Crear script temporal de prueba
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizar-documentacion-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualizar documentación del README
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizar documentación del README">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-anadir-seccion-de-seguridad" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 22: Añadir sección de seguridad
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-actualizar-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 23: Actualizar arquitectura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-actualizar-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 24: Actualizar índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-el-documento-del-dia-32" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear el documento del día 32
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear el documento del día 32">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 25: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-26-anadir-checklist-de-comprobacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 26: Añadir checklist de comprobación
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar build
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-27-compilar-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 27: Compilar TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guardar cambios en Git">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-28-revisar-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 28: Revisar cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-29-anadir-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 29: Añadir archivos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-30-crear-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 30: Crear commit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-31-subir-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 31: Subir cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#error-al-importar-bcrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error al importar bcrypt
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-no-encuentra-tipos-de-bcrypt" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error: no encuentra tipos de bcrypt
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-seed-sigue-mostrando-hashes-temporales" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El seed sigue mostrando hashes temporales
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#los-usuarios-existentes-no-se-actualizan" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Los usuarios existentes no se actualizan
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#la-respuesta-de-la-api-muestra-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        La respuesta de la API muestra <code>passwordHash</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comparepassword-devuelve-false-siempre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>comparePassword</code> devuelve false siempre
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-explicar-por-que-no-guardamos-password" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Explicar por qué no guardamos password
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-probar-comparepassword" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Probar <code>comparePassword</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-revisar-usuarios-antiguos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Revisar usuarios antiguos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-mejorar-el-seed" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Mejorar el seed
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 33
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-32" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 32
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-32-contrasenas-seguras-con-bcrypt">Día 32: Contraseñas seguras con <code>bcrypt</code><a class="headerlink" href="#dia-32-contrasenas-seguras-con-bcrypt" title="Permanent link">&para;</a></h1>
+<p>El <strong>Día 32</strong> abre la fase de <strong>seguridad</strong> de la nueva calendarización: dejamos de generar <code>passwordHash</code> temporales y empezamos a usar <code>bcrypt</code> para hashear contraseñas antes de guardarlas. Usaremos el paquete <code>bcrypt</code>, que está pensado para hashear contraseñas en Node.js, junto con sus tipos para TypeScript.</p>
+<p>En el día 31 limpiamos y refactorizamos el proyecto.</p>
+<p>Después de crear el CRUD persistente, revisamos la estructura, eliminamos código temporal y dejamos el backend preparado para empezar una nueva fase: <strong>seguridad</strong>.</p>
+<p>Hasta ahora, cuando creábamos usuarios, usábamos un valor temporal para <code>passwordHash</code>.</p>
+<p>Por ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="sb">`hash_temporal_</span><span class="si">${</span><span class="nx">cleanPassword</span><span class="si">}</span><span class="sb">`</span>
+</span></code></pre></div>
+<p>Esto nos permitió avanzar con el CRUD sin meternos todavía en seguridad.</p>
+<p>Pero ese enfoque no es válido para una aplicación real.</p>
+<p>Una API nunca debe guardar contraseñas en texto plano ni usar hashes falsos.</p>
+<p>A partir de hoy vamos a usar una librería especializada: <code>bcrypt</code>.</p>
+<p><code>bcrypt</code> nos permite transformar una contraseña en un hash seguro antes de guardarla en la base de datos.</p>
+<div class="admonition info">
+<p class="admonition-title">Idea principal</p>
+<p>La contraseña entra en la API, pero nunca debe guardarse tal cual en la base de datos.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<ul>
+<li>Seguridad.</li>
+<li>Contraseñas.</li>
+<li>Hash.</li>
+<li><code>bcrypt</code>.</li>
+<li>Salt rounds.</li>
+<li><code>password</code>.</li>
+<li><code>passwordHash</code>.</li>
+<li><code>hashPassword</code>.</li>
+<li><code>comparePassword</code>.</li>
+<li>No guardar texto plano.</li>
+<li>No devolver <code>passwordHash</code>.</li>
+<li>Seed con hashes reales.</li>
+</ul>
+<p>El producto del día será tener contraseñas hasheadas con <code>bcrypt</code> antes de guardarse en PostgreSQL.</p>
+<p>El resultado esperado será que al crear usuarios ya no se guarde:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>hash_temporal_123456
+</span></code></pre></div>
+<p>sino un hash real generado por <code>bcrypt</code>.</p>
+<h2 id="el-problema-actual">El problema actual<a class="headerlink" href="#el-problema-actual" title="Permanent link">&para;</a></h2>
+<p>En nuestro servicio de usuarios probablemente tenemos algo parecido a esto:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">createUser</span><span class="p">({</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="sb">`hash_temporal_</span><span class="si">${</span><span class="nx">cleanPassword</span><span class="si">}</span><span class="sb">`</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Esto era aceptable como paso temporal, pero tiene varios problemas:</p>
+<ul>
+<li>El hash no es real.</li>
+<li>La contraseña sigue siendo reconocible.</li>
+<li>No protege realmente los datos.</li>
+<li>No nos sirve para implementar login seguro.</li>
+<li>No es una práctica profesional.</li>
+</ul>
+<p>Si alguien accediera a la base de datos y viera:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>hash_temporal_123456
+</span></code></pre></div>
+<p>podría deducir fácilmente la contraseña original.</p>
+<p>Eso es justo lo que queremos evitar.</p>
+<h2 id="que-es-un-hash-de-contrasena">Qué es un hash de contraseña<a class="headerlink" href="#que-es-un-hash-de-contrasena" title="Permanent link">&para;</a></h2>
+<p>Un hash es una transformación de un dato original en una cadena diferente.</p>
+<p>Por ejemplo, una contraseña como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>123456
+</span></code></pre></div>
+<p>podría convertirse en algo parecido a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>$2b$10$G4K1Lw7fZkR8Gk...
+</span></code></pre></div>
+<p>La idea es que la aplicación guarde el hash, no la contraseña.</p>
+<p>Cuando el usuario quiera iniciar sesión, no compararemos la contraseña directamente con la base de datos.</p>
+<p>Haremos esto:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Password introducida] --&gt; B[bcrypt.compare]
+    C[passwordHash guardado] --&gt; B
+    B --&gt; D[Coincide o no coincide]</code></pre>
+<p>Hoy nos centraremos sobre todo en generar hashes.</p>
+<p>La comparación será muy importante en el login, que llegará en los próximos días.</p>
+<h2 id="password-frente-a-passwordhash">Password frente a passwordHash<a class="headerlink" href="#password-frente-a-passwordhash" title="Permanent link">&para;</a></h2>
+<p>Es importante diferenciar estos dos conceptos:</p>
+<table>
+<thead>
+<tr>
+<th>Concepto</th>
+<th>Qué es</th>
+<th>Dónde debe estar</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>password</code></td>
+<td>Contraseña que escribe el usuario</td>
+<td>Solo en la petición</td>
+</tr>
+<tr>
+<td><code>passwordHash</code></td>
+<td>Resultado seguro generado a partir de la contraseña</td>
+<td>Base de datos</td>
+</tr>
+</tbody>
+</table>
+<p>La API puede recibir esto:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ana García&quot;</span><span class="p">,</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ana@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Pero en la base de datos guardará algo como:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>passwordHash = &quot;$2b$10$...&quot;
+</span></code></pre></div>
+<p>Nunca guardará:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>password = &quot;123456&quot;
+</span></code></pre></div>
+<h2 id="que-son-los-salt-rounds">Qué son los salt rounds<a class="headerlink" href="#que-son-los-salt-rounds" title="Permanent link">&para;</a></h2>
+<p>Cuando usamos <code>bcrypt</code>, indicamos un número de rondas.</p>
+<p>Por ejemplo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Ese número influye en el coste del cálculo.</p>
+<p>A mayor número, más trabajo cuesta generar el hash.</p>
+<p>Para este reto usaremos:</p>
+<p><code>10</code>.</p>
+<p>Es un valor habitual para desarrollo y suficientemente claro para aprender.</p>
+<p>Más adelante, en un proyecto real, podríamos ajustar ese valor según rendimiento y necesidades de seguridad.</p>
+<h2 id="flujo-seguro-al-crear-usuario">Flujo seguro al crear usuario<a class="headerlink" href="#flujo-seguro-al-crear-usuario" title="Permanent link">&para;</a></h2>
+<p>El flujo actual puede ser:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[password] --&gt; B[hash temporal]
+    B --&gt; C[passwordHash en BD]</code></pre>
+<p>Después de hoy será:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[password recibida] --&gt; B[bcrypt.hash]
+    B --&gt; C[passwordHash real]
+    C --&gt; D[PostgreSQL]</code></pre>
+<p>El usuario enviará <code>password</code>.</p>
+<p>El servicio validará esa contraseña.</p>
+<p>Después llamará a una utilidad de seguridad:</p>
+<p><code>hashPassword</code>.</p>
+<p>Y finalmente guardará el resultado en:</p>
+<p><code>passwordHash</code>.</p>
+<h2 id="que-archivos-vamos-a-tocar-hoy">Qué archivos vamos a tocar hoy<a class="headerlink" href="#que-archivos-vamos-a-tocar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos principalmente con estos archivos:</p>
+<ul>
+<li><code>package.json</code></li>
+<li><code>src/services/user.service.ts</code></li>
+<li><code>src/utils/password.utils.ts</code></li>
+<li><code>prisma/seed.ts</code></li>
+<li><code>README.md</code></li>
+<li><code>docs/dia-32-bcrypt-passwords.md</code></li>
+</ul>
+<p>También comprobaremos los datos con:</p>
+<p>Prisma Studio.</p>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre una terminal y entra en el repositorio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Comprueba que el proyecto compila antes de tocar nada:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>npm<span class="w"> </span>run<span class="w"> </span>build
+</span></code></pre></div>
+<h3 id="paso-2-instalar-bcrypt">Paso 2: Instalar <code>bcrypt</code><a class="headerlink" href="#paso-2-instalar-bcrypt" title="Permanent link">&para;</a></h3>
+<p>Instala la librería:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>npm<span class="w"> </span>install<span class="w"> </span>bcrypt
+</span></code></pre></div>
+<p>Instala también los tipos para TypeScript:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>@types/bcrypt
+</span></code></pre></div>
+<p>Después revisa <code>package.json</code>.</p>
+<p>Deberías ver algo parecido a:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">&quot;@prisma/client&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">  </span><span class="nt">&quot;bcrypt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="p">},</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nt">&quot;devDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">  </span><span class="nt">&quot;@types/bcrypt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="nt">&quot;prisma&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="nt">&quot;tsx&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="w">  </span><span class="nt">&quot;typescript&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="paso-3-crear-passwordutilsts">Paso 3: Crear <code>password.utils.ts</code><a class="headerlink" href="#paso-3-crear-passwordutilsts" title="Permanent link">&para;</a></h3>
+<p>Dentro de <code>src/utils/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>src/utils/password.utils.ts
+</span></code></pre></div>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">bcrypt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;bcrypt&quot;</span><span class="p">;</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="p">}</span>
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">comparePassword</span><span class="p">(</span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">passwordHash</span><span class="p">);</span>
+</span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Aunque hoy usaremos principalmente <code>hashPassword</code>, dejamos también preparada <code>comparePassword</code> para el login.</p>
+<h3 id="paso-4-entender-hashpassword">Paso 4: Entender <code>hashPassword</code><a class="headerlink" href="#paso-4-entender-hashpassword" title="Permanent link">&para;</a></h3>
+<p>La función:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>recibe una contraseña en texto plano y devuelve un hash.</p>
+<p>Ejemplo conceptual:</p>
+<p><code>123456 → $2b$10$...</code></p>
+<p>Ese hash será lo que guardaremos en la base de datos.</p>
+<h3 id="paso-5-entender-comparepassword">Paso 5: Entender <code>comparePassword</code><a class="headerlink" href="#paso-5-entender-comparepassword" title="Permanent link">&para;</a></h3>
+<p>La función:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">comparePassword</span><span class="p">(</span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">,</span><span class="w"> </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">string</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">compare</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">passwordHash</span><span class="p">);</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>servirá más adelante para login.</p>
+<p>No necesitaremos recuperar la contraseña original.</p>
+<p>Solo comprobaremos si la contraseña introducida coincide con el hash guardado.</p>
+<p>Ejemplo conceptual:</p>
+<ul>
+<li><code>comparePassword("123456", "$2b$10$...") → true</code></li>
+<li><code>comparePassword("otra", "$2b$10$...") → false</code></li>
+</ul>
+<h2 id="modificar-creacion-de-usuarios">Modificar creación de usuarios<a class="headerlink" href="#modificar-creacion-de-usuarios" title="Permanent link">&para;</a></h2>
+<h3 id="paso-6-abrir-userservicets">Paso 6: Abrir <code>user.service.ts</code><a class="headerlink" href="#paso-6-abrir-userservicets" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>src/services/user.service.ts
+</span></code></pre></div>
+<p>Busca la función:</p>
+<p><code>createUserService</code>.</p>
+<p>Dentro debería haber algo parecido a:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">createUser</span><span class="p">({</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="p">,</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="p">,</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">  </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="sb">`hash_temporal_</span><span class="si">${</span><span class="nx">cleanPassword</span><span class="si">}</span><span class="sb">`</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Ese es el código que vamos a sustituir.</p>
+<h3 id="paso-7-importar-hashpassword">Paso 7: Importar <code>hashPassword</code><a class="headerlink" href="#paso-7-importar-hashpassword" title="Permanent link">&para;</a></h3>
+<p>En <code>user.service.ts</code>, añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hashPassword</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../utils/password.utils&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="paso-8-generar-un-hash-real">Paso 8: Generar un hash real<a class="headerlink" href="#paso-8-generar-un-hash-real" title="Permanent link">&para;</a></h3>
+<p>Dentro de <code>createUserService</code>, antes de llamar a <code>createUser</code>, añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">passwordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">cleanPassword</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Después cambia la creación por:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">createUser</span><span class="p">({</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="p">,</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="p">,</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">  </span><span class="nx">passwordHash</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>La parte final de <code>createUserService</code> debería quedar así:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">existingUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">findUserByEmail</span><span class="p">(</span><span class="nx">cleanEmail</span><span class="p">);</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">existingUser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El email ya está registrado&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">409</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span>
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a>
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">passwordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">cleanPassword</span><span class="p">);</span>
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a>
+</span><span id="__span-24-11"><a id="__codelineno-24-11" name="__codelineno-24-11" href="#__codelineno-24-11"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">createUser</span><span class="p">({</span>
+</span><span id="__span-24-12"><a id="__codelineno-24-12" name="__codelineno-24-12" href="#__codelineno-24-12"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="p">,</span>
+</span><span id="__span-24-13"><a id="__codelineno-24-13" name="__codelineno-24-13" href="#__codelineno-24-13"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="p">,</span>
+</span><span id="__span-24-14"><a id="__codelineno-24-14" name="__codelineno-24-14" href="#__codelineno-24-14"></a><span class="w">    </span><span class="nx">passwordHash</span>
+</span><span id="__span-24-15"><a id="__codelineno-24-15" name="__codelineno-24-15" href="#__codelineno-24-15"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-24-16"><a id="__codelineno-24-16" name="__codelineno-24-16" href="#__codelineno-24-16"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Ahora ya no guardamos un hash temporal.</p>
+<h3 id="paso-9-revisar-que-no-devolvemos-passwordhash">Paso 9: Revisar que no devolvemos <code>passwordHash</code><a class="headerlink" href="#paso-9-revisar-que-no-devolvemos-passwordhash" title="Permanent link">&para;</a></h3>
+<p>Aunque ahora el hash sea real, la regla sigue siendo la misma:</p>
+<div class="admonition danger">
+<p class="admonition-title">Regla importante</p>
+<p><code>passwordHash</code> nunca se devuelve al cliente.</p>
+</div>
+<p>Revisa:</p>
+<p><code>src/repositories/user.repository.ts</code>.</p>
+<p>Asegúrate de que las funciones de creación y consulta usan:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="kt">userSafeSelect</span>
+</span></code></pre></div>
+<p>Y que <code>userSafeSelect</code> no incluye:</p>
+<p><code>passwordHash</code>.</p>
+<h2 id="actualizar-el-seed">Actualizar el seed<a class="headerlink" href="#actualizar-el-seed" title="Permanent link">&para;</a></h2>
+<h3 id="paso-10-abrir-prismaseedts">Paso 10: Abrir <code>prisma/seed.ts</code><a class="headerlink" href="#paso-10-abrir-prismaseedts" title="Permanent link">&para;</a></h3>
+<p>Actualmente el seed puede tener algo como:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_admin123&quot;</span>
+</span></code></pre></div>
+<p>Eso ya no nos interesa.</p>
+<p>Queremos que los usuarios iniciales también tengan hashes reales.</p>
+<h3 id="paso-11-importar-bcrypt-en-el-seed">Paso 11: Importar <code>bcrypt</code> en el seed<a class="headerlink" href="#paso-11-importar-bcrypt-en-el-seed" title="Permanent link">&para;</a></h3>
+<p>En <code>prisma/seed.ts</code>, añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">bcrypt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;bcrypt&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="paso-12-crear-constante-salt_rounds">Paso 12: Crear constante <code>SALT_ROUNDS</code><a class="headerlink" href="#paso-12-crear-constante-salt_rounds" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="paso-13-generar-hashes-iniciales">Paso 13: Generar hashes iniciales<a class="headerlink" href="#paso-13-generar-hashes-iniciales" title="Permanent link">&para;</a></h3>
+<p>Dentro de <code>main</code>, antes de crear usuarios, añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">adminPasswordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="s2">&quot;admin123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="kd">const</span><span class="w"> </span><span class="nx">userPasswordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="s2">&quot;user123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="kd">const</span><span class="w"> </span><span class="nx">inactivePasswordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="s2">&quot;inactive123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span></code></pre></div>
+<h3 id="paso-14-sustituir-hashes-temporales">Paso 14: Sustituir hashes temporales<a class="headerlink" href="#paso-14-sustituir-hashes-temporales" title="Permanent link">&para;</a></h3>
+<p>Cambia:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_admin123&quot;</span>
+</span></code></pre></div>
+<p>por:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">adminPasswordHash</span>
+</span></code></pre></div>
+<p>Cambia:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_user123&quot;</span>
+</span></code></pre></div>
+<p>por:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">userPasswordHash</span>
+</span></code></pre></div>
+<p>Cambia:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;hash_temporal_inactive123&quot;</span>
+</span></code></pre></div>
+<p>por:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">inactivePasswordHash</span>
+</span></code></pre></div>
+<h3 id="paso-15-actualizar-tambien-usuarios-existentes">Paso 15: Actualizar también usuarios existentes<a class="headerlink" href="#paso-15-actualizar-tambien-usuarios-existentes" title="Permanent link">&para;</a></h3>
+<p>En el seed del día 24 usamos:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+</span></code></pre></div>
+<p>Eso significa que si el usuario ya existe, no se actualiza.</p>
+<p>Ahora queremos que el seed pueda actualizar el <code>passwordHash</code> de los usuarios iniciales.</p>
+<p>Cambia cada <code>update: {}</code> por algo como:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">adminPasswordHash</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Para el admin.</p>
+<p>Para el usuario normal:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">userPasswordHash</span>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Para el inactivo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="w">  </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">inactivePasswordHash</span>
+</span><span id="__span-39-3"><a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Así, si ya existían con hashes temporales, el seed los actualizará.</p>
+<h3 id="paso-16-seed-actualizado-completo">Paso 16: Seed actualizado completo<a class="headerlink" href="#paso-16-seed-actualizado-completo" title="Permanent link">&para;</a></h3>
+<p>El seed debería quedar parecido a esto:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">bcrypt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;bcrypt&quot;</span><span class="p">;</span>
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">,</span><span class="w"> </span><span class="nx">Role</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;@prisma/client&quot;</span><span class="p">;</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="kd">const</span><span class="w"> </span><span class="nx">prisma</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">PrismaClient</span><span class="p">();</span>
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a><span class="kd">const</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10</span><span class="p">;</span>
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-8"><a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">adminPasswordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="s2">&quot;admin123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span><span id="__span-40-9"><a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">userPasswordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="s2">&quot;user123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span><span id="__span-40-10"><a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">inactivePasswordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">bcrypt</span><span class="p">.</span><span class="nx">hash</span><span class="p">(</span><span class="s2">&quot;inactive123&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">SALT_ROUNDS</span><span class="p">);</span>
+</span><span id="__span-40-11"><a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a>
+</span><span id="__span-40-12"><a id="__codelineno-40-12" name="__codelineno-40-12" href="#__codelineno-40-12"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">admin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-40-13"><a id="__codelineno-40-13" name="__codelineno-40-13" href="#__codelineno-40-13"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-14"><a id="__codelineno-40-14" name="__codelineno-40-14" href="#__codelineno-40-14"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span>
+</span><span id="__span-40-15"><a id="__codelineno-40-15" name="__codelineno-40-15" href="#__codelineno-40-15"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-40-16"><a id="__codelineno-40-16" name="__codelineno-40-16" href="#__codelineno-40-16"></a><span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-17"><a id="__codelineno-40-17" name="__codelineno-40-17" href="#__codelineno-40-17"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">adminPasswordHash</span>
+</span><span id="__span-40-18"><a id="__codelineno-40-18" name="__codelineno-40-18" href="#__codelineno-40-18"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-40-19"><a id="__codelineno-40-19" name="__codelineno-40-19" href="#__codelineno-40-19"></a><span class="w">    </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-20"><a id="__codelineno-40-20" name="__codelineno-40-20" href="#__codelineno-40-20"></a><span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Admin Principal&quot;</span><span class="p">,</span>
+</span><span id="__span-40-21"><a id="__codelineno-40-21" name="__codelineno-40-21" href="#__codelineno-40-21"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;admin@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-40-22"><a id="__codelineno-40-22" name="__codelineno-40-22" href="#__codelineno-40-22"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">adminPasswordHash</span><span class="p">,</span>
+</span><span id="__span-40-23"><a id="__codelineno-40-23" name="__codelineno-40-23" href="#__codelineno-40-23"></a><span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">Role.ADMIN</span><span class="p">,</span>
+</span><span id="__span-40-24"><a id="__codelineno-40-24" name="__codelineno-40-24" href="#__codelineno-40-24"></a><span class="w">      </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-40-25"><a id="__codelineno-40-25" name="__codelineno-40-25" href="#__codelineno-40-25"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-40-26"><a id="__codelineno-40-26" name="__codelineno-40-26" href="#__codelineno-40-26"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-40-27"><a id="__codelineno-40-27" name="__codelineno-40-27" href="#__codelineno-40-27"></a>
+</span><span id="__span-40-28"><a id="__codelineno-40-28" name="__codelineno-40-28" href="#__codelineno-40-28"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-40-29"><a id="__codelineno-40-29" name="__codelineno-40-29" href="#__codelineno-40-29"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-30"><a id="__codelineno-40-30" name="__codelineno-40-30" href="#__codelineno-40-30"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user@email.com&quot;</span>
+</span><span id="__span-40-31"><a id="__codelineno-40-31" name="__codelineno-40-31" href="#__codelineno-40-31"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-40-32"><a id="__codelineno-40-32" name="__codelineno-40-32" href="#__codelineno-40-32"></a><span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-33"><a id="__codelineno-40-33" name="__codelineno-40-33" href="#__codelineno-40-33"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">userPasswordHash</span>
+</span><span id="__span-40-34"><a id="__codelineno-40-34" name="__codelineno-40-34" href="#__codelineno-40-34"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-40-35"><a id="__codelineno-40-35" name="__codelineno-40-35" href="#__codelineno-40-35"></a><span class="w">    </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-36"><a id="__codelineno-40-36" name="__codelineno-40-36" href="#__codelineno-40-36"></a><span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario Demo&quot;</span><span class="p">,</span>
+</span><span id="__span-40-37"><a id="__codelineno-40-37" name="__codelineno-40-37" href="#__codelineno-40-37"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;user@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-40-38"><a id="__codelineno-40-38" name="__codelineno-40-38" href="#__codelineno-40-38"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">userPasswordHash</span><span class="p">,</span>
+</span><span id="__span-40-39"><a id="__codelineno-40-39" name="__codelineno-40-39" href="#__codelineno-40-39"></a><span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">Role.USER</span><span class="p">,</span>
+</span><span id="__span-40-40"><a id="__codelineno-40-40" name="__codelineno-40-40" href="#__codelineno-40-40"></a><span class="w">      </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">true</span>
+</span><span id="__span-40-41"><a id="__codelineno-40-41" name="__codelineno-40-41" href="#__codelineno-40-41"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-40-42"><a id="__codelineno-40-42" name="__codelineno-40-42" href="#__codelineno-40-42"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-40-43"><a id="__codelineno-40-43" name="__codelineno-40-43" href="#__codelineno-40-43"></a>
+</span><span id="__span-40-44"><a id="__codelineno-40-44" name="__codelineno-40-44" href="#__codelineno-40-44"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">inactiveUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">upsert</span><span class="p">({</span>
+</span><span id="__span-40-45"><a id="__codelineno-40-45" name="__codelineno-40-45" href="#__codelineno-40-45"></a><span class="w">    </span><span class="nx">where</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-46"><a id="__codelineno-40-46" name="__codelineno-40-46" href="#__codelineno-40-46"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;inactive@email.com&quot;</span>
+</span><span id="__span-40-47"><a id="__codelineno-40-47" name="__codelineno-40-47" href="#__codelineno-40-47"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-40-48"><a id="__codelineno-40-48" name="__codelineno-40-48" href="#__codelineno-40-48"></a><span class="w">    </span><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-49"><a id="__codelineno-40-49" name="__codelineno-40-49" href="#__codelineno-40-49"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">inactivePasswordHash</span>
+</span><span id="__span-40-50"><a id="__codelineno-40-50" name="__codelineno-40-50" href="#__codelineno-40-50"></a><span class="w">    </span><span class="p">},</span>
+</span><span id="__span-40-51"><a id="__codelineno-40-51" name="__codelineno-40-51" href="#__codelineno-40-51"></a><span class="w">    </span><span class="nx">create</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-52"><a id="__codelineno-40-52" name="__codelineno-40-52" href="#__codelineno-40-52"></a><span class="w">      </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario Inactivo&quot;</span><span class="p">,</span>
+</span><span id="__span-40-53"><a id="__codelineno-40-53" name="__codelineno-40-53" href="#__codelineno-40-53"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;inactive@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-40-54"><a id="__codelineno-40-54" name="__codelineno-40-54" href="#__codelineno-40-54"></a><span class="w">      </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">inactivePasswordHash</span><span class="p">,</span>
+</span><span id="__span-40-55"><a id="__codelineno-40-55" name="__codelineno-40-55" href="#__codelineno-40-55"></a><span class="w">      </span><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">Role.USER</span><span class="p">,</span>
+</span><span id="__span-40-56"><a id="__codelineno-40-56" name="__codelineno-40-56" href="#__codelineno-40-56"></a><span class="w">      </span><span class="nx">isActive</span><span class="o">:</span><span class="w"> </span><span class="kt">false</span>
+</span><span id="__span-40-57"><a id="__codelineno-40-57" name="__codelineno-40-57" href="#__codelineno-40-57"></a><span class="w">    </span><span class="p">}</span>
+</span><span id="__span-40-58"><a id="__codelineno-40-58" name="__codelineno-40-58" href="#__codelineno-40-58"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-40-59"><a id="__codelineno-40-59" name="__codelineno-40-59" href="#__codelineno-40-59"></a>
+</span><span id="__span-40-60"><a id="__codelineno-40-60" name="__codelineno-40-60" href="#__codelineno-40-60"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Seed ejecutado correctamente:&quot;</span><span class="p">);</span>
+</span><span id="__span-40-61"><a id="__codelineno-40-61" name="__codelineno-40-61" href="#__codelineno-40-61"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">({</span><span class="w"> </span><span class="nx">admin</span><span class="p">,</span><span class="w"> </span><span class="nx">user</span><span class="p">,</span><span class="w"> </span><span class="nx">inactiveUser</span><span class="w"> </span><span class="p">});</span>
+</span><span id="__span-40-62"><a id="__codelineno-40-62" name="__codelineno-40-62" href="#__codelineno-40-62"></a><span class="p">}</span>
+</span><span id="__span-40-63"><a id="__codelineno-40-63" name="__codelineno-40-63" href="#__codelineno-40-63"></a>
+</span><span id="__span-40-64"><a id="__codelineno-40-64" name="__codelineno-40-64" href="#__codelineno-40-64"></a><span class="nx">main</span><span class="p">()</span>
+</span><span id="__span-40-65"><a id="__codelineno-40-65" name="__codelineno-40-65" href="#__codelineno-40-65"></a><span class="w">  </span><span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-66"><a id="__codelineno-40-66" name="__codelineno-40-66" href="#__codelineno-40-66"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$disconnect</span><span class="p">();</span>
+</span><span id="__span-40-67"><a id="__codelineno-40-67" name="__codelineno-40-67" href="#__codelineno-40-67"></a><span class="w">  </span><span class="p">})</span>
+</span><span id="__span-40-68"><a id="__codelineno-40-68" name="__codelineno-40-68" href="#__codelineno-40-68"></a><span class="w">  </span><span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-40-69"><a id="__codelineno-40-69" name="__codelineno-40-69" href="#__codelineno-40-69"></a><span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="s2">&quot;Error ejecutando el seed:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">error</span><span class="p">);</span>
+</span><span id="__span-40-70"><a id="__codelineno-40-70" name="__codelineno-40-70" href="#__codelineno-40-70"></a><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="nx">prisma</span><span class="p">.</span><span class="nx">$disconnect</span><span class="p">();</span>
+</span><span id="__span-40-71"><a id="__codelineno-40-71" name="__codelineno-40-71" href="#__codelineno-40-71"></a><span class="w">    </span><span class="nx">process</span><span class="p">.</span><span class="nx">exit</span><span class="p">(</span><span class="mf">1</span><span class="p">);</span>
+</span><span id="__span-40-72"><a id="__codelineno-40-72" name="__codelineno-40-72" href="#__codelineno-40-72"></a><span class="w">  </span><span class="p">});</span>
+</span></code></pre></div>
+<h2 id="probar-el-cambio">Probar el cambio<a class="headerlink" href="#probar-el-cambio" title="Permanent link">&para;</a></h2>
+<h3 id="paso-17-ejecutar-el-seed">Paso 17: Ejecutar el seed<a class="headerlink" href="#paso-17-ejecutar-el-seed" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span></code></pre></div>
+<p>O:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>npx<span class="w"> </span>prisma<span class="w"> </span>db<span class="w"> </span>seed
+</span></code></pre></div>
+<p>Esto actualizará los usuarios iniciales.</p>
+<h3 id="paso-18-abrir-prisma-studio">Paso 18: Abrir Prisma Studio<a class="headerlink" href="#paso-18-abrir-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:studio
+</span></code></pre></div>
+<p>Entra en la tabla:</p>
+<p><code>User</code>.</p>
+<p>Revisa el campo:</p>
+<p><code>passwordHash</code>.</p>
+<p>Deberías ver valores parecidos a:</p>
+<p><code>$2b$10$...</code></p>
+<p>Ya no deberías ver:</p>
+<ul>
+<li><code>hash_temporal_admin123</code></li>
+<li><code>hash_temporal_user123</code></li>
+<li><code>hash_temporal_inactive123</code></li>
+</ul>
+<h3 id="paso-19-crear-un-usuario-nuevo-desde-la-api">Paso 19: Crear un usuario nuevo desde la API<a class="headerlink" href="#paso-19-crear-un-usuario-nuevo-desde-la-api" title="Permanent link">&para;</a></h3>
+<p>Arranca la API:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<p>Crea un usuario:</p>
+<p><code>POST http://localhost:3000/api/users</code></p>
+<p>Body:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="p">{</span>
+</span><span id="__span-45-2"><a id="__codelineno-45-2" name="__codelineno-45-2" href="#__codelineno-45-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Seguro&quot;</span><span class="p">,</span>
+</span><span id="__span-45-3"><a id="__codelineno-45-3" name="__codelineno-45-3" href="#__codelineno-45-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usuario.seguro@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-45-4"><a id="__codelineno-45-4" name="__codelineno-45-4" href="#__codelineno-45-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-45-5"><a id="__codelineno-45-5" name="__codelineno-45-5" href="#__codelineno-45-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<p><code>201 Created</code>.</p>
+<p>La respuesta no debe incluir:</p>
+<p><code>passwordHash</code>.</p>
+<h3 id="paso-20-comprobar-el-usuario-en-prisma-studio">Paso 20: Comprobar el usuario en Prisma Studio<a class="headerlink" href="#paso-20-comprobar-el-usuario-en-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Vuelve a Prisma Studio.</p>
+<p>Busca:</p>
+<p><code>usuario.seguro@email.com</code>.</p>
+<p>Comprueba que <code>passwordHash</code> tiene formato de hash <code>bcrypt</code>.</p>
+<p>Debería empezar de forma parecida a:</p>
+<p><code>$2b$10$</code>.</p>
+<p>Esto confirma que el servicio está usando <code>hashPassword</code>.</p>
+<h2 id="probar-comparacion-de-contrasena">Probar comparación de contraseña<a class="headerlink" href="#probar-comparacion-de-contrasena" title="Permanent link">&para;</a></h2>
+<h3 id="paso-21-crear-script-temporal-de-prueba">Paso 21: Crear script temporal de prueba<a class="headerlink" href="#paso-21-crear-script-temporal-de-prueba" title="Permanent link">&para;</a></h3>
+<p>Para comprobar que <code>comparePassword</code> funciona, puedes crear un archivo temporal:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>src/debug-password.ts
+</span></code></pre></div>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">comparePassword</span><span class="p">,</span><span class="w"> </span><span class="nx">hashPassword</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./utils/password.utils&quot;</span><span class="p">;</span>
+</span><span id="__span-47-2"><a id="__codelineno-47-2" name="__codelineno-47-2" href="#__codelineno-47-2"></a>
+</span><span id="__span-47-3"><a id="__codelineno-47-3" name="__codelineno-47-3" href="#__codelineno-47-3"></a><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-47-4"><a id="__codelineno-47-4" name="__codelineno-47-4" href="#__codelineno-47-4"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span><span class="p">;</span>
+</span><span id="__span-47-5"><a id="__codelineno-47-5" name="__codelineno-47-5" href="#__codelineno-47-5"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">hash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">password</span><span class="p">);</span>
+</span><span id="__span-47-6"><a id="__codelineno-47-6" name="__codelineno-47-6" href="#__codelineno-47-6"></a>
+</span><span id="__span-47-7"><a id="__codelineno-47-7" name="__codelineno-47-7" href="#__codelineno-47-7"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Password:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">password</span><span class="p">);</span>
+</span><span id="__span-47-8"><a id="__codelineno-47-8" name="__codelineno-47-8" href="#__codelineno-47-8"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Hash:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">hash</span><span class="p">);</span>
+</span><span id="__span-47-9"><a id="__codelineno-47-9" name="__codelineno-47-9" href="#__codelineno-47-9"></a>
+</span><span id="__span-47-10"><a id="__codelineno-47-10" name="__codelineno-47-10" href="#__codelineno-47-10"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">isCorrect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">comparePassword</span><span class="p">(</span><span class="s2">&quot;123456&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">hash</span><span class="p">);</span>
+</span><span id="__span-47-11"><a id="__codelineno-47-11" name="__codelineno-47-11" href="#__codelineno-47-11"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">isIncorrect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">comparePassword</span><span class="p">(</span><span class="s2">&quot;otra-password&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">hash</span><span class="p">);</span>
+</span><span id="__span-47-12"><a id="__codelineno-47-12" name="__codelineno-47-12" href="#__codelineno-47-12"></a>
+</span><span id="__span-47-13"><a id="__codelineno-47-13" name="__codelineno-47-13" href="#__codelineno-47-13"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Coincide password correcta:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">isCorrect</span><span class="p">);</span>
+</span><span id="__span-47-14"><a id="__codelineno-47-14" name="__codelineno-47-14" href="#__codelineno-47-14"></a><span class="w">  </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Coincide password incorrecta:&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">isIncorrect</span><span class="p">);</span>
+</span><span id="__span-47-15"><a id="__codelineno-47-15" name="__codelineno-47-15" href="#__codelineno-47-15"></a><span class="p">}</span>
+</span><span id="__span-47-16"><a id="__codelineno-47-16" name="__codelineno-47-16" href="#__codelineno-47-16"></a>
+</span><span id="__span-47-17"><a id="__codelineno-47-17" name="__codelineno-47-17" href="#__codelineno-47-17"></a><span class="nx">main</span><span class="p">();</span>
+</span></code></pre></div>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a>npx<span class="w"> </span>tsx<span class="w"> </span>src/debug-password.ts
+</span></code></pre></div>
+<p>Resultado esperado:</p>
+<ul>
+<li><code>Coincide password correcta: true</code></li>
+<li><code>Coincide password incorrecta: false</code></li>
+</ul>
+<p>Después puedes eliminar el archivo temporal:</p>
+<p><code>src/debug-password.ts</code>.</p>
+<p>O dejarlo fuera del commit si solo era una prueba.</p>
+<h2 id="actualizar-documentacion-del-readme">Actualizar documentación del README<a class="headerlink" href="#actualizar-documentacion-del-readme" title="Permanent link">&para;</a></h2>
+<h3 id="paso-22-anadir-seccion-de-seguridad">Paso 22: Añadir sección de seguridad<a class="headerlink" href="#paso-22-anadir-seccion-de-seguridad" title="Permanent link">&para;</a></h3>
+<p>En el README, añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="gu">## Seguridad de contraseñas</span>
+</span><span id="__span-49-2"><a id="__codelineno-49-2" name="__codelineno-49-2" href="#__codelineno-49-2"></a>
+</span><span id="__span-49-3"><a id="__codelineno-49-3" name="__codelineno-49-3" href="#__codelineno-49-3"></a>El proyecto usa <span class="sb">`bcrypt`</span> para hashear contraseñas antes de guardarlas en la base de datos.
+</span><span id="__span-49-4"><a id="__codelineno-49-4" name="__codelineno-49-4" href="#__codelineno-49-4"></a>
+</span><span id="__span-49-5"><a id="__codelineno-49-5" name="__codelineno-49-5" href="#__codelineno-49-5"></a>Instalación:
+</span><span id="__span-49-6"><a id="__codelineno-49-6" name="__codelineno-49-6" href="#__codelineno-49-6"></a>
+</span><span id="__span-49-7"><a id="__codelineno-49-7" name="__codelineno-49-7" href="#__codelineno-49-7"></a><span class="sb">```bash</span>
+</span><span id="__span-49-8"><a id="__codelineno-49-8" name="__codelineno-49-8" href="#__codelineno-49-8"></a>npm<span class="w"> </span>install<span class="w"> </span>bcrypt
+</span><span id="__span-49-9"><a id="__codelineno-49-9" name="__codelineno-49-9" href="#__codelineno-49-9"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>@types/bcrypt
+</span><span id="__span-49-10"><a id="__codelineno-49-10" name="__codelineno-49-10" href="#__codelineno-49-10"></a><span class="sb">```</span>
+</span><span id="__span-49-11"><a id="__codelineno-49-11" name="__codelineno-49-11" href="#__codelineno-49-11"></a>
+</span><span id="__span-49-12"><a id="__codelineno-49-12" name="__codelineno-49-12" href="#__codelineno-49-12"></a>Utilidades principales:
+</span><span id="__span-49-13"><a id="__codelineno-49-13" name="__codelineno-49-13" href="#__codelineno-49-13"></a>
+</span><span id="__span-49-14"><a id="__codelineno-49-14" name="__codelineno-49-14" href="#__codelineno-49-14"></a><span class="sb">```text</span>
+</span><span id="__span-49-15"><a id="__codelineno-49-15" name="__codelineno-49-15" href="#__codelineno-49-15"></a>src/utils/password.utils.ts
+</span><span id="__span-49-16"><a id="__codelineno-49-16" name="__codelineno-49-16" href="#__codelineno-49-16"></a><span class="sb">```</span>
+</span><span id="__span-49-17"><a id="__codelineno-49-17" name="__codelineno-49-17" href="#__codelineno-49-17"></a>
+</span><span id="__span-49-18"><a id="__codelineno-49-18" name="__codelineno-49-18" href="#__codelineno-49-18"></a>Funciones:
+</span><span id="__span-49-19"><a id="__codelineno-49-19" name="__codelineno-49-19" href="#__codelineno-49-19"></a>
+</span><span id="__span-49-20"><a id="__codelineno-49-20" name="__codelineno-49-20" href="#__codelineno-49-20"></a><span class="sb">```ts</span>
+</span><span id="__span-49-21"><a id="__codelineno-49-21" name="__codelineno-49-21" href="#__codelineno-49-21"></a><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
+</span><span id="__span-49-22"><a id="__codelineno-49-22" name="__codelineno-49-22" href="#__codelineno-49-22"></a><span class="nx">comparePassword</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">passwordHash</span><span class="p">)</span>
+</span><span id="__span-49-23"><a id="__codelineno-49-23" name="__codelineno-49-23" href="#__codelineno-49-23"></a><span class="sb">```</span>
+</span><span id="__span-49-24"><a id="__codelineno-49-24" name="__codelineno-49-24" href="#__codelineno-49-24"></a>
+</span><span id="__span-49-25"><a id="__codelineno-49-25" name="__codelineno-49-25" href="#__codelineno-49-25"></a>Reglas:
+</span><span id="__span-49-26"><a id="__codelineno-49-26" name="__codelineno-49-26" href="#__codelineno-49-26"></a>
+</span><span id="__span-49-27"><a id="__codelineno-49-27" name="__codelineno-49-27" href="#__codelineno-49-27"></a><span class="k">-</span><span class="w"> </span>La API recibe <span class="sb">`password`</span>.
+</span><span id="__span-49-28"><a id="__codelineno-49-28" name="__codelineno-49-28" href="#__codelineno-49-28"></a><span class="k">-</span><span class="w"> </span>La base de datos guarda <span class="sb">`passwordHash`</span>.
+</span><span id="__span-49-29"><a id="__codelineno-49-29" name="__codelineno-49-29" href="#__codelineno-49-29"></a><span class="k">-</span><span class="w"> </span>La contraseña en texto plano nunca se guarda.
+</span><span id="__span-49-30"><a id="__codelineno-49-30" name="__codelineno-49-30" href="#__codelineno-49-30"></a><span class="k">-</span><span class="w"> </span><span class="sb">`passwordHash`</span> nunca se devuelve al cliente.
+</span></code></pre></div>
+<h3 id="paso-23-actualizar-arquitectura">Paso 23: Actualizar arquitectura<a class="headerlink" href="#paso-23-actualizar-arquitectura" title="Permanent link">&para;</a></h3>
+<p>En la sección de estructura, añade:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a>src/utils/password.utils.ts
+</span></code></pre></div>
+<p>La estructura debería quedar parecida a:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a>src/
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a>  prisma.ts
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a>  server.ts
+</span><span id="__span-51-4"><a id="__codelineno-51-4" name="__codelineno-51-4" href="#__codelineno-51-4"></a>  controllers/
+</span><span id="__span-51-5"><a id="__codelineno-51-5" name="__codelineno-51-5" href="#__codelineno-51-5"></a>  errors/
+</span><span id="__span-51-6"><a id="__codelineno-51-6" name="__codelineno-51-6" href="#__codelineno-51-6"></a>  repositories/
+</span><span id="__span-51-7"><a id="__codelineno-51-7" name="__codelineno-51-7" href="#__codelineno-51-7"></a>  routes/
+</span><span id="__span-51-8"><a id="__codelineno-51-8" name="__codelineno-51-8" href="#__codelineno-51-8"></a>  services/
+</span><span id="__span-51-9"><a id="__codelineno-51-9" name="__codelineno-51-9" href="#__codelineno-51-9"></a>  utils/
+</span><span id="__span-51-10"><a id="__codelineno-51-10" name="__codelineno-51-10" href="#__codelineno-51-10"></a>    parse.utils.ts
+</span><span id="__span-51-11"><a id="__codelineno-51-11" name="__codelineno-51-11" href="#__codelineno-51-11"></a>    string.utils.ts
+</span><span id="__span-51-12"><a id="__codelineno-51-12" name="__codelineno-51-12" href="#__codelineno-51-12"></a>    password.utils.ts
+</span></code></pre></div>
+<h3 id="paso-24-actualizar-indice-del-readme">Paso 24: Actualizar índice del README<a class="headerlink" href="#paso-24-actualizar-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 32 - Contraseñas seguras con bcrypt</span>](<span class="na">docs/dia-32-bcrypt-passwords.md</span>)
+</span></code></pre></div>
+<p>El bloque debería quedar parecido a:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-53-2"><a id="__codelineno-53-2" name="__codelineno-53-2" href="#__codelineno-53-2"></a>
+</span><span id="__span-53-3"><a id="__codelineno-53-3" name="__codelineno-53-3" href="#__codelineno-53-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-53-4"><a id="__codelineno-53-4" name="__codelineno-53-4" href="#__codelineno-53-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-53-5"><a id="__codelineno-53-5" name="__codelineno-53-5" href="#__codelineno-53-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-53-6"><a id="__codelineno-53-6" name="__codelineno-53-6" href="#__codelineno-53-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-53-7"><a id="__codelineno-53-7" name="__codelineno-53-7" href="#__codelineno-53-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-53-8"><a id="__codelineno-53-8" name="__codelineno-53-8" href="#__codelineno-53-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-53-9"><a id="__codelineno-53-9" name="__codelineno-53-9" href="#__codelineno-53-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-53-10"><a id="__codelineno-53-10" name="__codelineno-53-10" href="#__codelineno-53-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-53-11"><a id="__codelineno-53-11" name="__codelineno-53-11" href="#__codelineno-53-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-53-12"><a id="__codelineno-53-12" name="__codelineno-53-12" href="#__codelineno-53-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-53-13"><a id="__codelineno-53-13" name="__codelineno-53-13" href="#__codelineno-53-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-53-14"><a id="__codelineno-53-14" name="__codelineno-53-14" href="#__codelineno-53-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-53-15"><a id="__codelineno-53-15" name="__codelineno-53-15" href="#__codelineno-53-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-53-16"><a id="__codelineno-53-16" name="__codelineno-53-16" href="#__codelineno-53-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span><span id="__span-53-17"><a id="__codelineno-53-17" name="__codelineno-53-17" href="#__codelineno-53-17"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 15 - Middleware centralizado de errores</span>](<span class="na">docs/dia-15-middleware-errores.md</span>)
+</span><span id="__span-53-18"><a id="__codelineno-53-18" name="__codelineno-53-18" href="#__codelineno-53-18"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 16 - Base de datos y persistencia</span>](<span class="na">docs/dia-16-base-datos-persistencia.md</span>)
+</span><span id="__span-53-19"><a id="__codelineno-53-19" name="__codelineno-53-19" href="#__codelineno-53-19"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 17 - PostgreSQL con Docker Compose</span>](<span class="na">docs/dia-17-postgresql-docker-compose.md</span>)
+</span><span id="__span-53-20"><a id="__codelineno-53-20" name="__codelineno-53-20" href="#__codelineno-53-20"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 18 - Diseño del modelo persistente User</span>](<span class="na">docs/dia-18-diseno-modelo-persistente-user.md</span>)
+</span><span id="__span-53-21"><a id="__codelineno-53-21" name="__codelineno-53-21" href="#__codelineno-53-21"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 19 - ORM o acceso a datos</span>](<span class="na">docs/dia-19-orm-acceso-datos.md</span>)
+</span><span id="__span-53-22"><a id="__codelineno-53-22" name="__codelineno-53-22" href="#__codelineno-53-22"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 20 - Instalación y configuración inicial de Prisma</span>](<span class="na">docs/dia-20-instalacion-prisma.md</span>)
+</span><span id="__span-53-23"><a id="__codelineno-53-23" name="__codelineno-53-23" href="#__codelineno-53-23"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 21 - Modelo Prisma User</span>](<span class="na">docs/dia-21-modelo-prisma-user.md</span>)
+</span><span id="__span-53-24"><a id="__codelineno-53-24" name="__codelineno-53-24" href="#__codelineno-53-24"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 22 - Primera migración con Prisma</span>](<span class="na">docs/dia-22-primera-migracion-prisma.md</span>)
+</span><span id="__span-53-25"><a id="__codelineno-53-25" name="__codelineno-53-25" href="#__codelineno-53-25"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 23 - Prisma Studio</span>](<span class="na">docs/dia-23-prisma-studio.md</span>)
+</span><span id="__span-53-26"><a id="__codelineno-53-26" name="__codelineno-53-26" href="#__codelineno-53-26"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 24 - Seed de datos iniciales</span>](<span class="na">docs/dia-24-seed-datos-iniciales.md</span>)
+</span><span id="__span-53-27"><a id="__codelineno-53-27" name="__codelineno-53-27" href="#__codelineno-53-27"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 25 - Consultas básicas con Prisma Client</span>](<span class="na">docs/dia-25-consultas-basicas-prisma.md</span>)
+</span><span id="__span-53-28"><a id="__codelineno-53-28" name="__codelineno-53-28" href="#__codelineno-53-28"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 26 - Separar rutas</span>](<span class="na">docs/dia-26-separar-rutas.md</span>)
+</span><span id="__span-53-29"><a id="__codelineno-53-29" name="__codelineno-53-29" href="#__codelineno-53-29"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 27 - Controladores</span>](<span class="na">docs/dia-27-controladores.md</span>)
+</span><span id="__span-53-30"><a id="__codelineno-53-30" name="__codelineno-53-30" href="#__codelineno-53-30"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 28 - Servicios</span>](<span class="na">docs/dia-28-servicios.md</span>)
+</span><span id="__span-53-31"><a id="__codelineno-53-31" name="__codelineno-53-31" href="#__codelineno-53-31"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 29 - Repositorio con Prisma</span>](<span class="na">docs/dia-29-repositorio-prisma.md</span>)
+</span><span id="__span-53-32"><a id="__codelineno-53-32" name="__codelineno-53-32" href="#__codelineno-53-32"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 30 - CRUD persistente ordenado</span>](<span class="na">docs/dia-30-crud-persistente-ordenado.md</span>)
+</span><span id="__span-53-33"><a id="__codelineno-53-33" name="__codelineno-53-33" href="#__codelineno-53-33"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 31 - Limpieza y refactor</span>](<span class="na">docs/dia-31-limpieza-refactor.md</span>)
+</span><span id="__span-53-34"><a id="__codelineno-53-34" name="__codelineno-53-34" href="#__codelineno-53-34"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 32 - Contraseñas seguras con bcrypt</span>](<span class="na">docs/dia-32-bcrypt-passwords.md</span>)
+</span></code></pre></div>
+<h2 id="crear-el-documento-del-dia-32">Crear el documento del día 32<a class="headerlink" href="#crear-el-documento-del-dia-32" title="Permanent link">&para;</a></h2>
+<p>Dentro de la carpeta <code>docs/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a>docs/dia-32-bcrypt-passwords.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="gh"># Día 32 - Contraseñas seguras con bcrypt</span>
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a>
+</span><span id="__span-55-3"><a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-55-4"><a id="__codelineno-55-4" name="__codelineno-55-4" href="#__codelineno-55-4"></a>
+</span><span id="__span-55-5"><a id="__codelineno-55-5" name="__codelineno-55-5" href="#__codelineno-55-5"></a><span class="k">-</span><span class="w"> </span>He instalado bcrypt.
+</span><span id="__span-55-6"><a id="__codelineno-55-6" name="__codelineno-55-6" href="#__codelineno-55-6"></a><span class="k">-</span><span class="w"> </span>He instalado los tipos de bcrypt para TypeScript.
+</span><span id="__span-55-7"><a id="__codelineno-55-7" name="__codelineno-55-7" href="#__codelineno-55-7"></a><span class="k">-</span><span class="w"> </span>He creado password.utils.ts.
+</span><span id="__span-55-8"><a id="__codelineno-55-8" name="__codelineno-55-8" href="#__codelineno-55-8"></a><span class="k">-</span><span class="w"> </span>He creado hashPassword.
+</span><span id="__span-55-9"><a id="__codelineno-55-9" name="__codelineno-55-9" href="#__codelineno-55-9"></a><span class="k">-</span><span class="w"> </span>He creado comparePassword.
+</span><span id="__span-55-10"><a id="__codelineno-55-10" name="__codelineno-55-10" href="#__codelineno-55-10"></a><span class="k">-</span><span class="w"> </span>He sustituido passwordHash temporal por un hash real.
+</span><span id="__span-55-11"><a id="__codelineno-55-11" name="__codelineno-55-11" href="#__codelineno-55-11"></a><span class="k">-</span><span class="w"> </span>He actualizado createUserService.
+</span><span id="__span-55-12"><a id="__codelineno-55-12" name="__codelineno-55-12" href="#__codelineno-55-12"></a><span class="k">-</span><span class="w"> </span>He actualizado el seed para generar hashes reales.
+</span><span id="__span-55-13"><a id="__codelineno-55-13" name="__codelineno-55-13" href="#__codelineno-55-13"></a><span class="k">-</span><span class="w"> </span>He ejecutado el seed.
+</span><span id="__span-55-14"><a id="__codelineno-55-14" name="__codelineno-55-14" href="#__codelineno-55-14"></a><span class="k">-</span><span class="w"> </span>He comprobado los hashes en Prisma Studio.
+</span><span id="__span-55-15"><a id="__codelineno-55-15" name="__codelineno-55-15" href="#__codelineno-55-15"></a><span class="k">-</span><span class="w"> </span>He creado un usuario desde la API y he comprobado que se guarda con hash bcrypt.
+</span><span id="__span-55-16"><a id="__codelineno-55-16" name="__codelineno-55-16" href="#__codelineno-55-16"></a>
+</span><span id="__span-55-17"><a id="__codelineno-55-17" name="__codelineno-55-17" href="#__codelineno-55-17"></a><span class="gu">## Dependencias instaladas</span>
+</span><span id="__span-55-18"><a id="__codelineno-55-18" name="__codelineno-55-18" href="#__codelineno-55-18"></a>
+</span><span id="__span-55-19"><a id="__codelineno-55-19" name="__codelineno-55-19" href="#__codelineno-55-19"></a><span class="sb">```bash</span>
+</span><span id="__span-55-20"><a id="__codelineno-55-20" name="__codelineno-55-20" href="#__codelineno-55-20"></a>npm<span class="w"> </span>install<span class="w"> </span>bcrypt
+</span><span id="__span-55-21"><a id="__codelineno-55-21" name="__codelineno-55-21" href="#__codelineno-55-21"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>@types/bcrypt
+</span><span id="__span-55-22"><a id="__codelineno-55-22" name="__codelineno-55-22" href="#__codelineno-55-22"></a><span class="sb">```</span>
+</span><span id="__span-55-23"><a id="__codelineno-55-23" name="__codelineno-55-23" href="#__codelineno-55-23"></a>
+</span><span id="__span-55-24"><a id="__codelineno-55-24" name="__codelineno-55-24" href="#__codelineno-55-24"></a><span class="gu">## Archivo creado</span>
+</span><span id="__span-55-25"><a id="__codelineno-55-25" name="__codelineno-55-25" href="#__codelineno-55-25"></a>
+</span><span id="__span-55-26"><a id="__codelineno-55-26" name="__codelineno-55-26" href="#__codelineno-55-26"></a><span class="sb">```text</span>
+</span><span id="__span-55-27"><a id="__codelineno-55-27" name="__codelineno-55-27" href="#__codelineno-55-27"></a>src/utils/password.utils.ts
+</span><span id="__span-55-28"><a id="__codelineno-55-28" name="__codelineno-55-28" href="#__codelineno-55-28"></a><span class="sb">```</span>
+</span><span id="__span-55-29"><a id="__codelineno-55-29" name="__codelineno-55-29" href="#__codelineno-55-29"></a>
+</span><span id="__span-55-30"><a id="__codelineno-55-30" name="__codelineno-55-30" href="#__codelineno-55-30"></a><span class="gu">## Funciones creadas</span>
+</span><span id="__span-55-31"><a id="__codelineno-55-31" name="__codelineno-55-31" href="#__codelineno-55-31"></a>
+</span><span id="__span-55-32"><a id="__codelineno-55-32" name="__codelineno-55-32" href="#__codelineno-55-32"></a><span class="sb">```ts</span>
+</span><span id="__span-55-33"><a id="__codelineno-55-33" name="__codelineno-55-33" href="#__codelineno-55-33"></a><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
+</span><span id="__span-55-34"><a id="__codelineno-55-34" name="__codelineno-55-34" href="#__codelineno-55-34"></a><span class="nx">comparePassword</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">passwordHash</span><span class="p">)</span>
+</span><span id="__span-55-35"><a id="__codelineno-55-35" name="__codelineno-55-35" href="#__codelineno-55-35"></a><span class="sb">```</span>
+</span><span id="__span-55-36"><a id="__codelineno-55-36" name="__codelineno-55-36" href="#__codelineno-55-36"></a>
+</span><span id="__span-55-37"><a id="__codelineno-55-37" name="__codelineno-55-37" href="#__codelineno-55-37"></a><span class="gu">## Diferencia entre password y passwordHash</span>
+</span><span id="__span-55-38"><a id="__codelineno-55-38" name="__codelineno-55-38" href="#__codelineno-55-38"></a>
+</span><span id="__span-55-39"><a id="__codelineno-55-39" name="__codelineno-55-39" href="#__codelineno-55-39"></a>| Campo | Significado |
+</span><span id="__span-55-40"><a id="__codelineno-55-40" name="__codelineno-55-40" href="#__codelineno-55-40"></a>| --- | --- |
+</span><span id="__span-55-41"><a id="__codelineno-55-41" name="__codelineno-55-41" href="#__codelineno-55-41"></a>| <span class="sb">`password`</span> | Contraseña que llega en la petición |
+</span><span id="__span-55-42"><a id="__codelineno-55-42" name="__codelineno-55-42" href="#__codelineno-55-42"></a>| <span class="sb">`passwordHash`</span> | Hash seguro que se guarda en la base de datos |
+</span><span id="__span-55-43"><a id="__codelineno-55-43" name="__codelineno-55-43" href="#__codelineno-55-43"></a>
+</span><span id="__span-55-44"><a id="__codelineno-55-44" name="__codelineno-55-44" href="#__codelineno-55-44"></a><span class="gu">## Regla de seguridad</span>
+</span><span id="__span-55-45"><a id="__codelineno-55-45" name="__codelineno-55-45" href="#__codelineno-55-45"></a>
+</span><span id="__span-55-46"><a id="__codelineno-55-46" name="__codelineno-55-46" href="#__codelineno-55-46"></a><span class="sb">```text</span>
+</span><span id="__span-55-47"><a id="__codelineno-55-47" name="__codelineno-55-47" href="#__codelineno-55-47"></a>La contraseña en texto plano nunca se guarda.
+</span><span id="__span-55-48"><a id="__codelineno-55-48" name="__codelineno-55-48" href="#__codelineno-55-48"></a>passwordHash nunca se devuelve al cliente.
+</span><span id="__span-55-49"><a id="__codelineno-55-49" name="__codelineno-55-49" href="#__codelineno-55-49"></a><span class="sb">```</span>
+</span><span id="__span-55-50"><a id="__codelineno-55-50" name="__codelineno-55-50" href="#__codelineno-55-50"></a>
+</span><span id="__span-55-51"><a id="__codelineno-55-51" name="__codelineno-55-51" href="#__codelineno-55-51"></a><span class="gu">## Cambios en el seed</span>
+</span><span id="__span-55-52"><a id="__codelineno-55-52" name="__codelineno-55-52" href="#__codelineno-55-52"></a>
+</span><span id="__span-55-53"><a id="__codelineno-55-53" name="__codelineno-55-53" href="#__codelineno-55-53"></a>Los usuarios iniciales ya no usan valores temporales como:
+</span><span id="__span-55-54"><a id="__codelineno-55-54" name="__codelineno-55-54" href="#__codelineno-55-54"></a>
+</span><span id="__span-55-55"><a id="__codelineno-55-55" name="__codelineno-55-55" href="#__codelineno-55-55"></a><span class="sb">```text</span>
+</span><span id="__span-55-56"><a id="__codelineno-55-56" name="__codelineno-55-56" href="#__codelineno-55-56"></a>hash_temporal_admin123
+</span><span id="__span-55-57"><a id="__codelineno-55-57" name="__codelineno-55-57" href="#__codelineno-55-57"></a><span class="sb">```</span>
+</span><span id="__span-55-58"><a id="__codelineno-55-58" name="__codelineno-55-58" href="#__codelineno-55-58"></a>
+</span><span id="__span-55-59"><a id="__codelineno-55-59" name="__codelineno-55-59" href="#__codelineno-55-59"></a>Ahora usan hashes reales generados con bcrypt.
+</span><span id="__span-55-60"><a id="__codelineno-55-60" name="__codelineno-55-60" href="#__codelineno-55-60"></a>
+</span><span id="__span-55-61"><a id="__codelineno-55-61" name="__codelineno-55-61" href="#__codelineno-55-61"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-55-62"><a id="__codelineno-55-62" name="__codelineno-55-62" href="#__codelineno-55-62"></a>
+</span><span id="__span-55-63"><a id="__codelineno-55-63" name="__codelineno-55-63" href="#__codelineno-55-63"></a>bcrypt permite convertir una contraseña en un hash seguro antes de guardarla. De esta forma, aunque alguien accediera a la base de datos, no vería la contraseña original.
+</span></code></pre></div>
+<h3 id="paso-25-anadir-diagrama-mermaid">Paso 25: Añadir diagrama Mermaid<a class="headerlink" href="#paso-25-anadir-diagrama-mermaid" title="Permanent link">&para;</a></h3>
+<p>Añade al documento:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[password recibida] --&gt; B[hashPassword]
+    B --&gt; C[bcrypt.hash]
+    C --&gt; D[passwordHash]
+    D --&gt; E[PostgreSQL]</code></pre>
+<h3 id="paso-26-anadir-checklist-de-comprobacion">Paso 26: Añadir checklist de comprobación<a class="headerlink" href="#paso-26-anadir-checklist-de-comprobacion" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="gu">## Checklist de comprobación</span>
+</span><span id="__span-56-2"><a id="__codelineno-56-2" name="__codelineno-56-2" href="#__codelineno-56-2"></a>
+</span><span id="__span-56-3"><a id="__codelineno-56-3" name="__codelineno-56-3" href="#__codelineno-56-3"></a>| Prueba | Resultado |
+</span><span id="__span-56-4"><a id="__codelineno-56-4" name="__codelineno-56-4" href="#__codelineno-56-4"></a>| --- | --- |
+</span><span id="__span-56-5"><a id="__codelineno-56-5" name="__codelineno-56-5" href="#__codelineno-56-5"></a>| <span class="sb">`npm install bcrypt`</span> ejecutado | |
+</span><span id="__span-56-6"><a id="__codelineno-56-6" name="__codelineno-56-6" href="#__codelineno-56-6"></a>| <span class="sb">`password.utils.ts`</span> creado | |
+</span><span id="__span-56-7"><a id="__codelineno-56-7" name="__codelineno-56-7" href="#__codelineno-56-7"></a>| <span class="sb">`createUserService`</span> usa <span class="sb">`hashPassword`</span> | |
+</span><span id="__span-56-8"><a id="__codelineno-56-8" name="__codelineno-56-8" href="#__codelineno-56-8"></a>| El seed usa bcrypt | |
+</span><span id="__span-56-9"><a id="__codelineno-56-9" name="__codelineno-56-9" href="#__codelineno-56-9"></a>| <span class="sb">`npm run prisma:seed`</span> funciona | |
+</span><span id="__span-56-10"><a id="__codelineno-56-10" name="__codelineno-56-10" href="#__codelineno-56-10"></a>| Prisma Studio muestra hashes reales | |
+</span><span id="__span-56-11"><a id="__codelineno-56-11" name="__codelineno-56-11" href="#__codelineno-56-11"></a>| <span class="sb">`POST /api/users`</span> crea usuario con hash real | |
+</span><span id="__span-56-12"><a id="__codelineno-56-12" name="__codelineno-56-12" href="#__codelineno-56-12"></a>| La respuesta no incluye <span class="sb">`passwordHash`</span> | |
+</span><span id="__span-56-13"><a id="__codelineno-56-13" name="__codelineno-56-13" href="#__codelineno-56-13"></a>| <span class="sb">`npm run build`</span> funciona | |
+</span></code></pre></div>
+<h2 id="probar-build">Probar build<a class="headerlink" href="#probar-build" title="Permanent link">&para;</a></h2>
+<h3 id="paso-27-compilar-typescript">Paso 27: Compilar TypeScript<a class="headerlink" href="#paso-27-compilar-typescript" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>npm<span class="w"> </span>run<span class="w"> </span>build
+</span></code></pre></div>
+<p>Si hay errores, revisa:</p>
+<ul>
+<li>Imports de <code>bcrypt</code>.</li>
+<li>Tipos de <code>@types/bcrypt</code>.</li>
+<li>Ruta de <code>password.utils.ts</code>.</li>
+<li>Imports en <code>user.service.ts</code>.</li>
+<li>Imports en <code>seed.ts</code>.</li>
+</ul>
+<h2 id="guardar-cambios-en-git">Guardar cambios en Git<a class="headerlink" href="#guardar-cambios-en-git" title="Permanent link">&para;</a></h2>
+<h3 id="paso-28-revisar-cambios">Paso 28: Revisar cambios<a class="headerlink" href="#paso-28-revisar-cambios" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Deberías ver cambios en:</p>
+<ul>
+<li><code>package.json</code></li>
+<li><code>package-lock.json</code></li>
+<li><code>src/utils/password.utils.ts</code></li>
+<li><code>src/services/user.service.ts</code></li>
+<li><code>prisma/seed.ts</code></li>
+<li><code>README.md</code></li>
+<li><code>docs/dia-32-bcrypt-passwords.md</code></li>
+</ul>
+<h3 id="paso-29-anadir-archivos">Paso 29: Añadir archivos<a class="headerlink" href="#paso-29-anadir-archivos" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<h3 id="paso-30-crear-commit">Paso 30: Crear commit<a class="headerlink" href="#paso-30-crear-commit" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-60-1"><a id="__codelineno-60-1" name="__codelineno-60-1" href="#__codelineno-60-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 32 - Hashear contrasenas con bcrypt&quot;</span>
+</span></code></pre></div>
+<h3 id="paso-31-subir-cambios">Paso 31: Subir cambios<a class="headerlink" href="#paso-31-subir-cambios" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-61-1"><a id="__codelineno-61-1" name="__codelineno-61-1" href="#__codelineno-61-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="problemas-frecuentes">Problemas frecuentes<a class="headerlink" href="#problemas-frecuentes" title="Permanent link">&para;</a></h2>
+<h3 id="error-al-importar-bcrypt">Error al importar bcrypt<a class="headerlink" href="#error-al-importar-bcrypt" title="Permanent link">&para;</a></h3>
+<p>Si usas:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-62-1"><a id="__codelineno-62-1" name="__codelineno-62-1" href="#__codelineno-62-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">bcrypt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;bcrypt&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>y TypeScript da problemas, revisa que en <code>tsconfig.json</code> tienes:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-63-1"><a id="__codelineno-63-1" name="__codelineno-63-1" href="#__codelineno-63-1"></a><span class="nt">&quot;esModuleInterop&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span></code></pre></div>
+<p>Si aun así fallara, puedes usar:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-64-1"><a id="__codelineno-64-1" name="__codelineno-64-1" href="#__codelineno-64-1"></a><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">bcrypt</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;bcrypt&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<h3 id="error-no-encuentra-tipos-de-bcrypt">Error: no encuentra tipos de bcrypt<a class="headerlink" href="#error-no-encuentra-tipos-de-bcrypt" title="Permanent link">&para;</a></h3>
+<p>Instala:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-65-1"><a id="__codelineno-65-1" name="__codelineno-65-1" href="#__codelineno-65-1"></a>npm<span class="w"> </span>install<span class="w"> </span>-D<span class="w"> </span>@types/bcrypt
+</span></code></pre></div>
+<h3 id="el-seed-sigue-mostrando-hashes-temporales">El seed sigue mostrando hashes temporales<a class="headerlink" href="#el-seed-sigue-mostrando-hashes-temporales" title="Permanent link">&para;</a></h3>
+<p>Revisa que has cambiado los tres usuarios:</p>
+<ul>
+<li><code>admin</code></li>
+<li><code>user</code></li>
+<li><code>inactiveUser</code></li>
+</ul>
+<p>Y que has ejecutado:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-66-1"><a id="__codelineno-66-1" name="__codelineno-66-1" href="#__codelineno-66-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:seed
+</span></code></pre></div>
+<h3 id="los-usuarios-existentes-no-se-actualizan">Los usuarios existentes no se actualizan<a class="headerlink" href="#los-usuarios-existentes-no-se-actualizan" title="Permanent link">&para;</a></h3>
+<p>Recuerda que si el seed tiene:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-67-1"><a id="__codelineno-67-1" name="__codelineno-67-1" href="#__codelineno-67-1"></a><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{}</span>
+</span></code></pre></div>
+<p>no actualizará usuarios existentes.</p>
+<p>Cambia a:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-68-1"><a id="__codelineno-68-1" name="__codelineno-68-1" href="#__codelineno-68-1"></a><span class="nx">update</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-68-2"><a id="__codelineno-68-2" name="__codelineno-68-2" href="#__codelineno-68-2"></a><span class="w">  </span><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="kt">adminPasswordHash</span>
+</span><span id="__span-68-3"><a id="__codelineno-68-3" name="__codelineno-68-3" href="#__codelineno-68-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="la-respuesta-de-la-api-muestra-passwordhash">La respuesta de la API muestra <code>passwordHash</code><a class="headerlink" href="#la-respuesta-de-la-api-muestra-passwordhash" title="Permanent link">&para;</a></h3>
+<p>Esto no debería pasar.</p>
+<p>Revisa:</p>
+<p><code>src/repositories/user.repository.ts</code>.</p>
+<p>Y asegúrate de que todas las funciones usan:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-69-1"><a id="__codelineno-69-1" name="__codelineno-69-1" href="#__codelineno-69-1"></a><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="kt">userSafeSelect</span>
+</span></code></pre></div>
+<h3 id="comparepassword-devuelve-false-siempre"><code>comparePassword</code> devuelve false siempre<a class="headerlink" href="#comparepassword-devuelve-false-siempre" title="Permanent link">&para;</a></h3>
+<p>Comprueba que estás comparando:</p>
+<ul>
+<li>La contraseña original.</li>
+<li>Con el <code>passwordHash</code> generado por <code>bcrypt</code>.</li>
+</ul>
+<p>No compares dos hashes generados por separado, porque bcrypt añade sal y pueden ser distintos aunque la contraseña sea la misma.</p>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-explicar-por-que-no-guardamos-password">Tarea libre 1: Explicar por qué no guardamos password<a class="headerlink" href="#tarea-libre-1-explicar-por-que-no-guardamos-password" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-70-1"><a id="__codelineno-70-1" name="__codelineno-70-1" href="#__codelineno-70-1"></a><span class="gu">## Por qué no guardamos password</span>
+</span></code></pre></div>
+<p>Explica con tus palabras por qué la base de datos debe guardar <code>passwordHash</code> y no <code>password</code>.</p>
+<h3 id="tarea-libre-2-probar-comparepassword">Tarea libre 2: Probar <code>comparePassword</code><a class="headerlink" href="#tarea-libre-2-probar-comparepassword" title="Permanent link">&para;</a></h3>
+<p>Crea un script temporal o una prueba manual para comprobar:</p>
+<ul>
+<li>Contraseña correcta: <code>true</code>.</li>
+<li>Contraseña incorrecta: <code>false</code>.</li>
+</ul>
+<p>Después documenta el resultado.</p>
+<h3 id="tarea-libre-3-revisar-usuarios-antiguos">Tarea libre 3: Revisar usuarios antiguos<a class="headerlink" href="#tarea-libre-3-revisar-usuarios-antiguos" title="Permanent link">&para;</a></h3>
+<p>Comprueba en Prisma Studio si hay usuarios creados antes del día 32 con hashes temporales.</p>
+<p>Si los hay, puedes:</p>
+<ul>
+<li>Actualizarlos manualmente.</li>
+<li>Borrarlos.</li>
+<li>Recrearlos desde la API.</li>
+<li>Dejarlos documentados como datos antiguos de prueba.</li>
+</ul>
+<h3 id="tarea-libre-4-mejorar-el-seed">Tarea libre 4: Mejorar el seed<a class="headerlink" href="#tarea-libre-4-mejorar-el-seed" title="Permanent link">&para;</a></h3>
+<p>Añade una pequeña sección al seed con comentarios:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-71-1"><a id="__codelineno-71-1" name="__codelineno-71-1" href="#__codelineno-71-1"></a><span class="c1">// Estos passwords son solo para entorno de desarrollo.</span>
+</span><span id="__span-71-2"><a id="__codelineno-71-2" name="__codelineno-71-2" href="#__codelineno-71-2"></a><span class="c1">// En producción no se deberían usar credenciales predecibles.</span>
+</span></code></pre></div>
+<h3 id="tarea-libre-5-preparar-el-dia-33">Tarea libre 5: Preparar el día 33<a class="headerlink" href="#tarea-libre-5-preparar-el-dia-33" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-72-1"><a id="__codelineno-72-1" name="__codelineno-72-1" href="#__codelineno-72-1"></a><span class="gu">## Preparación para registro</span>
+</span></code></pre></div>
+<p>Responde:</p>
+<ul>
+<li>¿Qué diferencia habrá entre <code>POST /api/users</code> y <code>POST /api/auth/register</code>?</li>
+<li>¿Debe <code>register</code> devolver <code>passwordHash</code>?</li>
+<li>¿Qué campos necesitará el registro?</li>
+<li>¿Qué pasará si el email ya existe?</li>
+</ul>
+<p>Pistas:</p>
+<ul>
+<li><code>POST /api/auth/register</code></li>
+<li><code>name</code></li>
+<li><code>email</code></li>
+<li><code>password</code></li>
+<li><code>role</code> por defecto <code>USER</code></li>
+<li><code>isActive</code> por defecto <code>true</code></li>
+</ul>
+<h2 id="entrega-recomendada-del-dia-32">Entrega recomendada del día 32<a class="headerlink" href="#entrega-recomendada-del-dia-32" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 32, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-73-1"><a id="__codelineno-73-1" name="__codelineno-73-1" href="#__codelineno-73-1"></a>usermanager-api/
+</span><span id="__span-73-2"><a id="__codelineno-73-2" name="__codelineno-73-2" href="#__codelineno-73-2"></a>  .env.example
+</span><span id="__span-73-3"><a id="__codelineno-73-3" name="__codelineno-73-3" href="#__codelineno-73-3"></a>  .gitignore
+</span><span id="__span-73-4"><a id="__codelineno-73-4" name="__codelineno-73-4" href="#__codelineno-73-4"></a>  docker-compose.yml
+</span><span id="__span-73-5"><a id="__codelineno-73-5" name="__codelineno-73-5" href="#__codelineno-73-5"></a>  README.md
+</span><span id="__span-73-6"><a id="__codelineno-73-6" name="__codelineno-73-6" href="#__codelineno-73-6"></a>  package.json
+</span><span id="__span-73-7"><a id="__codelineno-73-7" name="__codelineno-73-7" href="#__codelineno-73-7"></a>  package-lock.json
+</span><span id="__span-73-8"><a id="__codelineno-73-8" name="__codelineno-73-8" href="#__codelineno-73-8"></a>  tsconfig.json
+</span><span id="__span-73-9"><a id="__codelineno-73-9" name="__codelineno-73-9" href="#__codelineno-73-9"></a>  prisma/
+</span><span id="__span-73-10"><a id="__codelineno-73-10" name="__codelineno-73-10" href="#__codelineno-73-10"></a>    schema.prisma
+</span><span id="__span-73-11"><a id="__codelineno-73-11" name="__codelineno-73-11" href="#__codelineno-73-11"></a>    seed.ts
+</span><span id="__span-73-12"><a id="__codelineno-73-12" name="__codelineno-73-12" href="#__codelineno-73-12"></a>    migrations/
+</span><span id="__span-73-13"><a id="__codelineno-73-13" name="__codelineno-73-13" href="#__codelineno-73-13"></a>      &lt;timestamp&gt;_init/
+</span><span id="__span-73-14"><a id="__codelineno-73-14" name="__codelineno-73-14" href="#__codelineno-73-14"></a>        migration.sql
+</span><span id="__span-73-15"><a id="__codelineno-73-15" name="__codelineno-73-15" href="#__codelineno-73-15"></a>  src/
+</span><span id="__span-73-16"><a id="__codelineno-73-16" name="__codelineno-73-16" href="#__codelineno-73-16"></a>    prisma.ts
+</span><span id="__span-73-17"><a id="__codelineno-73-17" name="__codelineno-73-17" href="#__codelineno-73-17"></a>    server.ts
+</span><span id="__span-73-18"><a id="__codelineno-73-18" name="__codelineno-73-18" href="#__codelineno-73-18"></a>    controllers/
+</span><span id="__span-73-19"><a id="__codelineno-73-19" name="__codelineno-73-19" href="#__codelineno-73-19"></a>      health.controller.ts
+</span><span id="__span-73-20"><a id="__codelineno-73-20" name="__codelineno-73-20" href="#__codelineno-73-20"></a>      user.controller.ts
+</span><span id="__span-73-21"><a id="__codelineno-73-21" name="__codelineno-73-21" href="#__codelineno-73-21"></a>    errors/
+</span><span id="__span-73-22"><a id="__codelineno-73-22" name="__codelineno-73-22" href="#__codelineno-73-22"></a>      AppError.ts
+</span><span id="__span-73-23"><a id="__codelineno-73-23" name="__codelineno-73-23" href="#__codelineno-73-23"></a>    repositories/
+</span><span id="__span-73-24"><a id="__codelineno-73-24" name="__codelineno-73-24" href="#__codelineno-73-24"></a>      user.repository.ts
+</span><span id="__span-73-25"><a id="__codelineno-73-25" name="__codelineno-73-25" href="#__codelineno-73-25"></a>    routes/
+</span><span id="__span-73-26"><a id="__codelineno-73-26" name="__codelineno-73-26" href="#__codelineno-73-26"></a>      health.routes.ts
+</span><span id="__span-73-27"><a id="__codelineno-73-27" name="__codelineno-73-27" href="#__codelineno-73-27"></a>      user.routes.ts
+</span><span id="__span-73-28"><a id="__codelineno-73-28" name="__codelineno-73-28" href="#__codelineno-73-28"></a>    services/
+</span><span id="__span-73-29"><a id="__codelineno-73-29" name="__codelineno-73-29" href="#__codelineno-73-29"></a>      user.service.ts
+</span><span id="__span-73-30"><a id="__codelineno-73-30" name="__codelineno-73-30" href="#__codelineno-73-30"></a>    utils/
+</span><span id="__span-73-31"><a id="__codelineno-73-31" name="__codelineno-73-31" href="#__codelineno-73-31"></a>      parse.utils.ts
+</span><span id="__span-73-32"><a id="__codelineno-73-32" name="__codelineno-73-32" href="#__codelineno-73-32"></a>      string.utils.ts
+</span><span id="__span-73-33"><a id="__codelineno-73-33" name="__codelineno-73-33" href="#__codelineno-73-33"></a>      password.utils.ts
+</span><span id="__span-73-34"><a id="__codelineno-73-34" name="__codelineno-73-34" href="#__codelineno-73-34"></a>  docs/
+</span><span id="__span-73-35"><a id="__codelineno-73-35" name="__codelineno-73-35" href="#__codelineno-73-35"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-73-36"><a id="__codelineno-73-36" name="__codelineno-73-36" href="#__codelineno-73-36"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-73-37"><a id="__codelineno-73-37" name="__codelineno-73-37" href="#__codelineno-73-37"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-73-38"><a id="__codelineno-73-38" name="__codelineno-73-38" href="#__codelineno-73-38"></a>    dia-04-metodos-http.md
+</span><span id="__span-73-39"><a id="__codelineno-73-39" name="__codelineno-73-39" href="#__codelineno-73-39"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-73-40"><a id="__codelineno-73-40" name="__codelineno-73-40" href="#__codelineno-73-40"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-73-41"><a id="__codelineno-73-41" name="__codelineno-73-41" href="#__codelineno-73-41"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-73-42"><a id="__codelineno-73-42" name="__codelineno-73-42" href="#__codelineno-73-42"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-73-43"><a id="__codelineno-73-43" name="__codelineno-73-43" href="#__codelineno-73-43"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-73-44"><a id="__codelineno-73-44" name="__codelineno-73-44" href="#__codelineno-73-44"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-73-45"><a id="__codelineno-73-45" name="__codelineno-73-45" href="#__codelineno-73-45"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-73-46"><a id="__codelineno-73-46" name="__codelineno-73-46" href="#__codelineno-73-46"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-73-47"><a id="__codelineno-73-47" name="__codelineno-73-47" href="#__codelineno-73-47"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-73-48"><a id="__codelineno-73-48" name="__codelineno-73-48" href="#__codelineno-73-48"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-73-49"><a id="__codelineno-73-49" name="__codelineno-73-49" href="#__codelineno-73-49"></a>    dia-15-middleware-errores.md
+</span><span id="__span-73-50"><a id="__codelineno-73-50" name="__codelineno-73-50" href="#__codelineno-73-50"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-73-51"><a id="__codelineno-73-51" name="__codelineno-73-51" href="#__codelineno-73-51"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-73-52"><a id="__codelineno-73-52" name="__codelineno-73-52" href="#__codelineno-73-52"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-73-53"><a id="__codelineno-73-53" name="__codelineno-73-53" href="#__codelineno-73-53"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-73-54"><a id="__codelineno-73-54" name="__codelineno-73-54" href="#__codelineno-73-54"></a>    dia-20-instalacion-prisma.md
+</span><span id="__span-73-55"><a id="__codelineno-73-55" name="__codelineno-73-55" href="#__codelineno-73-55"></a>    dia-21-modelo-prisma-user.md
+</span><span id="__span-73-56"><a id="__codelineno-73-56" name="__codelineno-73-56" href="#__codelineno-73-56"></a>    dia-22-primera-migracion-prisma.md
+</span><span id="__span-73-57"><a id="__codelineno-73-57" name="__codelineno-73-57" href="#__codelineno-73-57"></a>    dia-23-prisma-studio.md
+</span><span id="__span-73-58"><a id="__codelineno-73-58" name="__codelineno-73-58" href="#__codelineno-73-58"></a>    dia-24-seed-datos-iniciales.md
+</span><span id="__span-73-59"><a id="__codelineno-73-59" name="__codelineno-73-59" href="#__codelineno-73-59"></a>    dia-25-consultas-basicas-prisma.md
+</span><span id="__span-73-60"><a id="__codelineno-73-60" name="__codelineno-73-60" href="#__codelineno-73-60"></a>    dia-26-separar-rutas.md
+</span><span id="__span-73-61"><a id="__codelineno-73-61" name="__codelineno-73-61" href="#__codelineno-73-61"></a>    dia-27-controladores.md
+</span><span id="__span-73-62"><a id="__codelineno-73-62" name="__codelineno-73-62" href="#__codelineno-73-62"></a>    dia-28-servicios.md
+</span><span id="__span-73-63"><a id="__codelineno-73-63" name="__codelineno-73-63" href="#__codelineno-73-63"></a>    dia-29-repositorio-prisma.md
+</span><span id="__span-73-64"><a id="__codelineno-73-64" name="__codelineno-73-64" href="#__codelineno-73-64"></a>    dia-30-crud-persistente-ordenado.md
+</span><span id="__span-73-65"><a id="__codelineno-73-65" name="__codelineno-73-65" href="#__codelineno-73-65"></a>    dia-31-limpieza-refactor.md
+</span><span id="__span-73-66"><a id="__codelineno-73-66" name="__codelineno-73-66" href="#__codelineno-73-66"></a>    dia-32-bcrypt-passwords.md
+</span></code></pre></div>
+<p>El documento del día 32 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-74-1"><a id="__codelineno-74-1" name="__codelineno-74-1" href="#__codelineno-74-1"></a>docs/dia-32-bcrypt-passwords.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Dependencias instaladas.</li>
+<li>Archivo <code>password.utils.ts</code>.</li>
+<li>Funciones <code>hashPassword</code> y <code>comparePassword</code>.</li>
+<li>Diferencia entre <code>password</code> y <code>passwordHash</code>.</li>
+<li>Regla de seguridad.</li>
+<li>Cambios en el seed.</li>
+<li>Diagrama del flujo de hash.</li>
+<li>Checklist de comprobación.</li>
+<li>Pruebas realizadas.</li>
+<li>Preparación para registro.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-75-1"><a id="__codelineno-75-1" name="__codelineno-75-1" href="#__codelineno-75-1"></a>Hola, comparto el avance del día 32 del reto UserManager API:
+</span><span id="__span-75-2"><a id="__codelineno-75-2" name="__codelineno-75-2" href="#__codelineno-75-2"></a>
+</span><span id="__span-75-3"><a id="__codelineno-75-3" name="__codelineno-75-3" href="#__codelineno-75-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-75-4"><a id="__codelineno-75-4" name="__codelineno-75-4" href="#__codelineno-75-4"></a>
+</span><span id="__span-75-5"><a id="__codelineno-75-5" name="__codelineno-75-5" href="#__codelineno-75-5"></a>He empezado la fase de seguridad usando bcrypt para hashear contraseñas antes de guardarlas. La documentación está en:
+</span><span id="__span-75-6"><a id="__codelineno-75-6" name="__codelineno-75-6" href="#__codelineno-75-6"></a>
+</span><span id="__span-75-7"><a id="__codelineno-75-7" name="__codelineno-75-7" href="#__codelineno-75-7"></a>docs/dia-32-bcrypt-passwords.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos dado el primer paso real en seguridad.</p>
+<p>Hasta ahora teníamos un CRUD persistente, pero las contraseñas todavía se gestionaban de forma temporal. A partir de hoy, la API ya genera hashes reales con <code>bcrypt</code>.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li><code>bcrypt</code>.</li>
+<li>Hash de contraseñas.</li>
+<li><code>password</code>.</li>
+<li><code>passwordHash</code>.</li>
+<li><code>hashPassword</code>.</li>
+<li><code>comparePassword</code>.</li>
+<li>Seed con hashes reales.</li>
+<li>No devolver <code>passwordHash</code>.</li>
+<li>Prisma Studio.</li>
+<li>Build de TypeScript.</li>
+</ul>
+<p>Este día prepara directamente el registro y el login.</p>
+<p>En el próximo paso crearemos el endpoint:</p>
+<p><code>POST /api/auth/register</code>.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>Una contraseña nunca debe guardarse tal cual; la API debe transformarla en un hash seguro antes de almacenarla en la base de datos.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia31/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 31">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 31
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia33/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 33">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 33
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

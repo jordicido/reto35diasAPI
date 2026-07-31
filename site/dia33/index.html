@@ -1,0 +1,4127 @@
+
+<!doctype html>
+<html lang="es" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Reto opcional de 40 días para construir una API REST completa con Express, TypeScript, base de datos, JWT, roles y frontend Next.js.">
+      
+      
+        <meta name="author" content="2º DAM">
+      
+      
+      
+        <link rel="prev" href="../dia32/">
+      
+      
+        <link rel="next" href="../dia34/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="zensical-0.0.44">
+    
+    
+      
+        <title>Día 33: Registro de usuarios - UserManager API</title>
+      
+    
+    
+      
+        
+      
+      <link rel="stylesheet" href="../assets/stylesheets/modern/main.fba56155.min.css">
+      
+        
+          
+        
+        <link rel="stylesheet" href="../assets/stylesheets/modern/palette.dfe2e883.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,500,500i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_scope.pathname.endsWith("/")||(__md_scope=new URL(__md_scope.pathname+"/",location)),__md_hash=e=>[...e].reduce(((e,t)=>(e<<5)-e+t.charCodeAt(0)),0),__md_get=(e,t=localStorage,_=__md_scope)=>JSON.parse(t.getItem(_.pathname+"."+e)),__md_set=(e,t,_=localStorage,a=__md_scope)=>{try{_.setItem(a.pathname+"."+e,JSON.stringify(t))}catch(e){}},document.documentElement.setAttribute("data-platform",navigator.platform)</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer" aria-label="Navegación"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dia-33-registro-de-usuarios" class="md-skip">
+          Saltar a contenido
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabecera">
+    <a href="./.." title="UserManager API" class="md-header__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer" aria-label="Navegación">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-menu" viewBox="0 0 24 24"><path d="M4 5h16M4 12h16M4 19h16"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UserManager API
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Día 33: Registro de usuarios
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="none" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-moon" viewBox="0 0 24 24"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search" aria-label="Buscar">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34"/><circle cx="11" cy="11" r="8"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog" aria-label="Buscar">
+  <button type="button" class="md-search__button">
+    Buscar
+  </button>
+</div>
+      
+    
+    <div class="md-header__source">
+      
+    </div>
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navegación" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="./.." title="UserManager API" class="md-nav__button md-logo" aria-label="UserManager API" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-book-open" viewBox="0 0 24 24"><path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+
+    </a>
+    UserManager API
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="./.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Reto 35 días
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 1
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 2
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 3
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 4
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 5
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 6
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 7
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia8/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 8
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia9/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 9
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 10
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia11/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 11
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 12
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 13
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 14
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia15/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 15
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia16/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 16
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia17/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 17
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia18/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 18
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia19/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 19
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia20/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 20
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia21/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 21
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia22/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 22
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia23/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 23
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia24/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 24
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia25/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 25
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia26/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 26
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia27/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 27
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia28/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 28
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia29/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 29
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia30/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 30
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia31/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 31
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 32
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="././" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 33
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferencia-entre-crear-usuario-y-registrar-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Diferencia entre crear usuario y registrar usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-debe-hacer-el-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué debe hacer el registro
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-no-haremos-todavia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué no haremos todavía
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-del-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo del registro
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-archivos-vamos-a-crear" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué archivos vamos a crear
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-crear-authservicets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Crear <code>auth.service.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-preparar-imports-del-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Preparar imports del servicio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-crear-tipo-registerinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Crear tipo <code>RegisterInput</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-crear-registerservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Crear <code>registerService</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-analizar-que-hace-registerservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Analizar qué hace <code>registerService</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-controlador-de-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear controlador de auth
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear controlador de auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-crear-authcontrollerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Crear <code>auth.controller.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-rutas-de-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear rutas de auth
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear rutas de auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-crear-authroutests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Crear <code>auth.routes.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-montar-authrouter-en-serverts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Montar <code>authRouter</code> en <code>server.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-el-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar el registro
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar el registro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-arrancar-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Arrancar la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-probar-registro-correcto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Probar registro correcto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-comprobar-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Comprobar en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar errores
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar errores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-email-invalido" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Email inválido
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-password-corta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Password corta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-name-vacio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Name vacío
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-intentar-enviar-un-rol" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Intentar enviar un rol
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revisar-diferencias-con-post-apiusers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Revisar diferencias con <code>POST /api/users</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Revisar diferencias con POST &#x2f;api&#x2f;users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-comparar-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Comparar endpoints
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revisar-si-hay-duplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Revisar si hay duplicación
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Revisar si hay duplicación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-comparar-createuserservice-y-registerservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Comparar <code>createUserService</code> y <code>registerService</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecutar-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ejecutar build
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejecutar build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-compilar-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Compilar TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizar-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualizar README
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizar README">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-anadir-seccion-de-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 22: Añadir sección de Auth
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-actualizar-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 23: Actualizar arquitectura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-actualizar-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 24: Actualizar índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-el-documento-del-dia-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear el documento del día 33
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear el documento del día 33">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 25: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-26-anadir-checklist-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 26: Añadir checklist de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guardar cambios en Git">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-27-revisar-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 27: Revisar cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-28-anadir-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 28: Añadir archivos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-29-crear-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 29: Crear commit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-30-subir-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 30: Subir cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-apiauthregister-devuelve-404" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>POST /api/auth/register</code> devuelve 404
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-de-importacion-de-authrouter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error de importación de <code>authRouter</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-registro-devuelve-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El registro devuelve <code>passwordHash</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-usuario-se-crea-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El usuario se crea como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-email-duplicado-devuelve-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El email duplicado devuelve 500
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-passwordhash-sigue-siendo-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El passwordHash sigue siendo temporal
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-documentar-la-diferencia-entre-register-y-create-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Documentar la diferencia entre register y create user
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-ignorar-campos-no-permitidos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Ignorar campos no permitidos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-tabla-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear tabla de errores
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-pensar-en-respuesta-de-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Pensar en respuesta de registro
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-34" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 34
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 33
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia34/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 34
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia35/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 35
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia36/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 36
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia37/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 37
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-38-frontend-conexion-api.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 38
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-39-pruebas-integracion-frontend.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 39
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dia-40-documentacion-demo-cierre.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+  Día 40
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  
+                    
+                    
+                    
+                      
+                    
+                    
+                      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+                      <div class="md-sidebar-button__wrapper">
+                        <label class="md-sidebar-button" for="__toc"></label>
+                      </div>
+                    
+                  
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--secondary" aria-label="Tabla de contenidos">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Tabla de contenidos
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#que-vamos-a-trabajar-hoy" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        ¿Qué vamos a trabajar hoy?
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diferencia-entre-crear-usuario-y-registrar-usuario" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Diferencia entre crear usuario y registrar usuario
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-debe-hacer-el-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué debe hacer el registro
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-no-haremos-todavia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué no haremos todavía
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#flujo-del-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Flujo del registro
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#que-archivos-vamos-a-crear" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Qué archivos vamos a crear
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-guiada" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte guiada
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte guiada">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-1-abrir-el-proyecto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 1: Abrir el proyecto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-2-crear-authservicets" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 2: Crear <code>auth.service.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-3-preparar-imports-del-servicio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 3: Preparar imports del servicio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-4-crear-tipo-registerinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 4: Crear tipo <code>RegisterInput</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-5-crear-registerservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 5: Crear <code>registerService</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-6-analizar-que-hace-registerservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 6: Analizar qué hace <code>registerService</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-controlador-de-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear controlador de auth
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear controlador de auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-7-crear-authcontrollerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 7: Crear <code>auth.controller.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-rutas-de-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear rutas de auth
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear rutas de auth">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-8-crear-authroutests" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 8: Crear <code>auth.routes.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-9-montar-authrouter-en-serverts" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 9: Montar <code>authRouter</code> en <code>server.ts</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-el-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar el registro
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar el registro">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-10-arrancar-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 10: Arrancar PostgreSQL
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-11-arrancar-la-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 11: Arrancar la API
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-12-probar-registro-correcto" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 12: Probar registro correcto
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-13-comprobar-en-prisma-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 13: Comprobar en Prisma Studio
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#probar-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Probar errores
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Probar errores">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-14-email-duplicado" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 14: Email duplicado
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-15-email-invalido" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 15: Email inválido
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-16-password-corta" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 16: Password corta
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-17-name-vacio" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 17: Name vacío
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-18-intentar-enviar-un-rol" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 18: Intentar enviar un rol
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revisar-diferencias-con-post-apiusers" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Revisar diferencias con <code>POST /api/users</code>
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Revisar diferencias con POST &#x2f;api&#x2f;users">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-19-comparar-endpoints" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 19: Comparar endpoints
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#revisar-si-hay-duplicacion" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Revisar si hay duplicación
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Revisar si hay duplicación">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-20-comparar-createuserservice-y-registerservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 20: Comparar <code>createUserService</code> y <code>registerService</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ejecutar-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ejecutar build
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ejecutar build">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-21-compilar-typescript" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 21: Compilar TypeScript
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actualizar-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Actualizar README
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Actualizar README">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-22-anadir-seccion-de-auth" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 22: Añadir sección de Auth
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-23-actualizar-arquitectura" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 23: Actualizar arquitectura
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-24-actualizar-indice-del-readme" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 24: Actualizar índice del README
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#crear-el-documento-del-dia-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Crear el documento del día 33
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Crear el documento del día 33">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-25-anadir-diagrama-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 25: Añadir diagrama Mermaid
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-26-anadir-checklist-de-pruebas" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 26: Añadir checklist de pruebas
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guardar-cambios-en-git" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Guardar cambios en Git
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Guardar cambios en Git">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paso-27-revisar-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 27: Revisar cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-28-anadir-archivos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 28: Añadir archivos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-29-crear-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 29: Crear commit
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paso-30-subir-cambios" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Paso 30: Subir cambios
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#problemas-frecuentes" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Problemas frecuentes
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Problemas frecuentes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#post-apiauthregister-devuelve-404" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        <code>POST /api/auth/register</code> devuelve 404
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-de-importacion-de-authrouter" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Error de importación de <code>authRouter</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-registro-devuelve-passwordhash" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El registro devuelve <code>passwordHash</code>
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-usuario-se-crea-como-admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El usuario se crea como ADMIN
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-email-duplicado-devuelve-500" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El email duplicado devuelve 500
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#el-passwordhash-sigue-siendo-temporal" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        El passwordHash sigue siendo temporal
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#parte-libre" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Parte libre
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Parte libre">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-1-documentar-la-diferencia-entre-register-y-create-user" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 1: Documentar la diferencia entre register y create user
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-2-ignorar-campos-no-permitidos" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 2: Ignorar campos no permitidos
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-3-crear-tabla-de-errores" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 3: Crear tabla de errores
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-4-pensar-en-respuesta-de-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 4: Pensar en respuesta de registro
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tarea-libre-5-preparar-el-dia-34" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Tarea libre 5: Preparar el día 34
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entrega-recomendada-del-dia-33" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Entrega recomendada del día 33
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cierre-del-dia" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Cierre del día
+      </span>
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+<h1 id="dia-33-registro-de-usuarios">Día 33: Registro de usuarios<a class="headerlink" href="#dia-33-registro-de-usuarios" title="Permanent link">&para;</a></h1>
+<p>En el día 32 empezamos la fase de seguridad.</p>
+<p>Hasta ese momento, las contraseñas se guardaban con valores temporales como:</p>
+<p><code>hash_temporal_123456</code>.</p>
+<p>Después del día 32, el proyecto ya usa <code>bcrypt</code> para generar hashes reales:</p>
+<p><code>password → bcrypt.hash → passwordHash</code>.</p>
+<p>También creamos una utilidad:</p>
+<p><code>src/utils/password.utils.ts</code></p>
+<p>con funciones como:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">password</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nx">comparePassword</span><span class="p">(</span><span class="nx">password</span><span class="p">,</span><span class="w"> </span><span class="nx">passwordHash</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Hoy vamos a crear el primer endpoint específico de autenticación:</p>
+<p><code>POST /api/auth/register</code>.</p>
+<p>Este endpoint permitirá registrar nuevos usuarios.</p>
+<p>Hasta ahora ya teníamos:</p>
+<p><code>POST /api/users</code></p>
+<p>pero esa ruta pertenece al CRUD de usuarios.</p>
+<p>A partir de ahora vamos a separar dos conceptos:</p>
+<ul>
+<li>Crear usuarios desde el CRUD.</li>
+<li>Registrar usuarios desde autenticación.</li>
+</ul>
+<div class="admonition info">
+<p class="admonition-title">Idea principal</p>
+<p>El registro es el punto de entrada para que un usuario cree su propia cuenta.</p>
+</div>
+<h2 id="que-vamos-a-trabajar-hoy">¿Qué vamos a trabajar hoy?<a class="headerlink" href="#que-vamos-a-trabajar-hoy" title="Permanent link">&para;</a></h2>
+<p>Hoy trabajaremos estos conceptos:</p>
+<ul>
+<li>Registro.</li>
+<li>Auth.</li>
+<li><code>POST /api/auth/register</code>.</li>
+<li><code>auth.routes.ts</code>.</li>
+<li><code>auth.controller.ts</code>.</li>
+<li><code>auth.service.ts</code>.</li>
+<li>Reutilización de <code>bcrypt</code>.</li>
+<li>Validación de datos.</li>
+<li>Email duplicado.</li>
+<li>Rol por defecto <code>USER</code>.</li>
+<li>Usuario activo por defecto.</li>
+<li>Separación entre CRUD y autenticación.</li>
+</ul>
+<p>El producto del día será el endpoint <code>POST /api/auth/register</code> funcionando.</p>
+<p>El resultado esperado será que podamos registrar usuarios nuevos desde una ruta específica de autenticación.</p>
+<h2 id="diferencia-entre-crear-usuario-y-registrar-usuario">Diferencia entre crear usuario y registrar usuario<a class="headerlink" href="#diferencia-entre-crear-usuario-y-registrar-usuario" title="Permanent link">&para;</a></h2>
+<p>En el día 30 creamos el CRUD persistente de usuarios.</p>
+<p>Una de las rutas era:</p>
+<p><code>POST /api/users</code>.</p>
+<p>Esa ruta crea usuarios desde el módulo de usuarios.</p>
+<p>Más adelante, cuando tengamos roles y permisos, lo normal será que esa ruta quede reservada para administradores.</p>
+<p>En cambio, el registro será:</p>
+<p><code>POST /api/auth/register</code>.</p>
+<p>Esta ruta representará el alta de una cuenta por parte de un usuario.</p>
+<p>Podemos verlo así:</p>
+<table>
+<thead>
+<tr>
+<th>Ruta</th>
+<th>Uso actual</th>
+<th>Uso futuro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /api/users</code></td>
+<td>Crear usuario desde CRUD</td>
+<td>Solo ADMIN</td>
+</tr>
+<tr>
+<td><code>POST /api/auth/register</code></td>
+<td>Registro de cuenta</td>
+<td>Ruta pública</td>
+</tr>
+</tbody>
+</table>
+<p>Hoy todavía no aplicaremos permisos.</p>
+<p>Eso llegará más adelante.</p>
+<p>Pero ya empezamos a separar responsabilidades.</p>
+<h2 id="que-debe-hacer-el-registro">Qué debe hacer el registro<a class="headerlink" href="#que-debe-hacer-el-registro" title="Permanent link">&para;</a></h2>
+<p>El endpoint de registro debe recibir:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Nuevo&quot;</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nuevo@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Después debe aplicar estas reglas:</p>
+<ul>
+<li><code>name</code> es obligatorio.</li>
+<li><code>email</code> es obligatorio.</li>
+<li><code>password</code> es obligatorio.</li>
+<li><code>email</code> debe tener formato válido.</li>
+<li><code>password</code> debe tener al menos 6 caracteres.</li>
+<li><code>email</code> no puede estar repetido.</li>
+<li><code>password</code> debe transformarse en <code>passwordHash</code> con <code>bcrypt</code>.</li>
+<li><code>role</code> debe ser <code>USER</code> por defecto.</li>
+<li><code>isActive</code> debe ser <code>true</code> por defecto.</li>
+<li><code>passwordHash</code> nunca se devuelve al cliente.</li>
+</ul>
+<p>La respuesta correcta será algo parecido a:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario registrado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Nuevo&quot;</span><span class="p">,</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nuevo@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">    </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">    </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Observa que no aparece:</p>
+<p><code>passwordHash</code>.</p>
+<h2 id="que-no-haremos-todavia">Qué no haremos todavía<a class="headerlink" href="#que-no-haremos-todavia" title="Permanent link">&para;</a></h2>
+<p>Hoy no haremos login.</p>
+<p>Tampoco generaremos token JWT.</p>
+<p>Eso llegará en los próximos días:</p>
+<table>
+<thead>
+<tr>
+<th>Día</th>
+<th>Tema</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Día 33</td>
+<td>Registro</td>
+</tr>
+<tr>
+<td>Día 34</td>
+<td>Login</td>
+</tr>
+<tr>
+<td>Día 35</td>
+<td>JWT</td>
+</tr>
+<tr>
+<td>Día 36</td>
+<td>Middleware de autenticación</td>
+</tr>
+<tr>
+<td>Día 37</td>
+<td>Roles y permisos</td>
+</tr>
+</tbody>
+</table>
+<p>Por tanto, después del registro no devolveremos todavía un token.</p>
+<p>Hoy solo devolveremos el usuario creado de forma segura.</p>
+<h2 id="flujo-del-registro">Flujo del registro<a class="headerlink" href="#flujo-del-registro" title="Permanent link">&para;</a></h2>
+<p>El flujo será:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Cliente HTTP] --&gt; B[POST /api/auth/register]
+    B --&gt; C[auth.routes.ts]
+    C --&gt; D[auth.controller.ts]
+    D --&gt; E[auth.service.ts]
+    E --&gt; F[user.repository.ts]
+    F --&gt; G[Prisma]
+    G --&gt; H[PostgreSQL]</code></pre>
+<p>Dentro del servicio ocurrirá la parte de seguridad:</p>
+<pre class="mermaid"><code>flowchart TD
+    A[Recibir name, email, password] --&gt; B[Validar datos]
+    B --&gt; C[Normalizar email]
+    C --&gt; D[Comprobar email duplicado]
+    D --&gt; E[Generar passwordHash con bcrypt]
+    E --&gt; F[Crear usuario]
+    F --&gt; G[Devolver usuario seguro]</code></pre>
+<h2 id="que-archivos-vamos-a-crear">Qué archivos vamos a crear<a class="headerlink" href="#que-archivos-vamos-a-crear" title="Permanent link">&para;</a></h2>
+<p>Hoy crearemos tres archivos nuevos:</p>
+<ul>
+<li><code>src/routes/auth.routes.ts</code></li>
+<li><code>src/controllers/auth.controller.ts</code></li>
+<li><code>src/services/auth.service.ts</code></li>
+</ul>
+<p>Y modificaremos:</p>
+<ul>
+<li><code>src/server.ts</code></li>
+<li><code>README.md</code></li>
+<li><code>docs/dia-33-auth-register.md</code></li>
+</ul>
+<p>La estructura quedará así:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>src/
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  prisma.ts
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  server.ts
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  controllers/
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    auth.controller.ts
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    health.controller.ts
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    user.controller.ts
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  errors/
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    AppError.ts
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>  repositories/
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    user.repository.ts
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  routes/
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    auth.routes.ts
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>    health.routes.ts
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>    user.routes.ts
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  services/
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    auth.service.ts
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    user.service.ts
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>  utils/
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>    parse.utils.ts
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>    password.utils.ts
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    string.utils.ts
+</span></code></pre></div>
+<h2 id="parte-guiada">Parte guiada<a class="headerlink" href="#parte-guiada" title="Permanent link">&para;</a></h2>
+<h3 id="paso-1-abrir-el-proyecto">Paso 1: Abrir el proyecto<a class="headerlink" href="#paso-1-abrir-el-proyecto" title="Permanent link">&para;</a></h3>
+<p>Abre una terminal y entra en el repositorio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">cd</span><span class="w"> </span>usermanager-api
+</span></code></pre></div>
+<p>Comprueba que el proyecto compila antes de empezar:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>npm<span class="w"> </span>run<span class="w"> </span>build
+</span></code></pre></div>
+<h3 id="paso-2-crear-authservicets">Paso 2: Crear <code>auth.service.ts</code><a class="headerlink" href="#paso-2-crear-authservicets" title="Permanent link">&para;</a></h3>
+<p>Dentro de <code>src/services/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>src/services/auth.service.ts
+</span></code></pre></div>
+<p>Este archivo contendrá la lógica de autenticación.</p>
+<p>Hoy solo tendrá registro.</p>
+<p>Más adelante tendrá login.</p>
+<h3 id="paso-3-preparar-imports-del-servicio">Paso 3: Preparar imports del servicio<a class="headerlink" href="#paso-3-preparar-imports-del-servicio" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">AppError</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../errors/AppError&quot;</span><span class="p">;</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">createUser</span><span class="p">,</span><span class="w"> </span><span class="nx">findUserByEmail</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../repositories/user.repository&quot;</span><span class="p">;</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">hashPassword</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../utils/password.utils&quot;</span><span class="p">;</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nx">isNonEmptyString</span><span class="p">,</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">  </span><span class="nx">isValidBasicEmail</span><span class="p">,</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">  </span><span class="nx">normalizeEmail</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../utils/string.utils&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Usaremos:</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Para qué sirve</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AppError</code></td>
+<td>Gestionar errores controlados</td>
+</tr>
+<tr>
+<td><code>createUser</code></td>
+<td>Crear usuario en base de datos</td>
+</tr>
+<tr>
+<td><code>findUserByEmail</code></td>
+<td>Comprobar duplicados</td>
+</tr>
+<tr>
+<td><code>hashPassword</code></td>
+<td>Generar <code>passwordHash</code> real</td>
+</tr>
+<tr>
+<td><code>string.utils</code></td>
+<td>Validar y normalizar datos</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paso-4-crear-tipo-registerinput">Paso 4: Crear tipo <code>RegisterInput</code><a class="headerlink" href="#paso-4-crear-tipo-registerinput" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kr">type</span><span class="w"> </span><span class="nx">RegisterInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nx">password</span><span class="o">:</span><span class="w"> </span><span class="kt">unknown</span><span class="p">;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="p">};</span>
+</span></code></pre></div>
+<p>Usamos <code>unknown</code> porque los datos vienen del body de la petición.</p>
+<p>No debemos confiar en ellos directamente.</p>
+<h3 id="paso-5-crear-registerservice">Paso 5: Crear <code>registerService</code><a class="headerlink" href="#paso-5-crear-registerservice" title="Permanent link">&para;</a></h3>
+<p>Añade esta función:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">registerService</span><span class="p">(</span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="kt">RegisterInput</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">name</span><span class="p">,</span><span class="w"> </span><span class="nx">email</span><span class="p">,</span><span class="w"> </span><span class="nx">password</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">input</span><span class="p">;</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isNonEmptyString</span><span class="p">(</span><span class="nx">name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El nombre debe ser un texto no vacío&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">);</span>
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isNonEmptyString</span><span class="p">(</span><span class="nx">email</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-9"><a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El email debe ser un texto no vacío&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">);</span>
+</span><span id="__span-9-10"><a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-11"><a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>
+</span><span id="__span-9-12"><a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isNonEmptyString</span><span class="p">(</span><span class="nx">password</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-13"><a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;La contraseña debe ser un texto no vacío&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">);</span>
+</span><span id="__span-9-14"><a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-15"><a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+</span><span id="__span-9-16"><a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cleanName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">name</span><span class="p">.</span><span class="nx">trim</span><span class="p">();</span>
+</span><span id="__span-9-17"><a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cleanEmail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">normalizeEmail</span><span class="p">(</span><span class="nx">email</span><span class="p">);</span>
+</span><span id="__span-9-18"><a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">cleanPassword</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">password</span><span class="p">.</span><span class="nx">trim</span><span class="p">();</span>
+</span><span id="__span-9-19"><a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+</span><span id="__span-9-20"><a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="nx">isValidBasicEmail</span><span class="p">(</span><span class="nx">cleanEmail</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-21"><a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El email no tiene un formato válido&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">);</span>
+</span><span id="__span-9-22"><a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-23"><a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>
+</span><span id="__span-9-24"><a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">cleanPassword</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mf">6</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-25"><a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;La contraseña debe tener al menos 6 caracteres&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">400</span><span class="p">);</span>
+</span><span id="__span-9-26"><a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-27"><a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>
+</span><span id="__span-9-28"><a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">existingUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">findUserByEmail</span><span class="p">(</span><span class="nx">cleanEmail</span><span class="p">);</span>
+</span><span id="__span-9-29"><a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>
+</span><span id="__span-9-30"><a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">existingUser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-31"><a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a><span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El email ya está registrado&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">409</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-9-32"><a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a><span class="w">      </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span>
+</span><span id="__span-9-33"><a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-9-34"><a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-9-35"><a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>
+</span><span id="__span-9-36"><a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a><span class="w">  </span><span class="kd">const</span><span class="w"> </span><span class="nx">passwordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">cleanPassword</span><span class="p">);</span>
+</span><span id="__span-9-37"><a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>
+</span><span id="__span-9-38"><a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="nx">createUser</span><span class="p">({</span>
+</span><span id="__span-9-39"><a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a><span class="w">    </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="p">,</span>
+</span><span id="__span-9-40"><a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a><span class="w">    </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="p">,</span>
+</span><span id="__span-9-41"><a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a><span class="w">    </span><span class="nx">passwordHash</span>
+</span><span id="__span-9-42"><a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a><span class="w">  </span><span class="p">});</span>
+</span><span id="__span-9-43"><a id="__codelineno-9-43" name="__codelineno-9-43" href="#__codelineno-9-43"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Esta función hace todo el proceso de registro.</p>
+<h3 id="paso-6-analizar-que-hace-registerservice">Paso 6: Analizar qué hace <code>registerService</code><a class="headerlink" href="#paso-6-analizar-que-hace-registerservice" title="Permanent link">&para;</a></h3>
+<p>La función realiza estos pasos:</p>
+<ul>
+<li>Recibe datos.</li>
+<li>Valida <code>name</code>.</li>
+<li>Valida <code>email</code>.</li>
+<li>Valida <code>password</code>.</li>
+<li>Normaliza <code>email</code>.</li>
+<li>Comprueba formato básico de <code>email</code>.</li>
+<li>Comprueba longitud mínima de <code>password</code>.</li>
+<li>Comprueba si el <code>email</code> ya existe.</li>
+<li>Genera <code>passwordHash</code> con <code>bcrypt</code>.</li>
+<li>Crea el usuario.</li>
+<li>Devuelve usuario seguro.</li>
+</ul>
+<p>La creación final no indica <code>role</code> ni <code>isActive</code>:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">createUser</span><span class="p">({</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="p">,</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="p">,</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nx">passwordHash</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>Esto permite que Prisma aplique los valores por defecto:</p>
+<ul>
+<li><code>role → USER</code></li>
+<li><code>isActive → true</code></li>
+</ul>
+<h2 id="crear-controlador-de-auth">Crear controlador de auth<a class="headerlink" href="#crear-controlador-de-auth" title="Permanent link">&para;</a></h2>
+<h3 id="paso-7-crear-authcontrollerts">Paso 7: Crear <code>auth.controller.ts</code><a class="headerlink" href="#paso-7-crear-authcontrollerts" title="Permanent link">&para;</a></h3>
+<p>Dentro de <code>src/controllers/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>src/controllers/auth.controller.ts
+</span></code></pre></div>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Request</span><span class="p">,</span><span class="w"> </span><span class="nx">Response</span><span class="p">,</span><span class="w"> </span><span class="nx">NextFunction</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;express&quot;</span><span class="p">;</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">registerService</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../services/auth.service&quot;</span><span class="p">;</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="k">export</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">registerController</span><span class="p">(</span>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="nx">req</span><span class="o">:</span><span class="w"> </span><span class="kt">Request</span><span class="p">,</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">  </span><span class="nx">res</span><span class="o">:</span><span class="w"> </span><span class="kt">Response</span><span class="p">,</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="nx">next</span><span class="o">:</span><span class="w"> </span><span class="kt">NextFunction</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">registerService</span><span class="p">(</span><span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">);</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mf">201</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">      </span><span class="nx">message</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Usuario registrado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">      </span><span class="nx">data</span><span class="o">:</span><span class="w"> </span><span class="kt">user</span>
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="p">});</span>
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">    </span><span class="nx">next</span><span class="p">(</span><span class="nx">error</span><span class="p">);</span>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Este controlador se encarga de:</p>
+<ul>
+<li>Recibir la petición.</li>
+<li>Llamar al servicio.</li>
+<li>Responder con <code>201</code>.</li>
+<li>Pasar errores al middleware.</li>
+</ul>
+<p>No valida directamente los campos.</p>
+<p>La validación está en el servicio.</p>
+<h2 id="crear-rutas-de-auth">Crear rutas de auth<a class="headerlink" href="#crear-rutas-de-auth" title="Permanent link">&para;</a></h2>
+<h3 id="paso-8-crear-authroutests">Paso 8: Crear <code>auth.routes.ts</code><a class="headerlink" href="#paso-8-crear-authroutests" title="Permanent link">&para;</a></h3>
+<p>Dentro de <code>src/routes/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>src/routes/auth.routes.ts
+</span></code></pre></div>
+<p>Añade:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">Router</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;express&quot;</span><span class="p">;</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">registerController</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;../controllers/auth.controller&quot;</span><span class="p">;</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="k">export</span><span class="w"> </span><span class="kd">const</span><span class="w"> </span><span class="nx">authRouter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">Router</span><span class="p">();</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="nx">authRouter</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/register&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">registerController</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Esta ruta interna será:</p>
+<p><code>/register</code>.</p>
+<p>El prefijo <code>/api/auth</code> se añadirá en <code>server.ts</code>.</p>
+<h3 id="paso-9-montar-authrouter-en-serverts">Paso 9: Montar <code>authRouter</code> en <code>server.ts</code><a class="headerlink" href="#paso-9-montar-authrouter-en-serverts" title="Permanent link">&para;</a></h3>
+<p>Abre:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>src/server.ts
+</span></code></pre></div>
+<p>Importa el router:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">authRouter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./routes/auth.routes&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Después móntalo:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/auth&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">authRouter</span><span class="p">);</span>
+</span></code></pre></div>
+<p>La sección de rutas debería quedar parecida a:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/health&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">healthRouter</span><span class="p">);</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/auth&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">authRouter</span><span class="p">);</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/users&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">userRouter</span><span class="p">);</span>
+</span></code></pre></div>
+<p>El orden no es crítico aquí, pero es habitual dejar <code>auth</code> antes de rutas protegidas.</p>
+<h2 id="probar-el-registro">Probar el registro<a class="headerlink" href="#probar-el-registro" title="Permanent link">&para;</a></h2>
+<h3 id="paso-10-arrancar-postgresql">Paso 10: Arrancar PostgreSQL<a class="headerlink" href="#paso-10-arrancar-postgresql" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</span></code></pre></div>
+<h3 id="paso-11-arrancar-la-api">Paso 11: Arrancar la API<a class="headerlink" href="#paso-11-arrancar-la-api" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>npm<span class="w"> </span>run<span class="w"> </span>dev
+</span></code></pre></div>
+<h3 id="paso-12-probar-registro-correcto">Paso 12: Probar registro correcto<a class="headerlink" href="#paso-12-probar-registro-correcto" title="Permanent link">&para;</a></h3>
+<p>Haz una petición:</p>
+<p><code>POST http://localhost:3000/api/auth/register</code></p>
+<p>Body:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Registro&quot;</span><span class="p">,</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usuario.registro@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<p><code>201 Created</code>.</p>
+<p>Respuesta aproximada:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">{</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario registrado correctamente&quot;</span><span class="p">,</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Registro&quot;</span><span class="p">,</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">    </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usuario.registro@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USER&quot;</span><span class="p">,</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">    </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="w">    </span><span class="nt">&quot;createdAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a><span class="w">    </span><span class="nt">&quot;updatedAt&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</span><span id="__span-22-11"><a id="__codelineno-22-11" name="__codelineno-22-11" href="#__codelineno-22-11"></a><span class="w">  </span><span class="p">}</span>
+</span><span id="__span-22-12"><a id="__codelineno-22-12" name="__codelineno-22-12" href="#__codelineno-22-12"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Comprueba que no aparece:</p>
+<p><code>passwordHash</code>.</p>
+<h3 id="paso-13-comprobar-en-prisma-studio">Paso 13: Comprobar en Prisma Studio<a class="headerlink" href="#paso-13-comprobar-en-prisma-studio" title="Permanent link">&para;</a></h3>
+<p>Abre Prisma Studio:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>npm<span class="w"> </span>run<span class="w"> </span>prisma:studio
+</span></code></pre></div>
+<p>Entra en:</p>
+<p><code>User</code>.</p>
+<p>Busca:</p>
+<p><code>usuario.registro@email.com</code>.</p>
+<p>Comprueba que:</p>
+<ul>
+<li><code>role</code> es <code>USER</code>.</li>
+<li><code>isActive</code> es <code>true</code>.</li>
+<li><code>passwordHash</code> empieza con algo parecido a <code>$2b$10$</code>.</li>
+</ul>
+<h2 id="probar-errores">Probar errores<a class="headerlink" href="#probar-errores" title="Permanent link">&para;</a></h2>
+<h3 id="paso-14-email-duplicado">Paso 14: Email duplicado<a class="headerlink" href="#paso-14-email-duplicado" title="Permanent link">&para;</a></h3>
+<p>Repite la misma petición:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="p">{</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Registro&quot;</span><span class="p">,</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usuario.registro@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<p><code>409 Conflict</code>.</p>
+<p>Mensaje esperado:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">{</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;El email ya está registrado&quot;</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="paso-15-email-invalido">Paso 15: Email inválido<a class="headerlink" href="#paso-15-email-invalido" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="p">{</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Malo&quot;</span><span class="p">,</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;correo-sin-formato&quot;</span><span class="p">,</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<p><code>400 Bad Request</code>.</p>
+<h3 id="paso-16-password-corta">Paso 16: Password corta<a class="headerlink" href="#paso-16-password-corta" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p">{</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Password Corta&quot;</span><span class="p">,</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;password.corta@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123&quot;</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<p><code>400 Bad Request</code>.</p>
+<h3 id="paso-17-name-vacio">Paso 17: Name vacío<a class="headerlink" href="#paso-17-name-vacio" title="Permanent link">&para;</a></h3>
+<p>Prueba:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="p">{</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sin.nombre@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Respuesta esperada:</p>
+<p><code>400 Bad Request</code>.</p>
+<h3 id="paso-18-intentar-enviar-un-rol">Paso 18: Intentar enviar un rol<a class="headerlink" href="#paso-18-intentar-enviar-un-rol" title="Permanent link">&para;</a></h3>
+<p>Prueba enviar un body con <code>role</code>:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="p">{</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Rol&quot;</span><span class="p">,</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;usuario.rol@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span><span class="p">,</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ADMIN&quot;</span>
+</span><span id="__span-29-6"><a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>El usuario debe crearse como:</p>
+<p><code>USER</code>.</p>
+<p>Esto ocurre porque <code>registerService</code> ignora el campo <code>role</code>.</p>
+<p>En el registro público no permitimos que un usuario elija ser administrador.</p>
+<h2 id="revisar-diferencias-con-post-apiusers">Revisar diferencias con <code>POST /api/users</code><a class="headerlink" href="#revisar-diferencias-con-post-apiusers" title="Permanent link">&para;</a></h2>
+<h3 id="paso-19-comparar-endpoints">Paso 19: Comparar endpoints<a class="headerlink" href="#paso-19-comparar-endpoints" title="Permanent link">&para;</a></h3>
+<p>Ahora tenemos dos formas de crear usuarios:</p>
+<ul>
+<li><code>POST /api/users</code></li>
+<li><code>POST /api/auth/register</code></li>
+</ul>
+<p>Por ahora pueden parecer parecidas.</p>
+<p>Pero conceptualmente no son lo mismo.</p>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Responsabilidad</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /api/auth/register</code></td>
+<td>Registro público de usuarios</td>
+</tr>
+<tr>
+<td><code>POST /api/users</code></td>
+<td>Creación de usuarios desde gestión interna</td>
+</tr>
+</tbody>
+</table>
+<p>Más adelante:</p>
+<ul>
+<li><code>POST /api/auth/register</code> será público.</li>
+<li><code>POST /api/users</code> será solo para <code>ADMIN</code>.</li>
+</ul>
+<h2 id="revisar-si-hay-duplicacion">Revisar si hay duplicación<a class="headerlink" href="#revisar-si-hay-duplicacion" title="Permanent link">&para;</a></h2>
+<h3 id="paso-20-comparar-createuserservice-y-registerservice">Paso 20: Comparar <code>createUserService</code> y <code>registerService</code><a class="headerlink" href="#paso-20-comparar-createuserservice-y-registerservice" title="Permanent link">&para;</a></h3>
+<p>Es posible que <code>createUserService</code> y <code>registerService</code> se parezcan mucho.</p>
+<p>Eso es normal.</p>
+<p>Ambas crean usuarios, pero tienen intenciones distintas.</p>
+<p>Podríamos reutilizar una función común, pero hoy no es necesario complicar más el proyecto.</p>
+<p>De momento, lo importante es entender la separación:</p>
+<ul>
+<li><code>user.service.ts</code>: lógica del módulo usuarios.</li>
+<li><code>auth.service.ts</code>: lógica de autenticación.</li>
+</ul>
+<p>En un proyecto real, podríamos extraer una función interna compartida.</p>
+<h2 id="ejecutar-build">Ejecutar build<a class="headerlink" href="#ejecutar-build" title="Permanent link">&para;</a></h2>
+<h3 id="paso-21-compilar-typescript">Paso 21: Compilar TypeScript<a class="headerlink" href="#paso-21-compilar-typescript" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>npm<span class="w"> </span>run<span class="w"> </span>build
+</span></code></pre></div>
+<p>Si aparece algún error, revisa:</p>
+<ul>
+<li>Imports de <code>auth.routes.ts</code>.</li>
+<li>Imports de <code>auth.controller.ts</code>.</li>
+<li>Imports de <code>auth.service.ts</code>.</li>
+<li>Montaje en <code>server.ts</code>.</li>
+<li>Rutas relativas.</li>
+</ul>
+<h2 id="actualizar-readme">Actualizar README<a class="headerlink" href="#actualizar-readme" title="Permanent link">&para;</a></h2>
+<h3 id="paso-22-anadir-seccion-de-auth">Paso 22: Añadir sección de Auth<a class="headerlink" href="#paso-22-anadir-seccion-de-auth" title="Permanent link">&para;</a></h3>
+<p>En el README, añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="gu">## Autenticación</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>El proyecto ya incluye una primera ruta de autenticación para registro de usuarios.
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a>Ruta:
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>
+</span><span id="__span-31-7"><a id="__codelineno-31-7" name="__codelineno-31-7" href="#__codelineno-31-7"></a><span class="sb">`POST /api/auth/register`</span>
+</span><span id="__span-31-8"><a id="__codelineno-31-8" name="__codelineno-31-8" href="#__codelineno-31-8"></a>
+</span><span id="__span-31-9"><a id="__codelineno-31-9" name="__codelineno-31-9" href="#__codelineno-31-9"></a>Body esperado:
+</span><span id="__span-31-10"><a id="__codelineno-31-10" name="__codelineno-31-10" href="#__codelineno-31-10"></a>
+</span><span id="__span-31-11"><a id="__codelineno-31-11" name="__codelineno-31-11" href="#__codelineno-31-11"></a><span class="sb">```json</span>
+</span><span id="__span-31-12"><a id="__codelineno-31-12" name="__codelineno-31-12" href="#__codelineno-31-12"></a><span class="p">{</span>
+</span><span id="__span-31-13"><a id="__codelineno-31-13" name="__codelineno-31-13" href="#__codelineno-31-13"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Nuevo&quot;</span><span class="p">,</span>
+</span><span id="__span-31-14"><a id="__codelineno-31-14" name="__codelineno-31-14" href="#__codelineno-31-14"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nuevo@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-31-15"><a id="__codelineno-31-15" name="__codelineno-31-15" href="#__codelineno-31-15"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-31-16"><a id="__codelineno-31-16" name="__codelineno-31-16" href="#__codelineno-31-16"></a><span class="p">}</span>
+</span><span id="__span-31-17"><a id="__codelineno-31-17" name="__codelineno-31-17" href="#__codelineno-31-17"></a><span class="sb">```</span>
+</span><span id="__span-31-18"><a id="__codelineno-31-18" name="__codelineno-31-18" href="#__codelineno-31-18"></a>
+</span><span id="__span-31-19"><a id="__codelineno-31-19" name="__codelineno-31-19" href="#__codelineno-31-19"></a>Respuesta correcta:
+</span><span id="__span-31-20"><a id="__codelineno-31-20" name="__codelineno-31-20" href="#__codelineno-31-20"></a>
+</span><span id="__span-31-21"><a id="__codelineno-31-21" name="__codelineno-31-21" href="#__codelineno-31-21"></a><span class="sb">`201 Created`</span>.
+</span><span id="__span-31-22"><a id="__codelineno-31-22" name="__codelineno-31-22" href="#__codelineno-31-22"></a>
+</span><span id="__span-31-23"><a id="__codelineno-31-23" name="__codelineno-31-23" href="#__codelineno-31-23"></a>Reglas:
+</span><span id="__span-31-24"><a id="__codelineno-31-24" name="__codelineno-31-24" href="#__codelineno-31-24"></a>
+</span><span id="__span-31-25"><a id="__codelineno-31-25" name="__codelineno-31-25" href="#__codelineno-31-25"></a><span class="k">-</span><span class="w"> </span>El email no puede estar repetido.
+</span><span id="__span-31-26"><a id="__codelineno-31-26" name="__codelineno-31-26" href="#__codelineno-31-26"></a><span class="k">-</span><span class="w"> </span>La contraseña se guarda como <span class="sb">`passwordHash`</span> usando <span class="sb">`bcrypt`</span>.
+</span><span id="__span-31-27"><a id="__codelineno-31-27" name="__codelineno-31-27" href="#__codelineno-31-27"></a><span class="k">-</span><span class="w"> </span>El usuario se registra con <span class="sb">`role USER`</span> por defecto.
+</span><span id="__span-31-28"><a id="__codelineno-31-28" name="__codelineno-31-28" href="#__codelineno-31-28"></a><span class="k">-</span><span class="w"> </span>El usuario se registra activo por defecto.
+</span><span id="__span-31-29"><a id="__codelineno-31-29" name="__codelineno-31-29" href="#__codelineno-31-29"></a><span class="k">-</span><span class="w"> </span><span class="sb">`passwordHash`</span> nunca se devuelve al cliente.
+</span><span id="__span-31-30"><a id="__codelineno-31-30" name="__codelineno-31-30" href="#__codelineno-31-30"></a>
+</span><span id="__span-31-31"><a id="__codelineno-31-31" name="__codelineno-31-31" href="#__codelineno-31-31"></a>Todavía no se genera token JWT. Eso se añadirá más adelante.
+</span></code></pre></div>
+<h3 id="paso-23-actualizar-arquitectura">Paso 23: Actualizar arquitectura<a class="headerlink" href="#paso-23-actualizar-arquitectura" title="Permanent link">&para;</a></h3>
+<p>Añade los nuevos archivos a la estructura:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>src/
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>  controllers/
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>    auth.controller.ts
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>  routes/
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>    auth.routes.ts
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>  services/
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a>    auth.service.ts
+</span></code></pre></div>
+<p>La estructura puede quedar así:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>src/
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>  prisma.ts
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a>  server.ts
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>  controllers/
+</span><span id="__span-33-5"><a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a>    auth.controller.ts
+</span><span id="__span-33-6"><a id="__codelineno-33-6" name="__codelineno-33-6" href="#__codelineno-33-6"></a>    health.controller.ts
+</span><span id="__span-33-7"><a id="__codelineno-33-7" name="__codelineno-33-7" href="#__codelineno-33-7"></a>    user.controller.ts
+</span><span id="__span-33-8"><a id="__codelineno-33-8" name="__codelineno-33-8" href="#__codelineno-33-8"></a>  errors/
+</span><span id="__span-33-9"><a id="__codelineno-33-9" name="__codelineno-33-9" href="#__codelineno-33-9"></a>    AppError.ts
+</span><span id="__span-33-10"><a id="__codelineno-33-10" name="__codelineno-33-10" href="#__codelineno-33-10"></a>  repositories/
+</span><span id="__span-33-11"><a id="__codelineno-33-11" name="__codelineno-33-11" href="#__codelineno-33-11"></a>    user.repository.ts
+</span><span id="__span-33-12"><a id="__codelineno-33-12" name="__codelineno-33-12" href="#__codelineno-33-12"></a>  routes/
+</span><span id="__span-33-13"><a id="__codelineno-33-13" name="__codelineno-33-13" href="#__codelineno-33-13"></a>    auth.routes.ts
+</span><span id="__span-33-14"><a id="__codelineno-33-14" name="__codelineno-33-14" href="#__codelineno-33-14"></a>    health.routes.ts
+</span><span id="__span-33-15"><a id="__codelineno-33-15" name="__codelineno-33-15" href="#__codelineno-33-15"></a>    user.routes.ts
+</span><span id="__span-33-16"><a id="__codelineno-33-16" name="__codelineno-33-16" href="#__codelineno-33-16"></a>  services/
+</span><span id="__span-33-17"><a id="__codelineno-33-17" name="__codelineno-33-17" href="#__codelineno-33-17"></a>    auth.service.ts
+</span><span id="__span-33-18"><a id="__codelineno-33-18" name="__codelineno-33-18" href="#__codelineno-33-18"></a>    user.service.ts
+</span><span id="__span-33-19"><a id="__codelineno-33-19" name="__codelineno-33-19" href="#__codelineno-33-19"></a>  utils/
+</span><span id="__span-33-20"><a id="__codelineno-33-20" name="__codelineno-33-20" href="#__codelineno-33-20"></a>    parse.utils.ts
+</span><span id="__span-33-21"><a id="__codelineno-33-21" name="__codelineno-33-21" href="#__codelineno-33-21"></a>    password.utils.ts
+</span><span id="__span-33-22"><a id="__codelineno-33-22" name="__codelineno-33-22" href="#__codelineno-33-22"></a>    string.utils.ts
+</span></code></pre></div>
+<h3 id="paso-24-actualizar-indice-del-readme">Paso 24: Actualizar índice del README<a class="headerlink" href="#paso-24-actualizar-indice-del-readme" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 33 - Registro de usuarios</span>](<span class="na">docs/dia-33-auth-register.md</span>)
+</span></code></pre></div>
+<p>El bloque debería quedar parecido a:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="gu">## Documentación del reto</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 1 - Diseño inicial</span>](<span class="na">docs/dia-01-diseno-inicial.md</span>)
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 2 - Preparación del proyecto</span>](<span class="na">docs/dia-02-preparacion-proyecto.md</span>)
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 3 - Primer endpoint</span>](<span class="na">docs/dia-03-primer-endpoint.md</span>)
+</span><span id="__span-35-6"><a id="__codelineno-35-6" name="__codelineno-35-6" href="#__codelineno-35-6"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 4 - Métodos HTTP</span>](<span class="na">docs/dia-04-metodos-http.md</span>)
+</span><span id="__span-35-7"><a id="__codelineno-35-7" name="__codelineno-35-7" href="#__codelineno-35-7"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 5 - JSON, body, params y headers</span>](<span class="na">docs/dia-05-json-body-params-headers.md</span>)
+</span><span id="__span-35-8"><a id="__codelineno-35-8" name="__codelineno-35-8" href="#__codelineno-35-8"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 6 - Cliente HTTP y depuración</span>](<span class="na">docs/dia-06-cliente-http-depuracion.md</span>)
+</span><span id="__span-35-9"><a id="__codelineno-35-9" name="__codelineno-35-9" href="#__codelineno-35-9"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 7 - Listado de usuarios en memoria</span>](<span class="na">docs/dia-07-listado-usuarios.md</span>)
+</span><span id="__span-35-10"><a id="__codelineno-35-10" name="__codelineno-35-10" href="#__codelineno-35-10"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 8 - Consultar usuario por ID</span>](<span class="na">docs/dia-08-consultar-usuario-id.md</span>)
+</span><span id="__span-35-11"><a id="__codelineno-35-11" name="__codelineno-35-11" href="#__codelineno-35-11"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 9 - Crear usuarios en memoria</span>](<span class="na">docs/dia-09-crear-usuarios.md</span>)
+</span><span id="__span-35-12"><a id="__codelineno-35-12" name="__codelineno-35-12" href="#__codelineno-35-12"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 10 - Actualizar usuarios en memoria</span>](<span class="na">docs/dia-10-actualizar-usuarios.md</span>)
+</span><span id="__span-35-13"><a id="__codelineno-35-13" name="__codelineno-35-13" href="#__codelineno-35-13"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 11 - Eliminar o desactivar usuarios en memoria</span>](<span class="na">docs/dia-11-eliminar-desactivar-usuarios.md</span>)
+</span><span id="__span-35-14"><a id="__codelineno-35-14" name="__codelineno-35-14" href="#__codelineno-35-14"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 12 - Validación manual básica</span>](<span class="na">docs/dia-12-validacion-manual-basica.md</span>)
+</span><span id="__span-35-15"><a id="__codelineno-35-15" name="__codelineno-35-15" href="#__codelineno-35-15"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 13 - Validación de email y duplicados</span>](<span class="na">docs/dia-13-validacion-email-duplicados.md</span>)
+</span><span id="__span-35-16"><a id="__codelineno-35-16" name="__codelineno-35-16" href="#__codelineno-35-16"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 14 - Códigos de estado HTTP</span>](<span class="na">docs/dia-14-codigos-estado-http.md</span>)
+</span><span id="__span-35-17"><a id="__codelineno-35-17" name="__codelineno-35-17" href="#__codelineno-35-17"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 15 - Middleware centralizado de errores</span>](<span class="na">docs/dia-15-middleware-errores.md</span>)
+</span><span id="__span-35-18"><a id="__codelineno-35-18" name="__codelineno-35-18" href="#__codelineno-35-18"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 16 - Base de datos y persistencia</span>](<span class="na">docs/dia-16-base-datos-persistencia.md</span>)
+</span><span id="__span-35-19"><a id="__codelineno-35-19" name="__codelineno-35-19" href="#__codelineno-35-19"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 17 - PostgreSQL con Docker Compose</span>](<span class="na">docs/dia-17-postgresql-docker-compose.md</span>)
+</span><span id="__span-35-20"><a id="__codelineno-35-20" name="__codelineno-35-20" href="#__codelineno-35-20"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 18 - Diseño del modelo persistente User</span>](<span class="na">docs/dia-18-diseno-modelo-persistente-user.md</span>)
+</span><span id="__span-35-21"><a id="__codelineno-35-21" name="__codelineno-35-21" href="#__codelineno-35-21"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 19 - ORM o acceso a datos</span>](<span class="na">docs/dia-19-orm-acceso-datos.md</span>)
+</span><span id="__span-35-22"><a id="__codelineno-35-22" name="__codelineno-35-22" href="#__codelineno-35-22"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 20 - Instalación y configuración inicial de Prisma</span>](<span class="na">docs/dia-20-instalacion-prisma.md</span>)
+</span><span id="__span-35-23"><a id="__codelineno-35-23" name="__codelineno-35-23" href="#__codelineno-35-23"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 21 - Modelo Prisma User</span>](<span class="na">docs/dia-21-modelo-prisma-user.md</span>)
+</span><span id="__span-35-24"><a id="__codelineno-35-24" name="__codelineno-35-24" href="#__codelineno-35-24"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 22 - Primera migración con Prisma</span>](<span class="na">docs/dia-22-primera-migracion-prisma.md</span>)
+</span><span id="__span-35-25"><a id="__codelineno-35-25" name="__codelineno-35-25" href="#__codelineno-35-25"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 23 - Prisma Studio</span>](<span class="na">docs/dia-23-prisma-studio.md</span>)
+</span><span id="__span-35-26"><a id="__codelineno-35-26" name="__codelineno-35-26" href="#__codelineno-35-26"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 24 - Seed de datos iniciales</span>](<span class="na">docs/dia-24-seed-datos-iniciales.md</span>)
+</span><span id="__span-35-27"><a id="__codelineno-35-27" name="__codelineno-35-27" href="#__codelineno-35-27"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 25 - Consultas básicas con Prisma Client</span>](<span class="na">docs/dia-25-consultas-basicas-prisma.md</span>)
+</span><span id="__span-35-28"><a id="__codelineno-35-28" name="__codelineno-35-28" href="#__codelineno-35-28"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 26 - Separar rutas</span>](<span class="na">docs/dia-26-separar-rutas.md</span>)
+</span><span id="__span-35-29"><a id="__codelineno-35-29" name="__codelineno-35-29" href="#__codelineno-35-29"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 27 - Controladores</span>](<span class="na">docs/dia-27-controladores.md</span>)
+</span><span id="__span-35-30"><a id="__codelineno-35-30" name="__codelineno-35-30" href="#__codelineno-35-30"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 28 - Servicios</span>](<span class="na">docs/dia-28-servicios.md</span>)
+</span><span id="__span-35-31"><a id="__codelineno-35-31" name="__codelineno-35-31" href="#__codelineno-35-31"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 29 - Repositorio con Prisma</span>](<span class="na">docs/dia-29-repositorio-prisma.md</span>)
+</span><span id="__span-35-32"><a id="__codelineno-35-32" name="__codelineno-35-32" href="#__codelineno-35-32"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 30 - CRUD persistente ordenado</span>](<span class="na">docs/dia-30-crud-persistente-ordenado.md</span>)
+</span><span id="__span-35-33"><a id="__codelineno-35-33" name="__codelineno-35-33" href="#__codelineno-35-33"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 31 - Limpieza y refactor</span>](<span class="na">docs/dia-31-limpieza-refactor.md</span>)
+</span><span id="__span-35-34"><a id="__codelineno-35-34" name="__codelineno-35-34" href="#__codelineno-35-34"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 32 - Contraseñas seguras con bcrypt</span>](<span class="na">docs/dia-32-bcrypt-passwords.md</span>)
+</span><span id="__span-35-35"><a id="__codelineno-35-35" name="__codelineno-35-35" href="#__codelineno-35-35"></a><span class="k">-</span><span class="w"> </span>[<span class="nt">Día 33 - Registro de usuarios</span>](<span class="na">docs/dia-33-auth-register.md</span>)
+</span></code></pre></div>
+<h2 id="crear-el-documento-del-dia-33">Crear el documento del día 33<a class="headerlink" href="#crear-el-documento-del-dia-33" title="Permanent link">&para;</a></h2>
+<p>Dentro de la carpeta <code>docs/</code>, crea:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>docs/dia-33-auth-register.md
+</span></code></pre></div>
+<p>Añade este contenido inicial:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="gh"># Día 33 - Registro de usuarios</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="gu">## Qué he hecho</span>
+</span><span id="__span-37-4"><a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a>
+</span><span id="__span-37-5"><a id="__codelineno-37-5" name="__codelineno-37-5" href="#__codelineno-37-5"></a><span class="k">-</span><span class="w"> </span>He creado auth.service.ts.
+</span><span id="__span-37-6"><a id="__codelineno-37-6" name="__codelineno-37-6" href="#__codelineno-37-6"></a><span class="k">-</span><span class="w"> </span>He creado registerService.
+</span><span id="__span-37-7"><a id="__codelineno-37-7" name="__codelineno-37-7" href="#__codelineno-37-7"></a><span class="k">-</span><span class="w"> </span>He creado auth.controller.ts.
+</span><span id="__span-37-8"><a id="__codelineno-37-8" name="__codelineno-37-8" href="#__codelineno-37-8"></a><span class="k">-</span><span class="w"> </span>He creado registerController.
+</span><span id="__span-37-9"><a id="__codelineno-37-9" name="__codelineno-37-9" href="#__codelineno-37-9"></a><span class="k">-</span><span class="w"> </span>He creado auth.routes.ts.
+</span><span id="__span-37-10"><a id="__codelineno-37-10" name="__codelineno-37-10" href="#__codelineno-37-10"></a><span class="k">-</span><span class="w"> </span>He montado authRouter en server.ts.
+</span><span id="__span-37-11"><a id="__codelineno-37-11" name="__codelineno-37-11" href="#__codelineno-37-11"></a><span class="k">-</span><span class="w"> </span>He creado el endpoint POST /api/auth/register.
+</span><span id="__span-37-12"><a id="__codelineno-37-12" name="__codelineno-37-12" href="#__codelineno-37-12"></a><span class="k">-</span><span class="w"> </span>He validado name, email y password.
+</span><span id="__span-37-13"><a id="__codelineno-37-13" name="__codelineno-37-13" href="#__codelineno-37-13"></a><span class="k">-</span><span class="w"> </span>He comprobado email duplicado.
+</span><span id="__span-37-14"><a id="__codelineno-37-14" name="__codelineno-37-14" href="#__codelineno-37-14"></a><span class="k">-</span><span class="w"> </span>He usado bcrypt mediante hashPassword.
+</span><span id="__span-37-15"><a id="__codelineno-37-15" name="__codelineno-37-15" href="#__codelineno-37-15"></a><span class="k">-</span><span class="w"> </span>He comprobado que el usuario se crea como USER.
+</span><span id="__span-37-16"><a id="__codelineno-37-16" name="__codelineno-37-16" href="#__codelineno-37-16"></a><span class="k">-</span><span class="w"> </span>He comprobado que el usuario se crea activo.
+</span><span id="__span-37-17"><a id="__codelineno-37-17" name="__codelineno-37-17" href="#__codelineno-37-17"></a><span class="k">-</span><span class="w"> </span>He comprobado que passwordHash no se devuelve al cliente.
+</span><span id="__span-37-18"><a id="__codelineno-37-18" name="__codelineno-37-18" href="#__codelineno-37-18"></a><span class="k">-</span><span class="w"> </span>He probado errores de validación.
+</span><span id="__span-37-19"><a id="__codelineno-37-19" name="__codelineno-37-19" href="#__codelineno-37-19"></a><span class="k">-</span><span class="w"> </span>He ejecutado npm run build.
+</span><span id="__span-37-20"><a id="__codelineno-37-20" name="__codelineno-37-20" href="#__codelineno-37-20"></a>
+</span><span id="__span-37-21"><a id="__codelineno-37-21" name="__codelineno-37-21" href="#__codelineno-37-21"></a><span class="gu">## Endpoint creado</span>
+</span><span id="__span-37-22"><a id="__codelineno-37-22" name="__codelineno-37-22" href="#__codelineno-37-22"></a>
+</span><span id="__span-37-23"><a id="__codelineno-37-23" name="__codelineno-37-23" href="#__codelineno-37-23"></a><span class="sb">```text</span>
+</span><span id="__span-37-24"><a id="__codelineno-37-24" name="__codelineno-37-24" href="#__codelineno-37-24"></a>POST /api/auth/register
+</span><span id="__span-37-25"><a id="__codelineno-37-25" name="__codelineno-37-25" href="#__codelineno-37-25"></a><span class="sb">```</span>
+</span><span id="__span-37-26"><a id="__codelineno-37-26" name="__codelineno-37-26" href="#__codelineno-37-26"></a>
+</span><span id="__span-37-27"><a id="__codelineno-37-27" name="__codelineno-37-27" href="#__codelineno-37-27"></a><span class="gu">## Body esperado</span>
+</span><span id="__span-37-28"><a id="__codelineno-37-28" name="__codelineno-37-28" href="#__codelineno-37-28"></a>
+</span><span id="__span-37-29"><a id="__codelineno-37-29" name="__codelineno-37-29" href="#__codelineno-37-29"></a><span class="sb">```json</span>
+</span><span id="__span-37-30"><a id="__codelineno-37-30" name="__codelineno-37-30" href="#__codelineno-37-30"></a><span class="p">{</span>
+</span><span id="__span-37-31"><a id="__codelineno-37-31" name="__codelineno-37-31" href="#__codelineno-37-31"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Nuevo&quot;</span><span class="p">,</span>
+</span><span id="__span-37-32"><a id="__codelineno-37-32" name="__codelineno-37-32" href="#__codelineno-37-32"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nuevo@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-37-33"><a id="__codelineno-37-33" name="__codelineno-37-33" href="#__codelineno-37-33"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span>
+</span><span id="__span-37-34"><a id="__codelineno-37-34" name="__codelineno-37-34" href="#__codelineno-37-34"></a><span class="p">}</span>
+</span><span id="__span-37-35"><a id="__codelineno-37-35" name="__codelineno-37-35" href="#__codelineno-37-35"></a><span class="sb">```</span>
+</span><span id="__span-37-36"><a id="__codelineno-37-36" name="__codelineno-37-36" href="#__codelineno-37-36"></a>
+</span><span id="__span-37-37"><a id="__codelineno-37-37" name="__codelineno-37-37" href="#__codelineno-37-37"></a><span class="gu">## Respuesta correcta</span>
+</span><span id="__span-37-38"><a id="__codelineno-37-38" name="__codelineno-37-38" href="#__codelineno-37-38"></a>
+</span><span id="__span-37-39"><a id="__codelineno-37-39" name="__codelineno-37-39" href="#__codelineno-37-39"></a><span class="sb">```text</span>
+</span><span id="__span-37-40"><a id="__codelineno-37-40" name="__codelineno-37-40" href="#__codelineno-37-40"></a>201 Created
+</span><span id="__span-37-41"><a id="__codelineno-37-41" name="__codelineno-37-41" href="#__codelineno-37-41"></a><span class="sb">```</span>
+</span><span id="__span-37-42"><a id="__codelineno-37-42" name="__codelineno-37-42" href="#__codelineno-37-42"></a>
+</span><span id="__span-37-43"><a id="__codelineno-37-43" name="__codelineno-37-43" href="#__codelineno-37-43"></a><span class="gu">## Reglas del registro</span>
+</span><span id="__span-37-44"><a id="__codelineno-37-44" name="__codelineno-37-44" href="#__codelineno-37-44"></a>
+</span><span id="__span-37-45"><a id="__codelineno-37-45" name="__codelineno-37-45" href="#__codelineno-37-45"></a><span class="sb">```text</span>
+</span><span id="__span-37-46"><a id="__codelineno-37-46" name="__codelineno-37-46" href="#__codelineno-37-46"></a>name es obligatorio.
+</span><span id="__span-37-47"><a id="__codelineno-37-47" name="__codelineno-37-47" href="#__codelineno-37-47"></a>email es obligatorio.
+</span><span id="__span-37-48"><a id="__codelineno-37-48" name="__codelineno-37-48" href="#__codelineno-37-48"></a>password es obligatorio.
+</span><span id="__span-37-49"><a id="__codelineno-37-49" name="__codelineno-37-49" href="#__codelineno-37-49"></a>email debe tener formato válido.
+</span><span id="__span-37-50"><a id="__codelineno-37-50" name="__codelineno-37-50" href="#__codelineno-37-50"></a>password debe tener al menos 6 caracteres.
+</span><span id="__span-37-51"><a id="__codelineno-37-51" name="__codelineno-37-51" href="#__codelineno-37-51"></a>email no puede estar repetido.
+</span><span id="__span-37-52"><a id="__codelineno-37-52" name="__codelineno-37-52" href="#__codelineno-37-52"></a>password se guarda como passwordHash.
+</span><span id="__span-37-53"><a id="__codelineno-37-53" name="__codelineno-37-53" href="#__codelineno-37-53"></a>role se asigna como USER por defecto.
+</span><span id="__span-37-54"><a id="__codelineno-37-54" name="__codelineno-37-54" href="#__codelineno-37-54"></a>isActive se asigna como true por defecto.
+</span><span id="__span-37-55"><a id="__codelineno-37-55" name="__codelineno-37-55" href="#__codelineno-37-55"></a>passwordHash nunca se devuelve.
+</span><span id="__span-37-56"><a id="__codelineno-37-56" name="__codelineno-37-56" href="#__codelineno-37-56"></a><span class="sb">```</span>
+</span><span id="__span-37-57"><a id="__codelineno-37-57" name="__codelineno-37-57" href="#__codelineno-37-57"></a>
+</span><span id="__span-37-58"><a id="__codelineno-37-58" name="__codelineno-37-58" href="#__codelineno-37-58"></a><span class="gu">## Archivos creados</span>
+</span><span id="__span-37-59"><a id="__codelineno-37-59" name="__codelineno-37-59" href="#__codelineno-37-59"></a>
+</span><span id="__span-37-60"><a id="__codelineno-37-60" name="__codelineno-37-60" href="#__codelineno-37-60"></a><span class="sb">```text</span>
+</span><span id="__span-37-61"><a id="__codelineno-37-61" name="__codelineno-37-61" href="#__codelineno-37-61"></a>src/routes/auth.routes.ts
+</span><span id="__span-37-62"><a id="__codelineno-37-62" name="__codelineno-37-62" href="#__codelineno-37-62"></a>src/controllers/auth.controller.ts
+</span><span id="__span-37-63"><a id="__codelineno-37-63" name="__codelineno-37-63" href="#__codelineno-37-63"></a>src/services/auth.service.ts
+</span><span id="__span-37-64"><a id="__codelineno-37-64" name="__codelineno-37-64" href="#__codelineno-37-64"></a><span class="sb">```</span>
+</span><span id="__span-37-65"><a id="__codelineno-37-65" name="__codelineno-37-65" href="#__codelineno-37-65"></a>
+</span><span id="__span-37-66"><a id="__codelineno-37-66" name="__codelineno-37-66" href="#__codelineno-37-66"></a><span class="gu">## Flujo del registro</span>
+</span><span id="__span-37-67"><a id="__codelineno-37-67" name="__codelineno-37-67" href="#__codelineno-37-67"></a>
+</span><span id="__span-37-68"><a id="__codelineno-37-68" name="__codelineno-37-68" href="#__codelineno-37-68"></a><span class="sb">```text</span>
+</span><span id="__span-37-69"><a id="__codelineno-37-69" name="__codelineno-37-69" href="#__codelineno-37-69"></a>Route → Controller → Service → Repository → Prisma → PostgreSQL
+</span><span id="__span-37-70"><a id="__codelineno-37-70" name="__codelineno-37-70" href="#__codelineno-37-70"></a><span class="sb">```</span>
+</span><span id="__span-37-71"><a id="__codelineno-37-71" name="__codelineno-37-71" href="#__codelineno-37-71"></a>
+</span><span id="__span-37-72"><a id="__codelineno-37-72" name="__codelineno-37-72" href="#__codelineno-37-72"></a><span class="gu">## Diferencia entre endpoints</span>
+</span><span id="__span-37-73"><a id="__codelineno-37-73" name="__codelineno-37-73" href="#__codelineno-37-73"></a>
+</span><span id="__span-37-74"><a id="__codelineno-37-74" name="__codelineno-37-74" href="#__codelineno-37-74"></a>| Endpoint | Uso |
+</span><span id="__span-37-75"><a id="__codelineno-37-75" name="__codelineno-37-75" href="#__codelineno-37-75"></a>| --- | --- |
+</span><span id="__span-37-76"><a id="__codelineno-37-76" name="__codelineno-37-76" href="#__codelineno-37-76"></a>| <span class="sb">`POST /api/auth/register`</span> | Registro público de usuarios |
+</span><span id="__span-37-77"><a id="__codelineno-37-77" name="__codelineno-37-77" href="#__codelineno-37-77"></a>| <span class="sb">`POST /api/users`</span> | Creación de usuarios desde gestión interna |
+</span><span id="__span-37-78"><a id="__codelineno-37-78" name="__codelineno-37-78" href="#__codelineno-37-78"></a>
+</span><span id="__span-37-79"><a id="__codelineno-37-79" name="__codelineno-37-79" href="#__codelineno-37-79"></a><span class="gu">## Explicación personal</span>
+</span><span id="__span-37-80"><a id="__codelineno-37-80" name="__codelineno-37-80" href="#__codelineno-37-80"></a>
+</span><span id="__span-37-81"><a id="__codelineno-37-81" name="__codelineno-37-81" href="#__codelineno-37-81"></a>El registro permite que un usuario cree su propia cuenta. La contraseña no se guarda en texto plano, sino que se transforma en passwordHash usando bcrypt antes de guardarse en PostgreSQL.
+</span></code></pre></div>
+<h3 id="paso-25-anadir-diagrama-mermaid">Paso 25: Añadir diagrama Mermaid<a class="headerlink" href="#paso-25-anadir-diagrama-mermaid" title="Permanent link">&para;</a></h3>
+<p>Añade al documento:</p>
+<pre class="mermaid"><code>flowchart LR
+    A[Cliente] --&gt; B[POST /api/auth/register]
+    B --&gt; C[auth.routes.ts]
+    C --&gt; D[auth.controller.ts]
+    D --&gt; E[auth.service.ts]
+    E --&gt; F[user.repository.ts]
+    F --&gt; G[Prisma]
+    G --&gt; H[PostgreSQL]</code></pre>
+<h3 id="paso-26-anadir-checklist-de-pruebas">Paso 26: Añadir checklist de pruebas<a class="headerlink" href="#paso-26-anadir-checklist-de-pruebas" title="Permanent link">&para;</a></h3>
+<p>Añade:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="gu">## Checklist de pruebas</span>
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>
+</span><span id="__span-38-3"><a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a>| Prueba | Resultado |
+</span><span id="__span-38-4"><a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a>| --- | --- |
+</span><span id="__span-38-5"><a id="__codelineno-38-5" name="__codelineno-38-5" href="#__codelineno-38-5"></a>| <span class="sb">`POST /api/auth/register`</span> con datos correctos | |
+</span><span id="__span-38-6"><a id="__codelineno-38-6" name="__codelineno-38-6" href="#__codelineno-38-6"></a>| Registro con email duplicado | |
+</span><span id="__span-38-7"><a id="__codelineno-38-7" name="__codelineno-38-7" href="#__codelineno-38-7"></a>| Registro con email inválido | |
+</span><span id="__span-38-8"><a id="__codelineno-38-8" name="__codelineno-38-8" href="#__codelineno-38-8"></a>| Registro con password corta | |
+</span><span id="__span-38-9"><a id="__codelineno-38-9" name="__codelineno-38-9" href="#__codelineno-38-9"></a>| Registro con name vacío | |
+</span><span id="__span-38-10"><a id="__codelineno-38-10" name="__codelineno-38-10" href="#__codelineno-38-10"></a>| Intento de enviar <span class="sb">`role: ADMIN`</span> | |
+</span><span id="__span-38-11"><a id="__codelineno-38-11" name="__codelineno-38-11" href="#__codelineno-38-11"></a>| Prisma Studio muestra <span class="sb">`role: USER`</span> | |
+</span><span id="__span-38-12"><a id="__codelineno-38-12" name="__codelineno-38-12" href="#__codelineno-38-12"></a>| Prisma Studio muestra <span class="sb">`isActive: true`</span> | |
+</span><span id="__span-38-13"><a id="__codelineno-38-13" name="__codelineno-38-13" href="#__codelineno-38-13"></a>| Prisma Studio muestra <span class="sb">`passwordHash`</span> con bcrypt | |
+</span><span id="__span-38-14"><a id="__codelineno-38-14" name="__codelineno-38-14" href="#__codelineno-38-14"></a>| La respuesta no devuelve <span class="sb">`passwordHash`</span> | |
+</span><span id="__span-38-15"><a id="__codelineno-38-15" name="__codelineno-38-15" href="#__codelineno-38-15"></a>| <span class="sb">`npm run build`</span> funciona | |
+</span></code></pre></div>
+<h2 id="guardar-cambios-en-git">Guardar cambios en Git<a class="headerlink" href="#guardar-cambios-en-git" title="Permanent link">&para;</a></h2>
+<h3 id="paso-27-revisar-cambios">Paso 27: Revisar cambios<a class="headerlink" href="#paso-27-revisar-cambios" title="Permanent link">&para;</a></h3>
+<p>Ejecuta:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>git<span class="w"> </span>status
+</span></code></pre></div>
+<p>Deberías ver cambios en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>src/routes/auth.routes.ts
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>src/controllers/auth.controller.ts
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>src/services/auth.service.ts
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a>src/server.ts
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a>README.md
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>docs/dia-33-auth-register.md
+</span></code></pre></div>
+<h3 id="paso-28-anadir-archivos">Paso 28: Añadir archivos<a class="headerlink" href="#paso-28-anadir-archivos" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span></code></pre></div>
+<h3 id="paso-29-crear-commit">Paso 29: Crear commit<a class="headerlink" href="#paso-29-crear-commit" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Dia 33 - Crear registro de usuarios&quot;</span>
+</span></code></pre></div>
+<h3 id="paso-30-subir-cambios">Paso 30: Subir cambios<a class="headerlink" href="#paso-30-subir-cambios" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-43-1"><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>git<span class="w"> </span>push
+</span></code></pre></div>
+<h2 id="problemas-frecuentes">Problemas frecuentes<a class="headerlink" href="#problemas-frecuentes" title="Permanent link">&para;</a></h2>
+<h3 id="post-apiauthregister-devuelve-404"><code>POST /api/auth/register</code> devuelve 404<a class="headerlink" href="#post-apiauthregister-devuelve-404" title="Permanent link">&para;</a></h3>
+<p>Revisa que en <code>server.ts</code> tienes:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-44-1"><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="s2">&quot;/api/auth&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">authRouter</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Y que en <code>auth.routes.ts</code> tienes:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-45-1"><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a><span class="nx">authRouter</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s2">&quot;/register&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">registerController</span><span class="p">);</span>
+</span></code></pre></div>
+<p>La ruta final será:</p>
+<p><code>POST /api/auth/register</code>.</p>
+<h3 id="error-de-importacion-de-authrouter">Error de importación de <code>authRouter</code><a class="headerlink" href="#error-de-importacion-de-authrouter" title="Permanent link">&para;</a></h3>
+<p>Revisa el import:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-46-1"><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">authRouter</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s2">&quot;./routes/auth.routes&quot;</span><span class="p">;</span>
+</span></code></pre></div>
+<p>Desde <code>server.ts</code>, la ruta es:</p>
+<p><code>./routes/auth.routes</code>.</p>
+<h3 id="el-registro-devuelve-passwordhash">El registro devuelve <code>passwordHash</code><a class="headerlink" href="#el-registro-devuelve-passwordhash" title="Permanent link">&para;</a></h3>
+<p>Revisa el repositorio:</p>
+<p><code>src/repositories/user.repository.ts</code>.</p>
+<p>La función <code>createUser</code> debe usar:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-47-1"><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="nx">select</span><span class="o">:</span><span class="w"> </span><span class="kt">userSafeSelect</span>
+</span></code></pre></div>
+<p>Y <code>userSafeSelect</code> no debe incluir <code>passwordHash</code>.</p>
+<h3 id="el-usuario-se-crea-como-admin">El usuario se crea como ADMIN<a class="headerlink" href="#el-usuario-se-crea-como-admin" title="Permanent link">&para;</a></h3>
+<p>El registro no debe aceptar el rol enviado por el cliente.</p>
+<p>En <code>registerService</code>, la llamada debe ser:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-48-1"><a id="__codelineno-48-1" name="__codelineno-48-1" href="#__codelineno-48-1"></a><span class="k">return</span><span class="w"> </span><span class="nx">createUser</span><span class="p">({</span>
+</span><span id="__span-48-2"><a id="__codelineno-48-2" name="__codelineno-48-2" href="#__codelineno-48-2"></a><span class="w">  </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanName</span><span class="p">,</span>
+</span><span id="__span-48-3"><a id="__codelineno-48-3" name="__codelineno-48-3" href="#__codelineno-48-3"></a><span class="w">  </span><span class="nx">email</span><span class="o">:</span><span class="w"> </span><span class="kt">cleanEmail</span><span class="p">,</span>
+</span><span id="__span-48-4"><a id="__codelineno-48-4" name="__codelineno-48-4" href="#__codelineno-48-4"></a><span class="w">  </span><span class="nx">passwordHash</span>
+</span><span id="__span-48-5"><a id="__codelineno-48-5" name="__codelineno-48-5" href="#__codelineno-48-5"></a><span class="p">});</span>
+</span></code></pre></div>
+<p>No incluyas:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-49-1"><a id="__codelineno-49-1" name="__codelineno-49-1" href="#__codelineno-49-1"></a><span class="nx">role</span><span class="o">:</span><span class="w"> </span><span class="kt">input.role</span>
+</span></code></pre></div>
+<h3 id="el-email-duplicado-devuelve-500">El email duplicado devuelve 500<a class="headerlink" href="#el-email-duplicado-devuelve-500" title="Permanent link">&para;</a></h3>
+<p>Comprueba que antes de crear el usuario haces:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-50-1"><a id="__codelineno-50-1" name="__codelineno-50-1" href="#__codelineno-50-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">existingUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">findUserByEmail</span><span class="p">(</span><span class="nx">cleanEmail</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Y después:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-51-1"><a id="__codelineno-51-1" name="__codelineno-51-1" href="#__codelineno-51-1"></a><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">existingUser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-51-2"><a id="__codelineno-51-2" name="__codelineno-51-2" href="#__codelineno-51-2"></a><span class="w">  </span><span class="k">throw</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">AppError</span><span class="p">(</span><span class="s2">&quot;El email ya está registrado&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">409</span><span class="p">);</span>
+</span><span id="__span-51-3"><a id="__codelineno-51-3" name="__codelineno-51-3" href="#__codelineno-51-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<h3 id="el-passwordhash-sigue-siendo-temporal">El passwordHash sigue siendo temporal<a class="headerlink" href="#el-passwordhash-sigue-siendo-temporal" title="Permanent link">&para;</a></h3>
+<p>Revisa que estás usando:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-52-1"><a id="__codelineno-52-1" name="__codelineno-52-1" href="#__codelineno-52-1"></a><span class="kd">const</span><span class="w"> </span><span class="nx">passwordHash</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">hashPassword</span><span class="p">(</span><span class="nx">cleanPassword</span><span class="p">);</span>
+</span></code></pre></div>
+<p>Y no:</p>
+<div class="language-ts highlight"><pre><span></span><code><span id="__span-53-1"><a id="__codelineno-53-1" name="__codelineno-53-1" href="#__codelineno-53-1"></a><span class="nx">passwordHash</span><span class="o">:</span><span class="w"> </span><span class="sb">`hash_temporal_</span><span class="si">${</span><span class="nx">cleanPassword</span><span class="si">}</span><span class="sb">`</span>
+</span></code></pre></div>
+<h2 id="parte-libre">Parte libre<a class="headerlink" href="#parte-libre" title="Permanent link">&para;</a></h2>
+<h3 id="tarea-libre-1-documentar-la-diferencia-entre-register-y-create-user">Tarea libre 1: Documentar la diferencia entre register y create user<a class="headerlink" href="#tarea-libre-1-documentar-la-diferencia-entre-register-y-create-user" title="Permanent link">&para;</a></h3>
+<p>Añade al documento una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-54-1"><a id="__codelineno-54-1" name="__codelineno-54-1" href="#__codelineno-54-1"></a><span class="gu">## Diferencia entre registro y creación de usuarios</span>
+</span></code></pre></div>
+<p>Explica con tus palabras por qué existen:</p>
+<ul>
+<li><code>POST /api/auth/register</code></li>
+<li><code>POST /api/users</code></li>
+</ul>
+<h3 id="tarea-libre-2-ignorar-campos-no-permitidos">Tarea libre 2: Ignorar campos no permitidos<a class="headerlink" href="#tarea-libre-2-ignorar-campos-no-permitidos" title="Permanent link">&para;</a></h3>
+<p>Prueba a enviar:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-55-1"><a id="__codelineno-55-1" name="__codelineno-55-1" href="#__codelineno-55-1"></a><span class="p">{</span>
+</span><span id="__span-55-2"><a id="__codelineno-55-2" name="__codelineno-55-2" href="#__codelineno-55-2"></a><span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Usuario Hacker&quot;</span><span class="p">,</span>
+</span><span id="__span-55-3"><a id="__codelineno-55-3" name="__codelineno-55-3" href="#__codelineno-55-3"></a><span class="w">  </span><span class="nt">&quot;email&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;hacker@email.com&quot;</span><span class="p">,</span>
+</span><span id="__span-55-4"><a id="__codelineno-55-4" name="__codelineno-55-4" href="#__codelineno-55-4"></a><span class="w">  </span><span class="nt">&quot;password&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;123456&quot;</span><span class="p">,</span>
+</span><span id="__span-55-5"><a id="__codelineno-55-5" name="__codelineno-55-5" href="#__codelineno-55-5"></a><span class="w">  </span><span class="nt">&quot;role&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ADMIN&quot;</span><span class="p">,</span>
+</span><span id="__span-55-6"><a id="__codelineno-55-6" name="__codelineno-55-6" href="#__codelineno-55-6"></a><span class="w">  </span><span class="nt">&quot;isActive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span>
+</span><span id="__span-55-7"><a id="__codelineno-55-7" name="__codelineno-55-7" href="#__codelineno-55-7"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Comprueba en Prisma Studio que el usuario se crea como:</p>
+<ul>
+<li><code>role USER</code></li>
+<li><code>isActive true</code></li>
+</ul>
+<h3 id="tarea-libre-3-crear-tabla-de-errores">Tarea libre 3: Crear tabla de errores<a class="headerlink" href="#tarea-libre-3-crear-tabla-de-errores" title="Permanent link">&para;</a></h3>
+<p>Completa:</p>
+<table>
+<thead>
+<tr>
+<th>Caso</th>
+<th>Código esperado</th>
+<th>Mensaje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name vacío</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Email vacío</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Email inválido</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Password vacía</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Password corta</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Email duplicado</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tarea-libre-4-pensar-en-respuesta-de-registro">Tarea libre 4: Pensar en respuesta de registro<a class="headerlink" href="#tarea-libre-4-pensar-en-respuesta-de-registro" title="Permanent link">&para;</a></h3>
+<p>Responde:</p>
+<ul>
+<li>¿Debe <code>register</code> devolver solo usuario?</li>
+<li>¿Debe devolver token?</li>
+<li>¿Por qué todavía no devolvemos token en el día 33?</li>
+</ul>
+<p>Pista:</p>
+<blockquote>
+<p>El token JWT se añadirá después del login y de la generación de tokens.</p>
+</blockquote>
+<h3 id="tarea-libre-5-preparar-el-dia-34">Tarea libre 5: Preparar el día 34<a class="headerlink" href="#tarea-libre-5-preparar-el-dia-34" title="Permanent link">&para;</a></h3>
+<p>Añade una sección:</p>
+<div class="language-md highlight"><pre><span></span><code><span id="__span-56-1"><a id="__codelineno-56-1" name="__codelineno-56-1" href="#__codelineno-56-1"></a><span class="gu">## Preparación para login</span>
+</span></code></pre></div>
+<p>Responde:</p>
+<ul>
+<li>¿Qué necesitará el login?</li>
+<li>¿Qué campos enviará el usuario?</li>
+<li>¿Qué debe comprobar la API?</li>
+<li>¿Qué función de <code>password.utils</code> usaremos?</li>
+<li>¿Por qué necesitaremos acceder a <code>passwordHash</code>?</li>
+</ul>
+<p>Pistas:</p>
+<ul>
+<li><code>POST /api/auth/login</code></li>
+<li><code>email</code></li>
+<li><code>password</code></li>
+<li><code>comparePassword</code></li>
+<li><code>findUserByEmailWithPassword</code></li>
+<li>Usuario activo.</li>
+</ul>
+<h2 id="entrega-recomendada-del-dia-33">Entrega recomendada del día 33<a class="headerlink" href="#entrega-recomendada-del-dia-33" title="Permanent link">&para;</a></h2>
+<p>Las respuestas no se entregan como archivo suelto. Deben quedar dentro del repositorio de GitHub.</p>
+<p>Al finalizar el día 33, el repositorio debería tener esta estructura aproximada:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-57-1"><a id="__codelineno-57-1" name="__codelineno-57-1" href="#__codelineno-57-1"></a>usermanager-api/
+</span><span id="__span-57-2"><a id="__codelineno-57-2" name="__codelineno-57-2" href="#__codelineno-57-2"></a>  .env.example
+</span><span id="__span-57-3"><a id="__codelineno-57-3" name="__codelineno-57-3" href="#__codelineno-57-3"></a>  .gitignore
+</span><span id="__span-57-4"><a id="__codelineno-57-4" name="__codelineno-57-4" href="#__codelineno-57-4"></a>  docker-compose.yml
+</span><span id="__span-57-5"><a id="__codelineno-57-5" name="__codelineno-57-5" href="#__codelineno-57-5"></a>  README.md
+</span><span id="__span-57-6"><a id="__codelineno-57-6" name="__codelineno-57-6" href="#__codelineno-57-6"></a>  package.json
+</span><span id="__span-57-7"><a id="__codelineno-57-7" name="__codelineno-57-7" href="#__codelineno-57-7"></a>  package-lock.json
+</span><span id="__span-57-8"><a id="__codelineno-57-8" name="__codelineno-57-8" href="#__codelineno-57-8"></a>  tsconfig.json
+</span><span id="__span-57-9"><a id="__codelineno-57-9" name="__codelineno-57-9" href="#__codelineno-57-9"></a>  prisma/
+</span><span id="__span-57-10"><a id="__codelineno-57-10" name="__codelineno-57-10" href="#__codelineno-57-10"></a>    schema.prisma
+</span><span id="__span-57-11"><a id="__codelineno-57-11" name="__codelineno-57-11" href="#__codelineno-57-11"></a>    seed.ts
+</span><span id="__span-57-12"><a id="__codelineno-57-12" name="__codelineno-57-12" href="#__codelineno-57-12"></a>    migrations/
+</span><span id="__span-57-13"><a id="__codelineno-57-13" name="__codelineno-57-13" href="#__codelineno-57-13"></a>      &lt;timestamp&gt;_init/
+</span><span id="__span-57-14"><a id="__codelineno-57-14" name="__codelineno-57-14" href="#__codelineno-57-14"></a>        migration.sql
+</span><span id="__span-57-15"><a id="__codelineno-57-15" name="__codelineno-57-15" href="#__codelineno-57-15"></a>  src/
+</span><span id="__span-57-16"><a id="__codelineno-57-16" name="__codelineno-57-16" href="#__codelineno-57-16"></a>    prisma.ts
+</span><span id="__span-57-17"><a id="__codelineno-57-17" name="__codelineno-57-17" href="#__codelineno-57-17"></a>    server.ts
+</span><span id="__span-57-18"><a id="__codelineno-57-18" name="__codelineno-57-18" href="#__codelineno-57-18"></a>    controllers/
+</span><span id="__span-57-19"><a id="__codelineno-57-19" name="__codelineno-57-19" href="#__codelineno-57-19"></a>      auth.controller.ts
+</span><span id="__span-57-20"><a id="__codelineno-57-20" name="__codelineno-57-20" href="#__codelineno-57-20"></a>      health.controller.ts
+</span><span id="__span-57-21"><a id="__codelineno-57-21" name="__codelineno-57-21" href="#__codelineno-57-21"></a>      user.controller.ts
+</span><span id="__span-57-22"><a id="__codelineno-57-22" name="__codelineno-57-22" href="#__codelineno-57-22"></a>    errors/
+</span><span id="__span-57-23"><a id="__codelineno-57-23" name="__codelineno-57-23" href="#__codelineno-57-23"></a>      AppError.ts
+</span><span id="__span-57-24"><a id="__codelineno-57-24" name="__codelineno-57-24" href="#__codelineno-57-24"></a>    repositories/
+</span><span id="__span-57-25"><a id="__codelineno-57-25" name="__codelineno-57-25" href="#__codelineno-57-25"></a>      user.repository.ts
+</span><span id="__span-57-26"><a id="__codelineno-57-26" name="__codelineno-57-26" href="#__codelineno-57-26"></a>    routes/
+</span><span id="__span-57-27"><a id="__codelineno-57-27" name="__codelineno-57-27" href="#__codelineno-57-27"></a>      auth.routes.ts
+</span><span id="__span-57-28"><a id="__codelineno-57-28" name="__codelineno-57-28" href="#__codelineno-57-28"></a>      health.routes.ts
+</span><span id="__span-57-29"><a id="__codelineno-57-29" name="__codelineno-57-29" href="#__codelineno-57-29"></a>      user.routes.ts
+</span><span id="__span-57-30"><a id="__codelineno-57-30" name="__codelineno-57-30" href="#__codelineno-57-30"></a>    services/
+</span><span id="__span-57-31"><a id="__codelineno-57-31" name="__codelineno-57-31" href="#__codelineno-57-31"></a>      auth.service.ts
+</span><span id="__span-57-32"><a id="__codelineno-57-32" name="__codelineno-57-32" href="#__codelineno-57-32"></a>      user.service.ts
+</span><span id="__span-57-33"><a id="__codelineno-57-33" name="__codelineno-57-33" href="#__codelineno-57-33"></a>    utils/
+</span><span id="__span-57-34"><a id="__codelineno-57-34" name="__codelineno-57-34" href="#__codelineno-57-34"></a>      parse.utils.ts
+</span><span id="__span-57-35"><a id="__codelineno-57-35" name="__codelineno-57-35" href="#__codelineno-57-35"></a>      password.utils.ts
+</span><span id="__span-57-36"><a id="__codelineno-57-36" name="__codelineno-57-36" href="#__codelineno-57-36"></a>      string.utils.ts
+</span><span id="__span-57-37"><a id="__codelineno-57-37" name="__codelineno-57-37" href="#__codelineno-57-37"></a>  docs/
+</span><span id="__span-57-38"><a id="__codelineno-57-38" name="__codelineno-57-38" href="#__codelineno-57-38"></a>    dia-01-diseno-inicial.md
+</span><span id="__span-57-39"><a id="__codelineno-57-39" name="__codelineno-57-39" href="#__codelineno-57-39"></a>    dia-02-preparacion-proyecto.md
+</span><span id="__span-57-40"><a id="__codelineno-57-40" name="__codelineno-57-40" href="#__codelineno-57-40"></a>    dia-03-primer-endpoint.md
+</span><span id="__span-57-41"><a id="__codelineno-57-41" name="__codelineno-57-41" href="#__codelineno-57-41"></a>    dia-04-metodos-http.md
+</span><span id="__span-57-42"><a id="__codelineno-57-42" name="__codelineno-57-42" href="#__codelineno-57-42"></a>    dia-05-json-body-params-headers.md
+</span><span id="__span-57-43"><a id="__codelineno-57-43" name="__codelineno-57-43" href="#__codelineno-57-43"></a>    dia-06-cliente-http-depuracion.md
+</span><span id="__span-57-44"><a id="__codelineno-57-44" name="__codelineno-57-44" href="#__codelineno-57-44"></a>    dia-07-listado-usuarios.md
+</span><span id="__span-57-45"><a id="__codelineno-57-45" name="__codelineno-57-45" href="#__codelineno-57-45"></a>    dia-08-consultar-usuario-id.md
+</span><span id="__span-57-46"><a id="__codelineno-57-46" name="__codelineno-57-46" href="#__codelineno-57-46"></a>    dia-09-crear-usuarios.md
+</span><span id="__span-57-47"><a id="__codelineno-57-47" name="__codelineno-57-47" href="#__codelineno-57-47"></a>    dia-10-actualizar-usuarios.md
+</span><span id="__span-57-48"><a id="__codelineno-57-48" name="__codelineno-57-48" href="#__codelineno-57-48"></a>    dia-11-eliminar-desactivar-usuarios.md
+</span><span id="__span-57-49"><a id="__codelineno-57-49" name="__codelineno-57-49" href="#__codelineno-57-49"></a>    dia-12-validacion-manual-basica.md
+</span><span id="__span-57-50"><a id="__codelineno-57-50" name="__codelineno-57-50" href="#__codelineno-57-50"></a>    dia-13-validacion-email-duplicados.md
+</span><span id="__span-57-51"><a id="__codelineno-57-51" name="__codelineno-57-51" href="#__codelineno-57-51"></a>    dia-14-codigos-estado-http.md
+</span><span id="__span-57-52"><a id="__codelineno-57-52" name="__codelineno-57-52" href="#__codelineno-57-52"></a>    dia-15-middleware-errores.md
+</span><span id="__span-57-53"><a id="__codelineno-57-53" name="__codelineno-57-53" href="#__codelineno-57-53"></a>    dia-16-base-datos-persistencia.md
+</span><span id="__span-57-54"><a id="__codelineno-57-54" name="__codelineno-57-54" href="#__codelineno-57-54"></a>    dia-17-postgresql-docker-compose.md
+</span><span id="__span-57-55"><a id="__codelineno-57-55" name="__codelineno-57-55" href="#__codelineno-57-55"></a>    dia-18-diseno-modelo-persistente-user.md
+</span><span id="__span-57-56"><a id="__codelineno-57-56" name="__codelineno-57-56" href="#__codelineno-57-56"></a>    dia-19-orm-acceso-datos.md
+</span><span id="__span-57-57"><a id="__codelineno-57-57" name="__codelineno-57-57" href="#__codelineno-57-57"></a>    dia-20-instalacion-prisma.md
+</span><span id="__span-57-58"><a id="__codelineno-57-58" name="__codelineno-57-58" href="#__codelineno-57-58"></a>    dia-21-modelo-prisma-user.md
+</span><span id="__span-57-59"><a id="__codelineno-57-59" name="__codelineno-57-59" href="#__codelineno-57-59"></a>    dia-22-primera-migracion-prisma.md
+</span><span id="__span-57-60"><a id="__codelineno-57-60" name="__codelineno-57-60" href="#__codelineno-57-60"></a>    dia-23-prisma-studio.md
+</span><span id="__span-57-61"><a id="__codelineno-57-61" name="__codelineno-57-61" href="#__codelineno-57-61"></a>    dia-24-seed-datos-iniciales.md
+</span><span id="__span-57-62"><a id="__codelineno-57-62" name="__codelineno-57-62" href="#__codelineno-57-62"></a>    dia-25-consultas-basicas-prisma.md
+</span><span id="__span-57-63"><a id="__codelineno-57-63" name="__codelineno-57-63" href="#__codelineno-57-63"></a>    dia-26-separar-rutas.md
+</span><span id="__span-57-64"><a id="__codelineno-57-64" name="__codelineno-57-64" href="#__codelineno-57-64"></a>    dia-27-controladores.md
+</span><span id="__span-57-65"><a id="__codelineno-57-65" name="__codelineno-57-65" href="#__codelineno-57-65"></a>    dia-28-servicios.md
+</span><span id="__span-57-66"><a id="__codelineno-57-66" name="__codelineno-57-66" href="#__codelineno-57-66"></a>    dia-29-repositorio-prisma.md
+</span><span id="__span-57-67"><a id="__codelineno-57-67" name="__codelineno-57-67" href="#__codelineno-57-67"></a>    dia-30-crud-persistente-ordenado.md
+</span><span id="__span-57-68"><a id="__codelineno-57-68" name="__codelineno-57-68" href="#__codelineno-57-68"></a>    dia-31-limpieza-refactor.md
+</span><span id="__span-57-69"><a id="__codelineno-57-69" name="__codelineno-57-69" href="#__codelineno-57-69"></a>    dia-32-bcrypt-passwords.md
+</span><span id="__span-57-70"><a id="__codelineno-57-70" name="__codelineno-57-70" href="#__codelineno-57-70"></a>    dia-33-auth-register.md
+</span></code></pre></div>
+<p>El documento del día 33 deberá estar en:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-58-1"><a id="__codelineno-58-1" name="__codelineno-58-1" href="#__codelineno-58-1"></a>docs/dia-33-auth-register.md
+</span></code></pre></div>
+<p>Y deberá incluir:</p>
+<ul>
+<li>Resumen de lo realizado.</li>
+<li>Endpoint creado.</li>
+<li>Body esperado.</li>
+<li>Respuesta correcta.</li>
+<li>Reglas del registro.</li>
+<li>Archivos creados.</li>
+<li>Flujo del registro.</li>
+<li>Diferencia entre <code>register</code> y <code>POST /api/users</code>.</li>
+<li>Diagrama Mermaid.</li>
+<li>Checklist de pruebas.</li>
+<li>Tabla de errores.</li>
+<li>Preparación para login.</li>
+</ul>
+<p>En el foro, se compartirá el enlace actualizado al repositorio.</p>
+<p>Ejemplo de mensaje:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-59-1"><a id="__codelineno-59-1" name="__codelineno-59-1" href="#__codelineno-59-1"></a>Hola, comparto el avance del día 33 del reto UserManager API:
+</span><span id="__span-59-2"><a id="__codelineno-59-2" name="__codelineno-59-2" href="#__codelineno-59-2"></a>
+</span><span id="__span-59-3"><a id="__codelineno-59-3" name="__codelineno-59-3" href="#__codelineno-59-3"></a>https://github.com/usuario/usermanager-api
+</span><span id="__span-59-4"><a id="__codelineno-59-4" name="__codelineno-59-4" href="#__codelineno-59-4"></a>
+</span><span id="__span-59-5"><a id="__codelineno-59-5" name="__codelineno-59-5" href="#__codelineno-59-5"></a>He creado el endpoint de registro POST /api/auth/register usando bcrypt y arquitectura por capas. La documentación está en:
+</span><span id="__span-59-6"><a id="__codelineno-59-6" name="__codelineno-59-6" href="#__codelineno-59-6"></a>
+</span><span id="__span-59-7"><a id="__codelineno-59-7" name="__codelineno-59-7" href="#__codelineno-59-7"></a>docs/dia-33-auth-register.md
+</span></code></pre></div>
+<h2 id="cierre-del-dia">Cierre del día<a class="headerlink" href="#cierre-del-dia" title="Permanent link">&para;</a></h2>
+<p>Hoy hemos creado el primer endpoint real de autenticación.</p>
+<p>Ya no solo tenemos un CRUD de usuarios. Ahora tenemos una ruta específica para que un usuario pueda registrarse:</p>
+<p><code>POST /api/auth/register</code>.</p>
+<p>Hoy hemos trabajado:</p>
+<ul>
+<li><code>auth.routes.ts</code>.</li>
+<li><code>auth.controller.ts</code>.</li>
+<li><code>auth.service.ts</code>.</li>
+<li>Registro.</li>
+<li>Validación.</li>
+<li>Email duplicado.</li>
+<li><code>bcrypt</code>.</li>
+<li><code>passwordHash</code>.</li>
+<li>Rol <code>USER</code> por defecto.</li>
+<li>Usuario activo por defecto.</li>
+<li>Separación entre CRUD y auth.</li>
+</ul>
+<p>Todavía no hay login ni token.</p>
+<p>Eso vendrá en los próximos días.</p>
+<div class="admonition success">
+<p class="admonition-title">Idea clave</p>
+<p>El registro crea una cuenta de usuario de forma segura, guardando un <code>passwordHash</code> generado con <code>bcrypt</code> y evitando que el cliente pueda decidir campos sensibles como el rol.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-circle-arrow-up" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m16 12-4-4-4 4M12 16V8"/></svg>
+  Volver al principio
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Pie" >
+        
+          
+          <a href="../dia32/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Día 32">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7M19 12H5"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Día 32
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dia34/" class="md-footer__link md-footer__link--next" aria-label="Siguiente: Día 34">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Siguiente
+              </span>
+              <div class="md-ellipsis">
+                Día 34
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="lucide lucide-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2026 The authors
+
+    </div>
+  
+  
+    Made with
+    <a href="https://zensical.org/" target="_blank" rel="noopener">
+      Zensical
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate":null,"base":"..","features":["announce.dismiss","content.code.annotate","content.code.copy","content.code.select","content.footnote.tooltips","content.tabs.link","content.tooltips","navigation.footer","navigation.indexes","navigation.instant","navigation.instant.prefetch","navigation.path","navigation.sections","navigation.top","navigation.tracking","search.highlight"],"search":"../assets/javascripts/workers/search.e2d2d235.min.js","tags":null,"translations":{"clipboard.copied":"Copiado al portapapeles","clipboard.copy":"Copiar al portapapeles","search.result.more.one":"1 más en esta página","search.result.more.other":"# más en esta página","search.result.none":"No se encontraron documentos","search.result.one":"1 documento encontrado","search.result.other":"# documentos encontrados","search.result.placeholder":"Teclee para comenzar búsqueda","search.result.term.missing":"Falta","select.version":"Seleccionar versión"},"version":null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6e5f0216.min.js"></script>
+      
+    
+  </body>
+</html>

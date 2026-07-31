@@ -739,23 +739,21 @@ comprobar si vuestra API funciona correctamente.
     Ahora la API tendrá que funcionar con una aplicación real, respetando
     rutas, formatos de respuesta, códigos de estado, cabeceras y autenticación.
 
-### Día 38: Presentación del frontend y contrato de API
+### [Día 38: Frontend entregado y conexión con la API](dia38.md)
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Contrato frontend-backend |
-| Producto | Proyecto Next.js entregado por el profesor |
-| Tarea | Revisar pantallas, rutas necesarias y formato de respuestas |
-| Resultado | Entenderemos que el frontend espera una API concreta |
+| Concepto | Conexión frontend-backend |
+| Producto | Proyecto Next.js conectado a la API |
+| Tarea | Configurar la URL base, comprender CORS y probar el login |
+| Resultado | El frontend enviará peticiones y JWT a la API local |
 
 ```text title="Pantallas del frontend"
 Login
 Registro
 Mi perfil
-Listado de usuarios
-Editar usuario
-Cambiar contraseña
-Panel de administración
+Dashboard
+Panel de administración de usuarios
 ```
 
 ```text title="Endpoints que necesita consumir"
@@ -763,11 +761,7 @@ POST   /api/auth/register
 POST   /api/auth/login
 GET    /api/users/me
 GET    /api/users
-GET    /api/users/:id
 PATCH  /api/users/:id
-PATCH  /api/users/me/password
-PATCH  /api/users/:id/role
-PATCH  /api/users/:id/status
 DELETE /api/users/:id
 ```
 
@@ -775,17 +769,17 @@ DELETE /api/users/:id
     El frontend no se adapta mágicamente a cualquier API. Frontend y backend
     necesitan acordar rutas, datos y errores.
 
-### Día 39: Configurar endpoint, CORS y probar integración
+### [Día 39: Pruebas de integración desde el frontend](dia39.md)
 
 | Campo | Detalle |
 | --- | --- |
-| Concepto | Comunicación entre aplicaciones |
-| Producto | Frontend conectado a la API local |
-| Tarea | Configurar `NEXT_PUBLIC_API_URL` y resolver posibles errores de CORS |
-| Resultado | El frontend empezará a enviar peticiones al backend |
+| Concepto | Pruebas de integración |
+| Producto | Checklist completa de flujos y permisos |
+| Tarea | Probar registro, login, perfiles y acciones ADMIN |
+| Resultado | Comprobaremos códigos, permisos y persistencia |
 
 ```env title=".env.local del frontend"
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
+NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
 ```text title="Problemas esperados"
@@ -797,24 +791,19 @@ El token no se envía.
 Error de CORS.
 ```
 
-```ts title="CORS sencillo"
-app.use(cors());
-```
-
 ```ts title="CORS más controlado"
 app.use(cors({
-  origin: "http://localhost:3001",
-  credentials: true
+  origin: "http://localhost:3001"
 }));
 ```
 
-### Día 40: Integración final, documentación y entrega
+### [Día 40: Documentación, demo y cierre](dia40.md)
 
 | Campo | Detalle |
 | --- | --- |
 | Concepto | Cierre de producto |
 | Producto | API funcional consumida por frontend |
-| Tarea | Probar todos los flujos, documentar y dejar el proyecto preparado |
+| Tarea | Revisar, documentar y preparar una demo reproducible |
 | Resultado | Proyecto final completo |
 
 Pruebas mínimas desde el frontend:
@@ -822,13 +811,10 @@ Pruebas mínimas desde el frontend:
 - Registrar usuario.
 - Iniciar sesión.
 - Consultar mi perfil.
-- Cambiar contraseña.
 - Entrar como `ADMIN`.
 - Listar usuarios.
-- Editar usuario.
-- Cambiar rol.
-- Activar o desactivar usuario.
-- Eliminar usuario.
+- Crear usuario.
+- Desactivar usuario.
 - Comprobar que un `USER` no accede a zonas de `ADMIN`.
 
 Entrega final recomendada:
